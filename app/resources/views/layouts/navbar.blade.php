@@ -155,7 +155,7 @@
             class="user-image rounded-circle shadow"
             alt="User Image"
           />
-          <span class="d-none d-md-inline"> {{ Auth::user()->name }}</span>
+          <span class="d-none d-md-inline">Hi, {{ Auth::user()->name }}</span>
         </a>
         <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
           <!--begin::User Image-->
@@ -167,7 +167,7 @@
             />
             <p>
               {{ Auth::user()->name }}
-              <small>Member since  {{ Auth::user()->created_at}}</small>
+              <small>Member since  {{ Auth::user()->created_at->format('d M Y')}}</small>
             </p>
           </li>
           <!--end::User Image-->
