@@ -2,9 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckRole;
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('welcome');
+// });
 
 Auth::routes();
 
@@ -12,12 +12,11 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 
-// Route untuk Admin
-Route::get('/admin', function () {
-    return view('admin.dashboard');
-})->middleware('checkRole:admin');
+//group route with prefix "admin"
+Route::prefix('admin')->group(function () {
 
-// Route untuk User
-Route::get('/user', function () {
-    return view('user.dashboard');
-})->middleware('checkRole:user');
+    Route::group(['middleware' => ['auth', 'checkrole:admin']], function () {
+        Route::get('dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
+        
+    });
+});
