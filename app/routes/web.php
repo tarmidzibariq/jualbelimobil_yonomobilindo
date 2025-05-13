@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\UsersController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckRole;
 // Route::get('/', function () {
@@ -13,10 +15,9 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 
 
 //group route with prefix "admin"
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function () {
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
-    Route::group(['middleware' => ['auth', 'checkrole:admin']], function () {
-        Route::get('dashboard', [App\Http\Controllers\Admin\DashboardController::class, 'index'])->name('admin.dashboard');
-        
-    });
+    // Gunakan resource controller agar semua nama route otomatis sesuai konvensi Laravel
+    Route::resource('users', UsersController::class)->names('admin.users');
 });

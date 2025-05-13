@@ -28,10 +28,19 @@
         data-accordion="false"
       >
         <li class="nav-item">
-          <a href="#" class="nav-link active">
+          <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
             <i class="nav-icon bi bi-speedometer"></i>
             <p>
               Dashboard
+            </p>
+          </a>
+        </li>
+       
+        <li class="nav-item">
+          <a href="{{ route('admin.users.index') }}" class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+            <i class="nav-icon bi bi-people-fill"></i>
+            <p>
+              Users
             </p>
           </a>
         </li>
