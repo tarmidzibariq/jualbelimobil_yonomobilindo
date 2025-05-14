@@ -13,6 +13,9 @@
             @case(request()->routeIs('admin.users.*'))
                 Users
                 @break
+            @case(request()->routeIs('admin.cars.*'))
+                Cars
+                @break
             @default
                 Halaman
         @endswitch
@@ -24,10 +27,13 @@
           </li>
       
           @switch(true)
+
+            {{-- Dashboard --}}
             @case(request()->routeIs('admin.dashboard'))
               <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
               @break
       
+            {{-- Users --}}
             @case(request()->routeIs('admin.users.index'))
               <li class="breadcrumb-item active" aria-current="page">Users</li>
               @break
@@ -42,6 +48,25 @@
             @case(request()->routeIs('admin.users.edit'))
               <li class="breadcrumb-item">
                 <a href="{{ route('admin.users.index') }}">Users</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Edit</li>
+              @break
+
+            {{-- cars --}}
+            @case(request()->routeIs('admin.cars.index'))
+              <li class="breadcrumb-item active" aria-current="page">Cars</li>
+              @break
+      
+            @case(request()->routeIs('admin.cars.create'))
+              <li class="breadcrumb-item">
+                <a href="{{ route('admin.cars.index') }}">Cars</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Create</li>
+              @break
+      
+            @case(request()->routeIs('admin.cars.edit'))
+              <li class="breadcrumb-item">
+                <a href="{{ route('admin.cars.index') }}">Cars</a>
               </li>
               <li class="breadcrumb-item active" aria-current="page">Edit</li>
               @break
