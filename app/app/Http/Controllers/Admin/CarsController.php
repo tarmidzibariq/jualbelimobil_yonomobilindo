@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Car;
+use App\Models\CarType;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -28,7 +29,8 @@ class CarsController extends Controller
     public function create()
     {
         $user = User::all();
-        return view('admin.cars.create', compact('user'));
+        $brands = CarType::distinct()->pluck('brand');
+        return view('admin.cars.create', compact('user','brands'));
     }
 
     /**

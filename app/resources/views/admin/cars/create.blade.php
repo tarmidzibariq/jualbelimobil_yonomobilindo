@@ -1,6 +1,10 @@
 @extends('layouts.master')
 @section('content')
 
+@push('styles')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+@endpush
 
 <div class="app-content">
     <!--begin::Container-->
@@ -30,25 +34,25 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label for="user_id" class="form-label">User</label>
-                        <select class="form-control select2 @error('user_id') is-invalid @enderror" name="user_id"
-                            required>
+                        <select class="form-control select2 @error('user_id') is-invalid @enderror " name="user_id" required>
                             <option value="">-- Pilih User --</option>
                             @foreach ($user as $u)
-                            <option value="{{ $u->id }}" {{ old('user_id') == $u->id ? 'selected' : '' }}>
-                                {{ $u->name }} ({{ $u->email }})
-                            </option>
+                                <option value="{{ $u->id }}"
+                                    {{ old('user_id', auth()->user()->id) == $u->id ? 'selected' : '' }}>
+                                    {{ $u->name }} ({{ $u->email }})
+                                </option>
                             @endforeach
                         </select>
-                        @error('user_id')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
                     </div>
                     <div class="mb-3">
                         <label for="brand" class="form-label">Brand</label>
-                        <input type="text" class="form-control @error('brand') is-invalid @enderror" id="brand"
-                            name="brand" value="{{ old('brand') }}" required />
+                        <select name="brand" id="brand" class="form-control" required>
+                            <option value="">-- Pilih Brand --</option>
+                            @foreach ($brands as $brand)
+                            <option value="{{ $brand }}">{{ $brand }}</option>
+                            @endforeach
+                        </select>
+                        
                         @error('brand')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -57,8 +61,9 @@
                     </div>
                     <div class="mb-3">
                         <label for="model" class="form-label">Model</label>
-                        <input type="text" class="form-control @error('model') is-invalid @enderror" id="model"
-                            name="model" value="{{ old('model') }}" required />
+                        <select name="model" id="model" class="form-control" required disabled>
+                            <option value="">-- Pilih Model --</option>
+                        </select>
                         @error('model')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -156,6 +161,40 @@
     </div>
     <!--end::Container-->
 </div>
+@push('scripts')
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+  $(document).ready(function() {
+      $('.select2').select2({
+          theme: 'bootstrap-5',
+          placeholder: "-- Pilih User --",
+          allowClear: true
+      });
 
+      $('#brand').change(function() {
+        var brand = $(this).val();
+        if (brand) {
+            $.ajax({
+                url: '/api/models',
+                type: 'GET',
+                data: { brand: brand },
+                success: function(models) {
+                    $('#model').empty().append('<option value="">-- Pilih Model --</option>');
+                    $.each(models, function(index, model) {
+                        $('#model').append('<option value="' + model + '">' + model + '</option>');
+                    });
+                    $('#model').prop('disabled', false);
+                }
+            });
+        } else {
+            $('#model').empty().append('<option value="">-- Pilih Model --</option>').prop('disabled', true);
+        }
+    });
+  });
+
+
+</script>
+@endpush
 
 @endsection

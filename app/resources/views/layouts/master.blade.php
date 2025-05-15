@@ -18,6 +18,8 @@
     <!--end::Primary Meta Tags-->
     
     @include('layouts.css')
+
+    @stack('styles')
   </head>
   <!--end::Head-->
   
@@ -60,6 +62,7 @@
     <!--end::App Wrapper-->
     <!--begin::Script-->
     @include('layouts.js')
+    @stack('scripts')
     <!--end::Script-->
   </body>
   <!--end::Body-->
