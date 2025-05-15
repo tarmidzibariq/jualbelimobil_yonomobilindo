@@ -26,7 +26,7 @@ crossorigin="anonymous"
 <link rel="stylesheet" href="{{ asset('adminLTE/dist/css/adminlte.css')}}" />
 <!--end::Required Plugin(AdminLTE)-->
 <!-- apexcharts -->
-<link
+<linkz
 rel="stylesheet"
 href="https://cdn.jsdelivr.net/npm/apexcharts@3.37.1/dist/apexcharts.css"
 integrity="sha256-4MX+61mt9NVvvuPjUWdUdyfZfxSB1/Rf9WtqRHgG5S0="
