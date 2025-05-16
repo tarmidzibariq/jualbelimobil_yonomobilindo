@@ -18,11 +18,11 @@ return new class extends Migration
 
             $table->string('brand');
             $table->string('model');
-            $table->integer('year');
+            $table->string('year');
             $table->integer('price');
             $table->enum('transmission', ['manual', 'automatic']);
             $table->text('description')->nullable();
-            $table->string('servce_history')->nullable();
+            $table->date('service_history')->nullable();
             $table->string('fuel_type');
             $table->string('mileage');
             $table->enum('sale_type',['user','showroom']);

@@ -10,13 +10,17 @@ class Car extends Model
     use HasFactory;
 
     protected $fillable = [
-        'make',
+        'brand',
         'model',
         'year',
         'price',
-        'mileage',
-        'color',
+        'transmission',
         'description',
+        'service_history',
+        'fuel_type',
+        'mileage',
+        'sale_type',
+        'status',
         'user_id',
     ];
 

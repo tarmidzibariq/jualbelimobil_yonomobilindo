@@ -18,19 +18,26 @@
         @endif
         {{-- End Alert Notifikasi Sukses --}}
 
-        {{-- Form Search --}}
         <div class="d-flex justify-content-between mb-3">
-          <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Create</a>
-          <form action="{{ route('admin.users.index') }}" method="GET" class="d-flex" role="search">
-            <input type="text" name="search" class="form-control me-2" placeholder="Search by name or email" value="{{ request('search') }}">
-            <select name="role" class="form-select me-2">
-              <option value="">All Roles</option>
-              <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-              <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>User</option>
-            </select>
-            <button type="submit" class="btn btn-secondary">Search</button>
-          </form>
+            <a href="{{ route('admin.users.create') }}" class="btn btn-primary">Create</a>
         </div>
+        {{-- Form Search --}}
+        <form action="{{ route('admin.users.index') }}" method="GET" class="row g-3 align-items-center mb-3" role="search">
+          <div class="col-md-4">
+              <input type="text" name="search" class="form-control" placeholder="Search by name or email" value="{{ request('search') }}">
+          </div>
+          <div class="col-md-3">
+              <select name="role" class="form-select">
+                  <option value="">All Roles</option>
+                  <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                  <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>User</option>
+              </select>
+          </div>
+          <div class="col-12">
+              <button type="submit" class="btn btn-success">Search</button>
+              <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Reset</a>
+          </div>
+        </form>
         {{-- End Form Search --}}
 
         {{-- Table --}}
