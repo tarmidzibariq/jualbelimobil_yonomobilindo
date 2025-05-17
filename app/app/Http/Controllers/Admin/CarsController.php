@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Car;
+use App\Models\CarPhoto;
 use App\Models\CarType;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -36,7 +37,7 @@ class CarsController extends Controller
             $query->where('status', $request->status);
         }
 
-        $cars = $query->paginate(10);
+        $cars = $query->orderBy('id', 'desc')->paginate(10);
 
         // Ambil brand unik dari CarType
         $brands = CarType::distinct()->pluck('brand');
@@ -60,7 +61,7 @@ class CarsController extends Controller
     {
         $user = User::all();
         $brands = CarType::distinct()->pluck('brand');
-        return view('admin.cars.create', compact('user','brands'));
+        return view('admin.cars.create', compact('user', 'brands'));
     }
 
     /**
@@ -99,8 +100,23 @@ class CarsController extends Controller
             'status' => "pending_check",
         ]);
 
-        return redirect()->route('admin.cars.index')->with('success', 'ID #' . $car->id . 'Car created successfully.');   
+        // dd($request->file('photos'));
 
+        // Simpan foto mobil
+        $photos = $request->file('photos');
+
+        foreach ($photos as $photo) {
+            $filename = $photo->hashName(); // otomatis pakai nama acak unik.ext
+            $photo->storeAs('car_photos', $filename, 'public');
+
+            CarPhoto::create([
+                'car_id'    => $car->id,
+                'photo_url' => $filename, // cukup nama filenya saja
+            ]);
+        }
+        
+
+        return redirect()->route('admin.cars.index')->with('success', 'ID #' . $car->id . ' Car created successfully.');
     }
 
     /**
@@ -108,7 +124,7 @@ class CarsController extends Controller
      */
     public function show($id)
     {
-        $car = Car::with('user')->findOrFail($id);
+        $car = Car::with('user', 'carPhoto')->findOrFail($id);
         return view('admin.cars.partials.modal_content', compact('car'));
     }
 
@@ -117,7 +133,10 @@ class CarsController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $car = Car::with('carPhoto')->findOrFail($id);
+        $user = User::all();
+        $brands = CarType::distinct()->pluck('brand');
+        return view('admin.cars.edit', compact('car','user', 'brands'));
     }
 
     /**
@@ -125,7 +144,25 @@ class CarsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $car = Car::findOrFail($id);
+
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+            'brand' => 'required|string|max:50',
+            'model' => 'required|string|max:50',
+            'year' => 'required|integer|min:1886|max:' . date('Y'),
+            'price' => 'required|integer|min:0',
+            'transmission' => 'required|in:manual,automatic',
+            'description' => 'nullable|string',
+            'service_history' => 'nullable|date',
+            'fuel_type' => 'required|string|max:50',
+            'mileage' => 'required|string|max:50',
+            'sale_type' => 'required|in:user,showroom',
+        ]);
+
+        $car->update($request->all());
+
+        return redirect()->route('admin.cars.index')->with('success', 'ID #' . $car->id . ' Car updated successfully.');
     }
 
     /**

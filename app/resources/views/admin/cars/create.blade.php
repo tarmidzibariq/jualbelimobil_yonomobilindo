@@ -143,8 +143,11 @@
                     </div>
                     <div class="mb-3">
                         <label for="mileage" class="form-label">Mileage</label>
-                        <input type="number" class="form-control @error('mileage') is-invalid @enderror" id="mileage"
-                            name="mileage" value="{{ old('mileage') }}" required />
+                        <input type="text" class="form-control @error('mileage') is-invalid @enderror" id="mileage_format"
+                            value="{{ old('mileage') ? number_format(old('mileage'), 0, ',', '.') : '' }}" required />
+                 
+                        <input type="hidden" name="mileage" id="mileage" value="{{ old('mileage') }}" />
+                    
                         @error('mileage')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -164,6 +167,23 @@
                         </span>
                         @enderror
                     </div>
+                    <div id="photo-wrapper" class="row">
+                        <label for="sale_type" class="form-label">Photo Cars</label>
+                        <div class="col-md-4 mb-3 photo-group">
+                            <div class="border rounded p-3 shadow-sm position-relative text-center h-100">
+                                <img src="{{ asset('image/NoImage.png') }}" class="img-preview img-fluid mb-3" style="max-height: 150px;" />
+                                <input type="file" name="photos[]" class="form-control photo-input mb-2"  required>
+                                <button type="button" class="btn btn-danger w-100 btn-remove-photo">
+                                    <i class="bi bi-trash"></i> Hapus
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-2">
+                        <button type="button" id="btn-add-photo" class="btn btn-info px-4">Add Photo</button>
+                    </div>
+                    
                 </div>
 
                 <div class="card-footer">
@@ -179,45 +199,42 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
-  $(document).ready(function() {
-      $('.select2').select2({
-          theme: 'bootstrap-5',
-          placeholder: "-- Pilih User --",
-          allowClear: true
-      });
-      $('.select2Year').select2({
-          theme: 'bootstrap-5',
-          placeholder: "-- Pilih Tahun --",
-          allowClear: true
-      });
+    $(document).ready(function() {
+        $('.select2, .select2Year').select2({
+            theme: 'bootstrap-5',
+            width: '100%',
+            allowClear: true,
+            placeholder: '-- Pilih --',
+        
+        });
+        $('#brand, #model').select2({
+            theme: 'bootstrap-5',
+            width: '100%',
+            allowClear: true,
+            placeholder: '-- Pilih --',
+        });
 
-      $('#brand, #model').select2({
-        theme: 'bootstrap-5',
-        width: '100%',
-        allowClear: true,
-    });
+        $('#brand').on('change', function () {
+            const brand = $(this).val();
+            $('#model').prop('disabled', true).empty().append('<option value="">Loading...</option>');
 
-    $('#brand').on('change', function () {
-        const brand = $(this).val();
-        $('#model').prop('disabled', true).empty().append('<option value="">Loading...</option>');
-
-        if (brand) {
-            $.get('/api/models', { brand: brand }, function (data) {
-                $('#model').empty().append('<option value="">-- Pilih Model --</option>');
-                $.each(data, function (i, model) {
-                    $('#model').append(`<option value="${model}">${model}</option>`);
+            if (brand) {
+                $.get('/api/models', { brand: brand }, function (data) {
+                    $('#model').empty().append('<option value="">-- Pilih Model --</option>');
+                    $.each(data, function (i, model) {
+                        $('#model').append(`<option value="${model}">${model}</option>`);
+                    });
+                    $('#model').prop('disabled', false).trigger('change');
                 });
-                $('#model').prop('disabled', false).trigger('change');
-            });
-        } else {
-            $('#model').empty().append('<option value="">-- Pilih Model --</option>').prop('disabled', true);
-        }
+            } else {
+                $('#model').empty().append('<option value="">-- Pilih Model --</option>').prop('disabled', true);
+            }
+        });
+
     });
 
-  });
-
-//   Format input price to Rupiah
-  function formatRupiah(angka) {
+    // Format input price to Rupiah
+    function formatRupiah(angka) {
         return angka.replace(/\D/g, "")
             .replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
@@ -231,9 +248,66 @@
             this.value = formatRupiah(clean);
             inputHidden.value = clean;
         });
-    });
 
+        const inputMileageFormatted = document.getElementById('mileage_format');
+        const inputMileageHidden = document.getElementById('mileage');
+    
+        inputMileageFormatted.addEventListener('input', function () {
+            let clean = this.value.replace(/\D/g, "");
+            this.value = formatRupiah(clean);
+            inputMileageHidden.value = clean;
+        });
+    });
+    // Menangani penambahan dan penghapusan foto
+    document.addEventListener('DOMContentLoaded', function () {
+        const wrapper = document.getElementById('photo-wrapper');
+        const btnAdd = document.getElementById('btn-add-photo');
+
+        // Fungsi untuk preview
+        function previewImage(input, previewElement) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewElement.src = e.target.result;
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        // Tambah field baru
+        btnAdd.addEventListener('click', function () {
+            const newCol = document.createElement('div');
+            newCol.classList.add('col-md-4', 'mb-4', 'photo-group');
+
+            newCol.innerHTML = `
+                <div class="border rounded p-3 shadow-sm position-relative text-center h-100">
+                    <img src="{{ asset('image/NoImage.png') }}" class="img-preview img-fluid mb-3" style="max-height: 150px;" />
+                    <input type="file" name="photos[]" class="form-control photo-input mb-2" accept="image/*" required>
+                    <button type="button" class="btn btn-danger w-100 btn-remove-photo">
+                        <i class="bi bi-trash"></i> Hapus
+                    </button>
+                </div>
+            `;
+            wrapper.appendChild(newCol);
+        });
+
+        // Delegasi untuk preview dan hapus
+        wrapper.addEventListener('change', function (e) {
+            if (e.target.classList.contains('photo-input')) {
+                const img = e.target.closest('.photo-group').querySelector('.img-preview');
+                previewImage(e.target, img);
+            }
+        });
+
+        wrapper.addEventListener('click', function (e) {
+            if (e.target.closest('.btn-remove-photo')) {
+                const group = e.target.closest('.photo-group');
+                group.remove();
+            }
+        });
+    });
 </script>
+
 @endpush
 
 @endsection

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CarPhotoController;
 use App\Http\Controllers\Admin\CarsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UsersController;
@@ -43,8 +44,10 @@ Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function 
 
     // Users Route
     Route::resource('users', UsersController::class)->names('admin.users');
-    
     // Cars Route
     Route::resource('cars', CarsController::class)->names('admin.cars');
-    // Route::get('/admin/cars/{id}', [CarsController::class, 'show'])->name('admin.cars.show');
+
+    // Car Photos Route
+    Route::resource('carsPhoto', CarPhotoController::class)->names('admin.carsPhoto')
+        ->except(['create', 'edit', 'show']);
 });

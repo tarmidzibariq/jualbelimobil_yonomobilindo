@@ -20,6 +20,27 @@
     <tr><th>Created At</th><td>{{ $car->created_at }}</td></tr>
     <tr><th>Updated At</th><td>{{ $car->updated_at }}</td></tr>
   </table>
+  <h6 class="fw-bold mb-2">Foto Mobil</h6>
+  @if ($car->carPhoto->count())
+    <div class="row mb-3">
+        @foreach ($car->carPhoto as $photo)
+          <div class="col-md-4 text-center">
+            @if (Storage::disk('public')->exists('car_photos/' . $photo->photo_url))
+              <img src="{{ asset('storage/car_photos/' . $photo->photo_url) }}"
+                  alt="Car Photo"
+                  class="img-fluid rounded shadow-sm mb-2"
+                  style="max-height: 180px;">
+            @else
+              <p class="text-danger fw-bold">
+                  File Terhapus, Silahkan upload ulang.
+              </p>
+            @endif
+          </div>
+        @endforeach
+    </div>
+  @else
+    <p class="text-muted">Belum ada foto yang diunggah.</p>
+  @endif
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
