@@ -44,11 +44,14 @@ Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function 
 
     // Users Route
     Route::resource('users', UsersController::class)->names('admin.users');
+
     // Cars Route
     Route::resource('cars', CarsController::class)->names('admin.cars');
 
+    // Cars Route with custom methods
+    Route::get('cars/{id}/edit-status', [CarsController::class, 'editStatus']);
+    Route::post('cars/{id}/update-status', [CarsController::class, 'updateStatus']);
+
     // Car Photos Route
-    // Ini benar untuk menghapus car photo
     Route::resource('cars-photo', CarPhotoController::class)->names('admin.carPhotos')->except(['show', 'edit', 'update', 'create', 'store']);
-    // Route::delete('cars-photo/{id}', [CarPhotoController::class, 'destroy'])->name('admin.carPhotos.destroy');
 });

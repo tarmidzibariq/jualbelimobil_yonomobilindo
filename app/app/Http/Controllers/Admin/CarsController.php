@@ -182,11 +182,37 @@ class CarsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    // public function destroy($id)
-    // {
-    //     $car = Car::findOrFail($id);
-    //     $car->delete();
+    public function destroy($id)
+    {
+        $car = Car::findOrFail($id);
+        $car->delete();
 
-    //     return redirect()->route('admin.cars.index')->with('success', 'ID #' . $car->id . ' Car deleted successfully.');
-    // }
+        return redirect()->route('admin.cars.index')->with('success', 'ID #' . $car->id . ' Car deleted successfully.');
+    }
+
+    /**
+     * Update the status of the car via AJAX.
+     */
+    public function editStatus($id)
+    {
+        $car = Car::findOrFail($id);
+        return view('admin.cars.partials.update_status_modal', compact('car'));
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        // Validasi bahwa status adalah salah satu dari 4 nilai yang diperbolehkan
+        $request->validate([
+            'status' => 'required|in:available,pending_check,sold,under_review'
+        ]);
+
+        // Ambil data mobil berdasarkan ID
+        $car = Car::findOrFail($id);
+        // Update statusnya
+        $car->status = $request->status;
+        $car->save();
+
+        // Kembalikan response JSON (bisa dipakai untuk notifikasi success di frontend)
+        return response()->json(['message' => 'Status updated']);
+    }
 }

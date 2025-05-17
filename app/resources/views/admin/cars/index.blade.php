@@ -26,9 +26,9 @@
                         <select class="form-select" name="brand" id="brand">
                             <option value="">-- All Brands --</option>
                             @foreach ($brands as $brand)
-                                <option value="{{ $brand }}" {{ request('brand') == $brand ? 'selected' : '' }}>
-                                    {{ $brand }}
-                                </option>
+                            <option value="{{ $brand }}" {{ request('brand') == $brand ? 'selected' : '' }}>
+                                {{ $brand }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -38,9 +38,9 @@
                         <select class="form-select" name="sale_type" id="sale_type">
                             <option value="">-- All Sale Types --</option>
                             @foreach ($sale_types as $key => $label)
-                                <option value="{{ $key }}" {{ request('sale_type') == $key ? 'selected' : '' }}>
-                                    {{ $label }}
-                                </option>
+                            <option value="{{ $key }}" {{ request('sale_type') == $key ? 'selected' : '' }}>
+                                {{ $label }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -50,9 +50,9 @@
                         <select class="form-select" name="status" id="status">
                             <option value="">-- All Statuses --</option>
                             @foreach ($statuses as $key => $label)
-                                <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>
-                                    {{ $label }}
-                                </option>
+                            <option value="{{ $key }}" {{ request('status') == $key ? 'selected' : '' }}>
+                                {{ $label }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -86,15 +86,39 @@
                                 <td>{{ $car->model }}</td>
                                 <td>{{ number_format($car->price, 0, ',', '.') }}</td>
                                 <td>{{ ucfirst($car->sale_type) }}</td>
-                                <td>{{ ucfirst($car->status) }}</td>
+                                <td>
+                                    <!-- Label status saat ini -->
+                                    @php
+                                    $status = $car->status;
+                                    $badgeClass = match($status) {
+                                    'available' => 'bg-success',
+                                    'pending_check' => 'bg-warning text-dark',
+                                    'sold' => 'bg-danger',
+                                    'under_review' => 'bg-info text-dark',
+                                    default => 'bg-secondary',
+                                    };
+                                    @endphp
+
+                                    <span class="badge {{ $badgeClass }} status-label-{{ $car->id }}">
+                                        {{ ucfirst($status) }}
+                                    </span>
+
+                                    <!-- Tombol untuk membuka modal update status -->
+                                    <button type="button" class="btn btn-sm btn-outline-primary mt-1 btn-edit-status"
+                                        data-id="{{ $car->id }}" {{-- ID mobil --}} data-status="{{ $car->status }}"
+                                        {{-- Status saat ini --}} data-bs-toggle="modal" data-bs-target="#statusModal">
+                                        Update Status
+                                    </button>
+                                </td>
                                 <td>
                                     {{-- Tombol untuk membuka modal detail mobil --}}
-                                    <button type="button" class="btn btn-sm btn-info btn-show-detail" 
-                                      data-id="{{ $car->id }}" data-bs-toggle="modal" data-bs-target="#carModal">
-                                      Show
+                                    <button type="button" class="btn btn-sm btn-info btn-show-detail"
+                                        data-id="{{ $car->id }}" data-bs-toggle="modal" data-bs-target="#carModal">
+                                        Show
                                     </button>
                                     {{-- Tombol edit --}}
-                                    <a href="{{ route('admin.cars.edit', $car->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="{{ route('admin.cars.edit', $car->id) }}"
+                                        class="btn btn-sm btn-warning">Edit</a>
                                     {{-- Form untuk delete dengan konfirmasi --}}
                                     <form action="{{ route('admin.cars.destroy', $car->id) }}" method="POST"
                                         style="display:inline-block;">
@@ -106,9 +130,9 @@
                                 </td>
                             </tr>
                             @empty
-                              <tr>
+                            <tr>
                                 <td colspan="7" class="text-center">No users found.</td>
-                              </tr>
+                            </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -116,25 +140,40 @@
 
                 <!-- Modal kosong, akan diisi konten AJAX -->
                 <div class="modal fade" id="carModal" tabindex="-1" aria-labelledby="carModalLabel" aria-hidden="true">
-                  <div class="modal-dialog modal-lg">
-                    <div class="modal-content" id="carModalContent">
-                      <!-- Konten modal akan di-load via AJAX -->
-                      <div class="modal-body text-center">
-                        <div class="spinner-border text-primary" role="status">
-                          <span class="visually-hidden">Loading...</span>
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content" id="carModalContent">
+                            <!-- Konten modal akan di-load via AJAX -->
+                            <div class="modal-body text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
                         </div>
-                      </div>
                     </div>
-                  </div>
                 </div>
+
+                <!-- Modal update status (kosong, isi via AJAX) -->
+                <div class="modal fade" id="statusModal" tabindex="-1" aria-labelledby="statusModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content" id="statusModalContent">
+                            <div class="modal-body text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             {{-- Pagination --}}
             <div class="card-footer clearfix">
-              <div class="pagination pagination-sm m-0 float-end">
-                {{ $cars->appends(request()->query())->links('pagination::bootstrap-5') }}
-             
-              </div>
+                <div class="pagination pagination-sm m-0 float-end">
+                    {{ $cars->appends(request()->query())->links('pagination::bootstrap-5') }}
+
+                </div>
             </div>
         </div>
     </div>
@@ -143,33 +182,103 @@
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-  $(document).ready(function() {
-    $('.btn-show-detail').on('click', function() {
-      let carId = $(this).data('id');
-      let modalContent = $('#carModalContent');
-  
-      // Tampilkan loading spinner saat AJAX request
-      modalContent.html(`
-        <div class="modal-body text-center">
-          <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-      `);
-  
-      $.ajax({
-        url: `/admin/cars/${carId}`, // route show detail mobil, harus mengembalikan partial view
-        method: 'GET',
-        success: function(response) {
-          modalContent.html(response);
-        },
-        error: function() {
-          modalContent.html('<div class="modal-body"><p class="text-danger">Failed to load data.</p></div>');
-        }
-      });
-    });
-  });
-</script>
-  
-@endpush
+    $(document).ready(function () {
 
+        // ===============================
+        // 1. Show detail mobil ke dalam modal
+        // ===============================
+        $('.btn-show-detail').on('click', function () {
+            let carId = $(this).data('id');
+            let modalContent = $('#carModalContent');
+
+            modalContent.html(`
+          <div class="modal-body text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        `);
+
+            $.ajax({
+                url: `/admin/cars/${carId}`, // Show route: menampilkan detail mobil
+                method: 'GET',
+                success: function (response) {
+                    modalContent.html(response); // Load ke dalam modal
+                },
+                error: function () {
+                    modalContent.html(
+                        '<div class="modal-body text-danger">Failed to load data.</div>'
+                        );
+                }
+            });
+        });
+
+        // ===============================
+        // 2. Load form update status via AJAX modal
+        // ===============================
+        $(document).on('click', '.btn-edit-status', function () {
+            const carId = $(this).data('id');
+            const modalContent = $('#statusModalContent');
+
+            modalContent.html(`
+          <div class="modal-body text-center">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+          </div>
+        `);
+
+            $.ajax({
+                url: `/admin/cars/${carId}/edit-status`, // Route untuk ambil form partial
+                method: 'GET',
+                success: function (html) {
+                    modalContent.html(html);
+                },
+                error: function () {
+                    modalContent.html(
+                        '<div class="modal-body text-danger">Gagal memuat form status.</div>'
+                        );
+                }
+            });
+        });
+
+        // ===============================
+        // 3. Submit update status via AJAX
+        // ===============================
+        $(document).on('submit', '#form-update-status', function (e) {
+            e.preventDefault();
+
+            const carId = $('#modal-car-id').val(); // dari input hidden
+            const newStatus = $('#new-status').val();
+
+            $.ajax({
+                url: `/admin/cars/${carId}/update-status`, // Route untuk update status
+                method: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    status: newStatus
+                },
+                success: function (res) {
+                    // Tutup modal
+                    $('#statusModal').modal('hide');
+
+                    // Update tampilan badge status di table
+                    $(`.status-label-${carId}`).text(newStatus.charAt(0).toUpperCase() +
+                        newStatus.slice(1));
+
+                    // Optional: tampilkan alert atau notifikasi lain
+                    alert('Status updated successfully!');
+                },
+                error: function (xhr) {
+                    console.error('Update failed:', xhr.status, xhr.responseText);
+                    alert('Failed to update status');
+                }
+            });
+        });
+
+    });
+
+</script>
+
+
+@endpush
