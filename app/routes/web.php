@@ -48,6 +48,7 @@ Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function 
     Route::resource('cars', CarsController::class)->names('admin.cars');
 
     // Car Photos Route
-    Route::resource('carsPhoto', CarPhotoController::class)->names('admin.carsPhoto')
-        ->except(['create', 'edit', 'show']);
+    // Ini benar untuk menghapus car photo
+    Route::resource('cars-photo', CarPhotoController::class)->names('admin.carPhotos')->except(['show', 'edit', 'update', 'create', 'store']);
+    // Route::delete('cars-photo/{id}', [CarPhotoController::class, 'destroy'])->name('admin.carPhotos.destroy');
 });

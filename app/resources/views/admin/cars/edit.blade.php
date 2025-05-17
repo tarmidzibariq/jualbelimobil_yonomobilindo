@@ -176,33 +176,27 @@
                     <div id="photo-wrapper" class="row">
                         <label for="sale_type" class="form-label">Photo Cars</label>
                         @if ($car->carPhoto->count())
-                            <div class="row mb-3">
-                                @foreach ($car->carPhoto as $photo)
-                                <div class="col-md-4 text-center">
-                                    @if (Storage::disk('public')->exists('car_photos/' . $photo->photo_url))
-                                    <img src="{{ asset('storage/car_photos/' . $photo->photo_url) }}"
-                                        alt="Car Photo"
-                                        class="img-fluid rounded shadow-sm mb-2"
-                                        style="max-height: 180px;">
-
-                                    <form action="{{ route('admin.carsPhoto.destroy', $photo->id) }}" method="POST"
-                                        style="display:inline-block;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="button" class="btn btn-danger w-100 btn-remove-photo">
-                                            <i class="bi bi-trash"></i> Hapus</button>
-                                    </form>
-                                    
-                                    @else
-                                    <p class="text-danger fw-bold">
-                                        File Terhapus, Silahkan upload ulang.
-                                    </p>
-                                    @endif
+                            @foreach ($car->carPhoto as $photo)
+                                <div class="col-md-4 mb-3 photo-group">
+                                    <div class="border rounded p-3 shadow-sm position-relative text-center h-100">
+                                        @if (Storage::disk('public')->exists('car_photos/' . $photo->photo_url))
+                                            <img src="{{ asset('storage/car_photos/' . $photo->photo_url) }}" class="img-preview img-fluid mb-3" style="max-height: 150px;" />
+                                            {{-- <input type="file" name="photos[]" class="form-control photo-input mb-2" value="{{ $photo->photo_url }}"  required> --}}
+                                            <button type="button"
+                                                class="btn btn-danger w-100 btn-delete-photo"
+                                                data-photo-id="{{ $photo->id }}">
+                                                🗑 Hapus
+                                            </button>
+                                        @else
+                                            <p class="text-danger fw-bold">
+                                                File Terhapus, Silahkan upload ulang.
+                                            </p>
+                                        @endif
+                                    </div>
                                 </div>
-                                @endforeach
-                            </div>
+                            @endforeach
                         @else
-                            <p class="text-muted">Belum ada foto yang diunggah.</p>
+                        <p class="text-muted">Belum ada foto yang diunggah.</p>
                         @endif
                     </div>
                     
@@ -344,6 +338,25 @@
             if (e.target.closest('.btn-remove-photo')) {
                 const group = e.target.closest('.photo-group');
                 group.remove();
+            }
+        });
+    });
+
+    // Hapus foto yang sudah ada
+    $(document).on('click', '.btn-delete-photo', function () {
+        const photoId = $(this).data('photo-id');
+        if (!confirm('Yakin ingin menghapus foto ini?')) return;
+
+        $.ajax({
+            url: `/admin/cars-photo/${photoId}`,
+            type: 'DELETE',
+            data: { _token: '{{ csrf_token() }}' },
+            success: function () {
+                alert('Foto berhasil dihapus');
+                location.reload(); // atau remove elemen foto dari DOM
+            },
+            error: function () {
+                alert('Gagal menghapus foto');
             }
         });
     });

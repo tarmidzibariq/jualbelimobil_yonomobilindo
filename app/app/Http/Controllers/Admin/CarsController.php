@@ -98,6 +98,7 @@ class CarsController extends Controller
             'mileage' => $request->mileage,
             'sale_type' => $request->sale_type,
             'status' => "pending_check",
+            
         ]);
 
         // dd($request->file('photos'));
@@ -158,21 +159,34 @@ class CarsController extends Controller
             'fuel_type' => 'required|string|max:50',
             'mileage' => 'required|string|max:50',
             'sale_type' => 'required|in:user,showroom',
+            'photos.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $car->update($request->all());
 
+        // Proses foto tambahan (jika ada)
+        if ($request->hasFile('photos')) {
+            foreach ($request->file('photos') as $photo) {
+                $filename = $photo->hashName();
+                $photo->storeAs('car_photos', $filename, 'public');
+
+                \App\Models\CarPhoto::create([
+                    'car_id' => $car->id,
+                    'photo_url' => $filename
+                ]);
+            }
+        }
         return redirect()->route('admin.cars.index')->with('success', 'ID #' . $car->id . ' Car updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
-    {
-        $car = Car::findOrFail($id);
-        $car->delete();
+    // public function destroy($id)
+    // {
+    //     $car = Car::findOrFail($id);
+    //     $car->delete();
 
-        return redirect()->route('admin.cars.index')->with('success', 'ID #' . $car->id . ' Car deleted successfully.');
-    }
+    //     return redirect()->route('admin.cars.index')->with('success', 'ID #' . $car->id . ' Car deleted successfully.');
+    // }
 }
