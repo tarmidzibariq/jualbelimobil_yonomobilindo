@@ -55,3 +55,13 @@ Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function 
     // Car Photos Route
     Route::resource('cars-photo', CarPhotoController::class)->names('admin.carPhotos')->except(['show', 'edit', 'update', 'create', 'store']);
 });
+
+//group route with prefix "admin" with middleware "auth" and "checkrole:admin"
+Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function () {
+
+    // Dashboard Route
+    Route::get('dashboard', [App\Http\Controllers\User\DashboardController::class, 'index'])->name('user.dashboard');
+
+    Route::resource('downPayment', App\Http\Controllers\User\DownPaymentController::class)->names('user.downPayment');
+});
+

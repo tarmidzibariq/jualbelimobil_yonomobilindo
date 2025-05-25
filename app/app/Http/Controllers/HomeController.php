@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\User\DashboardController as UserDashboardController;
 class HomeController extends Controller
 {
     /**
@@ -25,10 +26,14 @@ class HomeController extends Controller
     {
         if (Auth::user()->role == 'admin') {
             # code...
-            return view('admin.dashboard.index');
-        } else {
+            $dashboard = new AdminDashboardController();
+            return $dashboard->index();
 
-            return view('user.dashboard');
+            // return view('admin.dashboard.index');
+        } else {
+            $dashboard = new UserDashboardController();
+            return $dashboard->index();
+            // return view('user.dashboard.index');
         }
     }
 }
