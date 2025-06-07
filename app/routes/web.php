@@ -18,7 +18,7 @@ use App\Models\CarType;
 // route authentication
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home-cms');
 
 // API route to get car models based on brand
 Route::get('/api/models', function (Request $request) {

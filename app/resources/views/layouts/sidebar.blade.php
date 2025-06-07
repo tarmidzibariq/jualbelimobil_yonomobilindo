@@ -2,16 +2,16 @@
   <!--begin::Sidebar Brand-->
   <div class="sidebar-brand">
     <!--begin::Brand Link-->
-    <a href="./index.html" class="brand-link">
+    <a href="{{route('home-cms')}}" class="brand-link">
       <!--begin::Brand Image-->
       <img
-        src="{{ asset('adminLTE/dist/assets/img/AdminLTELogo.png') }}"
-        alt="AdminLTE Logo"
-        class="brand-image opacity-75 shadow"
+        src="{{ asset('image/YONO MOBILINDO LOGO 2.png') }}"
+        alt="YONO MOBILINDO"
+        class="brand-image  shadow"
       />
       <!--end::Brand Image-->
       <!--begin::Brand Text-->
-      <span class="brand-text fw-light">AdminLTE 4</span>
+      <span class="brand-text fw-light">YONOMOBILINDO</span>
       <!--end::Brand Text-->
     </a>
     <!--end::Brand Link-->

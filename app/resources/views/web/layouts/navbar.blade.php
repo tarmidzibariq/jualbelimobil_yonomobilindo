@@ -32,11 +32,20 @@
                          <a class="nav-link" href="#">KONTAK</a>
                      </li>
                  </ul>
-                 <a class="btn btn-login px-5" href="#" data-bs-toggle="modal" data-bs-target="#loginModal">MASUK</a>
+                 {{-- Jika belum login --}}
+                 @guest
+                 <button type="button" class="btn btn-login px-4" data-bs-toggle="modal" data-bs-target="#loginModal">
+                     MASUK
+                 </button>
+                 @endguest
+
+                 {{-- Jika sudah login --}}
+                 @auth
+                 <a href="{{ route('home-cms') }}" class="btn btn-login px-4">
+                     DASHBOARD
+                 </a>
+                 @endauth
              </div>
          </div>
      </nav>
  </section>
-
- 
- 
