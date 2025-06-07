@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CarPhotoController;
 use App\Http\Controllers\Admin\CarsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Web\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Http\Request;
@@ -65,3 +66,4 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
     Route::resource('downPayment', App\Http\Controllers\User\DownPaymentController::class)->names('user.downPayment');
 });
 
+Route::get('/', [HomeController::class, 'index'])->name('home');
