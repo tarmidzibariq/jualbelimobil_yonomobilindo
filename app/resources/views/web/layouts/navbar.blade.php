@@ -38,33 +38,5 @@
      </nav>
  </section>
 
- <!-- Modal Login -->
- <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-     <div class="modal-dialog modal-dialog-centered">
-         <div class="modal-content p-4">
-             <div class="modal-header border-0">
-                 <h5 class="modal-title w-100 text-center" id="loginModalLabel">Masuk</h5>
-             </div>
-             <div class="modal-body">
-                 <form>
-                     <div class="mb-3">
-                         <label for="email" class="form-label fw-medium">Email*</label>
-                         <input type="email" class="form-control py-2 border-0" id="email" placeholder="Masukkan Email">
-                     </div>
-                     <div class="mb-3">
-                         <label for="password" class="form-label fw-medium">Kata Sandi*</label>
-                         <input type="password" class="form-control py-2 border-0" id="password"
-                             placeholder="Masukkan Kata Sandi">
-                     </div>
-                     <div class="mb-3 form-check">
-                         <input type="checkbox" class="form-check-input" id="remember">
-                         <label class="form-check-label " for="remember">Ingat Saya</label>
-                     </div>
-                     <button type="submit" class="btn btn-login w-100 mb-2">Masuk</button>
-                     <div class="text-center register-link">Belum Mempunyai Akun? <a href="#">Daftar</a></div>
-                 </form>
-             </div>
-         </div>
-     </div>
- </div>
+ 
  

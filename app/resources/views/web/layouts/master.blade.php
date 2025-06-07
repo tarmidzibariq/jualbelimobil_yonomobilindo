@@ -15,6 +15,9 @@
 
     {{-- navbar --}}
     @include('web.layouts.navbar')
+
+    {{-- modal Login --}}
+    @include('web.login')
     
     {{-- content --}}
     @yield('web-content')
