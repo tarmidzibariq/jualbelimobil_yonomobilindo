@@ -30,7 +30,7 @@
 
                      <button type="submit" class="btn btn-login w-100 mb-2">Masuk</button>
                      
-                     <div class="text-center register-link">Belum Mempunyai Akun? <a href="#">Daftar</a></div>
+                     <div class="text-center register-link">Belum Mempunyai Akun? <a href="{{ route('register') }}">Daftar</a></div>
                  </form>
              </div>
          </div>

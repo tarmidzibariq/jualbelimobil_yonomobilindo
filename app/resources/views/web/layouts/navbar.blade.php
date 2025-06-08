@@ -34,7 +34,7 @@
                  </ul>
                  {{-- Jika belum login --}}
                  @guest
-                 <button type="button" class="btn btn-login px-4" data-bs-toggle="modal" data-bs-target="#loginModal">
+                 <button type="button" class="btn btn-login px-5" data-bs-toggle="modal" data-bs-target="#loginModal">
                      MASUK
                  </button>
                  @endguest
