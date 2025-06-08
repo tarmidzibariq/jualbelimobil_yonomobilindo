@@ -77,8 +77,11 @@
 <body>
 
     <div class="register-box text-center rounded">
-        <img src="{{asset('image/Logo-Mobilindo-2.svg')}}" alt="YONOMOBILINDO LOGO"
-            class="img-fluid mx-auto d-block mb-3" style="max-width: 200px;">
+        <a href="{{route('home')}}">
+            <img src="{{asset('image/Logo-Mobilindo-2.svg')}}" alt="YONOMOBILINDO LOGO"
+                class="img-fluid mx-auto d-block mb-3" style="max-width: 200px;">
+
+        </a>
 
         <h3 class="form-heading mb-1">Daftar</h3>
         <p class="text-muted mb-4">Segera mendaftar dan dapatkan keuntungan</p>

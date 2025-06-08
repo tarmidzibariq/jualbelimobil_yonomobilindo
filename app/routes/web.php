@@ -57,7 +57,7 @@ Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function 
     Route::resource('cars-photo', CarPhotoController::class)->names('admin.carPhotos')->except(['show', 'edit', 'update', 'create', 'store']);
 });
 
-//group route with prefix "admin" with middleware "auth" and "checkrole:admin"
+//group route with prefix "admin" with middleware "auth" and "checkrole:user"
 Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function () {
 
     // Dashboard Route
@@ -66,4 +66,10 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
     Route::resource('downPayment', App\Http\Controllers\User\DownPaymentController::class)->names('user.downPayment');
 });
 
+//group route with prefix "admin" 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::prefix('web')->group(function () {
+
+    Route::resource('jualMobil', App\Http\Controllers\Web\JualMobilController::class)->names('web.jualMobil');
+});
