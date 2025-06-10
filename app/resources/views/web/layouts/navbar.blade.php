@@ -26,10 +26,10 @@
                          <a class="nav-link {{ request()->routeIs('web.jualMobil.*') ? 'active' : '' }}" href="{{ route('web.jualMobil.index')}}">JUAL MOBIL</a>
                      </li>
                      <li class="nav-item">
-                         <a class="nav-link" href="{{route('web.testimonial')}}">TESTIMONIAL</a>
+                         <a class="nav-link {{request()->routeIs('web.testimonial') ? 'active' : ''}}" href="{{route('web.testimonial')}}">TESTIMONIAL</a>
                      </li>
                      <li class="nav-item">
-                         <a class="nav-link" href="#">KONTAK</a>
+                         <a class="nav-link {{request()->routeIs('web.kontak') ? 'active' : ''}}" href="{{route('web.kontak')}}">KONTAK</a>
                      </li>
                  </ul>
                  {{-- Jika belum login --}}

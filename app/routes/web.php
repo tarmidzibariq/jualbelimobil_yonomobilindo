@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CarsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\KontakController;
 use App\Http\Controllers\Web\TestimonialController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckRole;
@@ -67,12 +68,17 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
     Route::resource('downPayment', App\Http\Controllers\User\DownPaymentController::class)->names('user.downPayment');
 });
 
-//group route with prefix "admin" 
+//Home Route
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::prefix('web')->group(function () {
 
+    // jual mobil
     Route::resource('jualMobil', App\Http\Controllers\Web\JualMobilController::class)->names('web.jualMobil');
 
+    // testimonial
     Route::get('testimonial', [TestimonialController::class, 'index'])->name('web.testimonial');
+
+    // kontak
+    Route::get('kontak', [KontakController::class, 'index'])->name('web.kontak');
 });
