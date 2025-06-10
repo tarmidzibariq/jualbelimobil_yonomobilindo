@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CarsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\TestimonialController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Http\Request;
@@ -72,4 +73,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::prefix('web')->group(function () {
 
     Route::resource('jualMobil', App\Http\Controllers\Web\JualMobilController::class)->names('web.jualMobil');
+
+    Route::get('testimonial', [TestimonialController::class, 'index'])->name('web.testimonial');
 });

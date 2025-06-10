@@ -26,7 +26,7 @@
                          <a class="nav-link {{ request()->routeIs('web.jualMobil.*') ? 'active' : '' }}" href="{{ route('web.jualMobil.index')}}">JUAL MOBIL</a>
                      </li>
                      <li class="nav-item">
-                         <a class="nav-link" href="#">TESTIMONIAL</a>
+                         <a class="nav-link" href="{{route('web.testimonial')}}">TESTIMONIAL</a>
                      </li>
                      <li class="nav-item">
                          <a class="nav-link" href="#">KONTAK</a>
