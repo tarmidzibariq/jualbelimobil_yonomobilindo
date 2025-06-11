@@ -85,49 +85,23 @@
         <h3 class="fw-bold mb-4">Mobil Tersedia</h3>
         <div class="row g-4">
             <!-- Card 1 -->
+            @foreach ($car as $item)
             <div class="col-md-4 col-6">
                 <div class="card shadow-sm h-100 rounded-top">
                     <div class="ratio ratio-4x3 bg-light d-flex align-items-center justify-content-center text-dark rounded-top "
                         style="font-weight: 500;">
-                        Gambar Mobil
+                        <img src="" alt="">
                     </div>
                     <div class="card-body">
-                        <h6 class="card-title fw-bold">Toyota Calya G AT 2020 Silver</h6>
-                        <p class="mb-2" style="font-size: 14px;">2020 | 50.000 km | Automatic</p>
-                        <p class="fw-bold mb-0">Rp 100.000.000</p>
+                        <h6 class="card-title fw-bold text-capitalize">{{$item->brand}} {{$item->model}} {{$item->year}} </h6>
+                        <p class="mb-2 text-capitalize" style="font-size: 14px; ">{{$item->year}} | {{$item->mileage}} km | {{$item->transmission}}</p>
+                        <p class="fw-bold mb-0">Rp {{ number_format($item->price, 0, ',', '.') }}</p>
                     </div>
                 </div>
             </div>
+            
+            @endforeach
 
-            <!-- Card 2 -->
-            <div class="col-md-4 col-6">
-                <div class="card shadow-sm h-100 rounded-top">
-                    <div class="ratio ratio-4x3 bg-light d-flex align-items-center justify-content-center text-dark rounded-top"
-                        style="font-weight: 500;">
-                        Gambar Mobil
-                    </div>
-                    <div class="card-body">
-                        <h6 class="card-title fw-bold">Toyota Calya G AT 2020 Silver</h6>
-                        <p class="mb-2" style="font-size: 14px;">2020 | 50.000 km | Automatic</p>
-                        <p class="fw-bold mb-0">Rp 100.000.000</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Card 3 -->
-            <div class="col-md-4 col-6">
-                <div class="card shadow-sm h-100 rounded-top">
-                    <div class="ratio ratio-4x3 bg-light d-flex align-items-center justify-content-center text-dark rounded-top"
-                        style="font-weight: 500;">
-                        Gambar Mobil
-                    </div>
-                    <div class="card-body">
-                        <h6 class="card-title fw-bold">Toyota Calya G AT 2020 Silver</h6>
-                        <p class="mb-2" style="font-size: 14px;">2020 | 50.000 km | Automatic</p>
-                        <p class="fw-bold mb-0">Rp 100.000.000</p>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 

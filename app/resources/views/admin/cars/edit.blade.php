@@ -148,6 +148,16 @@
                         @enderror
                     </div>
                     <div class="mb-3">
+                        <label for="color" class="form-label">Color</label>
+                        <input type="text" class="form-control @error('color') is-invalid @enderror"
+                            id="color" name="color" value="{{ old('color', $car->color) }}" required />
+                        @error('color')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
                         <label for="mileage" class="form-label">Mileage</label>
                         <input type="text" class="form-control @error('mileage') is-invalid @enderror" id="mileage_format"
                             value="{{ old('mileage',$car->mileage) ? number_format(old('mileage',$car->mileage), 0, ',', '.') : '' }}" required />
@@ -173,15 +183,17 @@
                         </span>
                         @enderror
                     </div>
-                    <div id="photo-wrapper" class="row">
-                        <label for="sale_type" class="form-label">Photo Cars</label>
+                    <div id="photo-wrapper" class="row sortable-photo-wrapper">
+                    <label class="form-label">Photo Cars</label>
+
                         @if ($car->carPhoto->count())
-                            @foreach ($car->carPhoto as $photo)
-                                <div class="col-md-4 mb-3 photo-group">
+                            @foreach ($car->carPhoto->sortBy('number') as $photo)
+                                <div class="col-md-4 mb-3 photo-group" data-photo-id="{{ $photo->id }}">
                                     <div class="border rounded p-3 shadow-sm position-relative text-center h-100">
                                         @if (Storage::disk('public')->exists('car_photos/' . $photo->photo_url))
                                             <img src="{{ asset('storage/car_photos/' . $photo->photo_url) }}" class="img-preview img-fluid mb-3" style="max-height: 150px;" />
-                                            {{-- <input type="file" name="photos[]" class="form-control photo-input mb-2" value="{{ $photo->photo_url }}"  required> --}}
+                                            <input type="hidden" name="existing_photo_ids[]" value="{{ $photo->id }}">
+                                            <input type="hidden" name="existing_photo_order[]" class="photo-order" value="{{ $photo->number }}">
                                             <button type="button"
                                                 class="btn btn-danger w-100 btn-delete-photo"
                                                 data-photo-id="{{ $photo->id }}">
@@ -189,14 +201,14 @@
                                             </button>
                                         @else
                                             <p class="text-danger fw-bold">
-                                                File Terhapus, Silahkan upload ulang.
+                                                File tidak ditemukan. Silakan upload ulang.
                                             </p>
                                         @endif
                                     </div>
                                 </div>
                             @endforeach
                         @else
-                        <p class="text-muted">Belum ada foto yang diunggah.</p>
+                            <p class="text-muted">Belum ada foto yang diunggah.</p>
                         @endif
                     </div>
                     
@@ -218,6 +230,9 @@
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
 <script>
     const selectedModel = @json(old('model', $car->model));
     const selectedBrand = @json(old('brand', $car->brand));
@@ -293,53 +308,67 @@
             inputMileageHidden.value = clean;
         });
     });
+
     // Menangani penambahan dan penghapusan foto
     document.addEventListener('DOMContentLoaded', function () {
         const wrapper = document.getElementById('photo-wrapper');
         const btnAdd = document.getElementById('btn-add-photo');
 
-        // Fungsi untuk preview
-        function previewImage(input, previewElement) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    previewElement.src = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        // Tambah field baru
+        // Tambah foto baru
         btnAdd.addEventListener('click', function () {
             const newCol = document.createElement('div');
-            newCol.classList.add('col-md-4', 'mb-4', 'photo-group');
+            newCol.classList.add('col-md-3', 'mb-3', 'photo-group');
 
             newCol.innerHTML = `
-                <div class="border rounded p-3 shadow-sm position-relative text-center h-100">
-                    <img src="{{ asset('image/NoImage.png') }}" class="img-preview img-fluid mb-3" style="max-height: 150px;" />
-                    <input type="file" name="photos[]" class="form-control photo-input mb-2" accept="image/*" required>
-                    <button type="button" class="btn btn-danger w-100 btn-remove-photo">
-                        <i class="bi bi-trash"></i> Hapus
-                    </button>
-                </div>
-            `;
+            <div class="card position-relative text-center h-100 shadow-sm p-2">
+                <img src="{{ asset('image/NoImage.png') }}" class="img-preview img-fluid mb-2" style="max-height: 150px;">
+                <input type="file" name="photos[]" class="form-control photo-input mb-2" accept="image/*" required>
+                <input type="hidden" name="photo_order[]" value="0" class="photo-order">
+                <button type="button" class="btn btn-danger btn-sm w-100 btn-remove-photo">
+                    <i class="bi bi-trash"></i> Hapus
+                </button>
+            </div>
+        `;
             wrapper.appendChild(newCol);
         });
 
-        // Delegasi untuk preview dan hapus
+        // Preview image
         wrapper.addEventListener('change', function (e) {
             if (e.target.classList.contains('photo-input')) {
-                const img = e.target.closest('.photo-group').querySelector('.img-preview');
-                previewImage(e.target, img);
+                const preview = e.target.closest('.photo-group').querySelector('.img-preview');
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => preview.src = e.target.result;
+                    reader.readAsDataURL(file);
+                }
             }
         });
 
+        // Hapus photo group
         wrapper.addEventListener('click', function (e) {
             if (e.target.closest('.btn-remove-photo')) {
-                const group = e.target.closest('.photo-group');
-                group.remove();
+                const photo = e.target.closest('.photo-group');
+                photo.remove();
             }
         });
+
+        // Drag & Drop dengan SortableJS
+        new Sortable(wrapper, {
+            animation: 150,
+            draggable: '.photo-group',
+            onEnd: updatePhotoOrder,
+        });
+
+        // Update order saat submit
+        document.querySelector('form').addEventListener('submit', updatePhotoOrder);
+
+        function updatePhotoOrder() {
+            const groups = wrapper.querySelectorAll('.photo-group');
+            groups.forEach((group, index) => {
+                group.querySelector('.photo-order').value = index + 1;
+            });
+        }
     });
 
     // Hapus foto yang sudah ada

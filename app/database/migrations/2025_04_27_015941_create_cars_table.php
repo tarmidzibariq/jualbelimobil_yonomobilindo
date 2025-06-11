@@ -25,6 +25,7 @@ return new class extends Migration
             $table->date('service_history')->nullable();
             $table->string('fuel_type');
             $table->string('mileage');
+            $table->string('color');
             $table->enum('sale_type',['user','showroom']);
             $table->enum('status',['available','pending_check','sold','under_review']);
             $table->timestamps();

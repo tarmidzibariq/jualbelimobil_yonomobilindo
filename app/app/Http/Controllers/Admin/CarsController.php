@@ -8,6 +8,7 @@ use App\Models\CarPhoto;
 use App\Models\CarType;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CarsController extends Controller
 {
@@ -69,8 +70,6 @@ class CarsController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->all());
-
         $request->validate([
             'user_id' => 'required|exists:users,id',
             'brand' => 'required|string|max:50',
@@ -82,43 +81,52 @@ class CarsController extends Controller
             'service_history' => 'nullable|date',
             'fuel_type' => 'required|string|max:50',
             'mileage' => 'required|string|max:50',
+            'color' => 'required|string|max:50',
             'sale_type' => 'required|in:user,showroom',
+            'photos.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $car = Car::create([
-            'user_id' => $request->user_id,
-            'brand' => $request->brand,
-            'model' => $request->model,
-            'year' => $request->year,
-            'price' => $request->price,
-            'transmission' => $request->transmission,
-            'description' => $request->description,
-            'service_history' => $request->service_history,
-            'fuel_type' => $request->fuel_type,
-            'mileage' => $request->mileage,
-            'sale_type' => $request->sale_type,
-            'status' => "pending_check",
-            
-        ]);
+        try {
+            DB::transaction(function () use ($request) {
+                $car = Car::create([
+                    'user_id' => $request->user_id,
+                    'brand' => $request->brand,
+                    'model' => $request->model,
+                    'year' => $request->year,
+                    'price' => $request->price,
+                    'transmission' => $request->transmission,
+                    'description' => $request->description,
+                    'service_history' => $request->service_history,
+                    'fuel_type' => $request->fuel_type,
+                    'mileage' => $request->mileage,
+                    'color' => $request->color,
+                    'sale_type' => $request->sale_type,
+                    'status' => "pending_check",
+                ]);
 
-        // dd($request->file('photos'));
+                $photos = $request->file('photos', []);
+                $orders = $request->input('photo_order', []);
 
-        // Simpan foto mobil
-        $photos = $request->file('photos');
+                foreach ($photos as $i => $photo) {
+                    $filename = $photo->hashName();
+                    $photo->storeAs('car_photos', $filename, 'public');
 
-        foreach ($photos as $photo) {
-            $filename = $photo->hashName(); // otomatis pakai nama acak unik.ext
-            $photo->storeAs('car_photos', $filename, 'public');
+                    CarPhoto::create([
+                        'car_id' => $car->id,
+                        'photo_url' => $filename,
+                        'number' => $orders[$i] ?? ($i + 1),
+                    ]);
+                }
+            });
 
-            CarPhoto::create([
-                'car_id'    => $car->id,
-                'photo_url' => $filename, // cukup nama filenya saja
-            ]);
+            return redirect()->route('admin.cars.index')->with('success', 'Mobil berhasil ditambahkan.');
+
+        } catch (\Exception $e) {
+            // Jika error, kembali ke form dengan pesan error
+            return back()->withInput()->withErrors(['error' => 'Gagal menyimpan data: ' . $e->getMessage()]);
         }
-        
-
-        return redirect()->route('admin.cars.index')->with('success', 'ID #' . $car->id . ' Car created successfully.');
     }
+
 
     /**
      * Display the specified resource.
@@ -158,24 +166,38 @@ class CarsController extends Controller
             'service_history' => 'nullable|date',
             'fuel_type' => 'required|string|max:50',
             'mileage' => 'required|string|max:50',
+            'color' => 'required|string|max:50',
             'sale_type' => 'required|in:user,showroom',
             'photos.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         $car->update($request->all());
 
-        // Proses foto tambahan (jika ada)
-        if ($request->hasFile('photos')) {
-            foreach ($request->file('photos') as $photo) {
-                $filename = $photo->hashName();
-                $photo->storeAs('car_photos', $filename, 'public');
+        // 1. Update urutan foto yang lama
+        $existingPhotoIds = $request->input('existing_photo_ids', []);
+        $existingOrders = $request->input('existing_photo_order', []);
 
-                \App\Models\CarPhoto::create([
-                    'car_id' => $car->id,
-                    'photo_url' => $filename
-                ]);
-            }
+        foreach ($existingPhotoIds as $i => $photoId) {
+            CarPhoto::where('id', $photoId)->update([
+                'number' => $existingOrders[$i] ?? ($i + 1),
+            ]);
         }
+
+        // 2. Upload foto baru
+        $newPhotos = $request->file('photos', []);
+        $newOrders = $request->input('new_photo_order', []);
+
+        foreach ($newPhotos as $i => $photo) {
+            $filename = $photo->hashName();
+            $photo->storeAs('car_photos', $filename, 'public');
+
+            CarPhoto::create([
+                'car_id' => $car->id,
+                'photo_url' => $filename,
+                'number' => $newOrders[$i] ?? ($i + 1),
+            ]);
+        }
+
         return redirect()->route('admin.cars.index')->with('success', 'ID #' . $car->id . ' Car updated successfully.');
     }
 

@@ -15,6 +15,7 @@
     <tr><th>Service History</th><td>{{ $car->service_history }}</td></tr>
     <tr><th>Fuel Type</th><td>{{ $car->fuel_type }}</td></tr>
     <tr><th>Mileage</th><td>{{ number_format($car->mileage, 0, ',', '.') }}</td></tr>
+    <tr><th>Color</th><td>{{ $car->color }}</td></tr>
     <tr><th>Sale Type</th><td>{{ $car->sale_type }}</td></tr>
     <tr><th>Status</th><td>{{ $car->status }}</td></tr>
     <tr><th>Created At</th><td>{{ $car->created_at }}</td></tr>
@@ -23,7 +24,7 @@
   <h6 class="fw-bold mb-2">Foto Mobil</h6>
   @if ($car->carPhoto->count())
     <div class="row mb-3">
-        @foreach ($car->carPhoto as $photo)
+        @foreach ($car->carPhoto->sortBy('number') as $photo)
           <div class="col-md-4 text-center">
             @if (Storage::disk('public')->exists('car_photos/' . $photo->photo_url))
               <img src="{{ asset('storage/car_photos/' . $photo->photo_url) }}"

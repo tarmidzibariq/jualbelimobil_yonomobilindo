@@ -19,6 +19,7 @@ class Car extends Model
         'service_history',
         'fuel_type',
         'mileage',
+        'color',
         'sale_type',
         'status',
         'user_id',

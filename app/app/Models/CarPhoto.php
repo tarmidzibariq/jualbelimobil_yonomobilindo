@@ -11,6 +11,7 @@ class CarPhoto extends Model
     protected $fillable = [
         'car_id',
         'photo_url',
+        'number'
     ];
 
     // defining the relationship with the Car model

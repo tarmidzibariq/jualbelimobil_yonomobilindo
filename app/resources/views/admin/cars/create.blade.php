@@ -3,7 +3,8 @@
 
 @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css"
+    rel="stylesheet" />
 @endpush
 
 <div class="app-content">
@@ -34,13 +35,14 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <label for="user_id" class="form-label">User</label>
-                        <select class="form-control select2 @error('user_id') is-invalid @enderror " name="user_id" required>
+                        <select class="form-control select2 @error('user_id') is-invalid @enderror " name="user_id"
+                            required>
                             <option value="">-- Pilih User --</option>
                             @foreach ($user as $u)
-                                <option value="{{ $u->id }}"
-                                    {{ old('user_id', auth()->user()->id) == $u->id ? 'selected' : '' }}>
-                                    {{ $u->name }} ({{ $u->email }})
-                                </option>
+                            <option value="{{ $u->id }}"
+                                {{ old('user_id', auth()->user()->id) == $u->id ? 'selected' : '' }}>
+                                {{ $u->name }} ({{ $u->email }})
+                            </option>
                             @endforeach
                         </select>
                     </div>
@@ -52,7 +54,7 @@
                             <option value="{{ $brand }}">{{ $brand }}</option>
                             @endforeach
                         </select>
-                        
+
                         @error('brand')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -72,10 +74,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="year" class="form-label">Year</label>
-                        <select class="form-control select2Year @error('year') is-invalid @enderror" name="year" id="year" required>
+                        <select class="form-control select2Year @error('year') is-invalid @enderror" name="year"
+                            id="year" required>
                             <option value="">-- Pilih Tahun --</option>
                             @for ($year = 2025; $year >= 2004; $year--)
-                                <option value="{{ $year }}" {{ old('year') == $year ? 'selected' : '' }}>{{ $year }}</option>
+                            <option value="{{ $year }}" {{ old('year') == $year ? 'selected' : '' }}>{{ $year }}
+                            </option>
                             @endfor
                         </select>
                         @error('year')
@@ -87,23 +91,26 @@
                     <div class="mb-3">
                         <label for="price_format" class="form-label">Price</label>
                         <input type="text" class="form-control @error('price') is-invalid @enderror" id="price_format"
-                               value="{{ old('price') ? number_format(old('price'), 0, ',', '.') : '' }}" required />
-                    
+                            value="{{ old('price') ? number_format(old('price'), 0, ',', '.') : '' }}" required />
+
                         <input type="hidden" name="price" id="price" value="{{ old('price') }}" />
-                    
+
                         @error('price')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
                         @enderror
                     </div>
-                    
+
                     <div class="mb-3">
                         <label for="transmission" class="form-label">Transmission</label>
-                        <select name="transmission" id="transmission" class="form-control @error('transmission') is-invalid @enderror" required>
+                        <select name="transmission" id="transmission"
+                            class="form-control @error('transmission') is-invalid @enderror" required>
                             <option value="">-- Pilih Transmission --</option>
-                            <option value="automatic" {{ old('transmission') == 'Automatic' ? 'selected' : '' }}>Automatic</option>
-                            <option value="manual" {{ old('transmission') == 'Manual' ? 'selected' : '' }}>Manual</option>
+                            <option value="automatic" {{ old('transmission') == 'Automatic' ? 'selected' : '' }}>
+                                Automatic</option>
+                            <option value="manual" {{ old('transmission') == 'Manual' ? 'selected' : '' }}>Manual
+                            </option>
                         </select>
                         @error('transmission')
                         <span class="invalid-feedback" role="alert">
@@ -133,8 +140,8 @@
                     </div>
                     <div class="mb-3">
                         <label for="fuel_type" class="form-label">Fuel Type</label>
-                        <input type="text" class="form-control @error('fuel_type') is-invalid @enderror"
-                            id="fuel_type" name="fuel_type" value="{{ old('fuel_type') }}" required />
+                        <input type="text" class="form-control @error('fuel_type') is-invalid @enderror" id="fuel_type"
+                            name="fuel_type" value="{{ old('fuel_type') }}" required />
                         @error('fuel_type')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -143,11 +150,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="mileage" class="form-label">Mileage</label>
-                        <input type="text" class="form-control @error('mileage') is-invalid @enderror" id="mileage_format"
+                        <input type="text" class="form-control @error('mileage') is-invalid @enderror"
+                            id="mileage_format"
                             value="{{ old('mileage') ? number_format(old('mileage'), 0, ',', '.') : '' }}" required />
-                 
+
                         <input type="hidden" name="mileage" id="mileage" value="{{ old('mileage') }}" />
-                    
+
                         @error('mileage')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
@@ -155,10 +163,22 @@
                         @enderror
                     </div>
                     <div class="mb-3">
+                        <label for="color" class="form-label">Color</label>
+                        <input type="text" class="form-control @error('color') is-invalid @enderror" id="color"
+                            name="color" value="{{ old('color') }}" required />
+                        @error('color')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
                         <label for="sale_type" class="form-label">Sale Type</label>
-                        <select name="sale_type" id="sale_type" class="form-control @error('sale_type') is-invalid @enderror" required>
+                        <select name="sale_type" id="sale_type"
+                            class="form-control @error('sale_type') is-invalid @enderror" required>
                             <option value="">-- Pilih sale_type --</option>
-                            <option value="showroom" {{ old('sale_type') == 'Showroom' ? 'selected' : '' }}>Showroom</option>
+                            <option value="showroom" {{ old('sale_type') == 'Showroom' ? 'selected' : '' }}>Showroom
+                            </option>
                             <option value="user" {{ old('sale_type') == 'User' ? 'selected' : '' }}>User</option>
                         </select>
                         @error('sale_type')
@@ -167,23 +187,27 @@
                         </span>
                         @enderror
                     </div>
-                    <div id="photo-wrapper" class="row">
-                        <label for="sale_type" class="form-label">Photo Cars</label>
-                        <div class="col-md-4 mb-3 photo-group">
-                            <div class="border rounded p-3 shadow-sm position-relative text-center h-100">
-                                <img src="{{ asset('image/NoImage.png') }}" class="img-preview img-fluid mb-3" style="max-height: 150px;" />
-                                <input type="file" name="photos[]" class="form-control photo-input mb-2"  required>
-                                <button type="button" class="btn btn-danger w-100 btn-remove-photo">
+                    <label for="photos" class="form-label">Photo Mobil</label>
+                    <div id="photo-wrapper" class="row sortable-photo-wrapper">
+                        {{-- Template satu photo --}}
+                        <div class="col-md-3 mb-3 photo-group">
+                            <div class="card position-relative text-center h-100 shadow-sm p-2">
+                                <img src="{{ asset('image/NoImage.png') }}" class="img-preview img-fluid mb-2"
+                                    style="max-height: 150px;">
+                                <input type="file" name="photos[]" class="form-control photo-input mb-2"
+                                    accept="image/*" required>
+                                <input type="hidden" name="photo_order[]" value="1" class="photo-order">
+                                <button type="button" class="btn btn-danger btn-sm w-100 btn-remove-photo">
                                     <i class="bi bi-trash"></i> Hapus
                                 </button>
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="d-flex justify-content-between mt-2">
-                        <button type="button" id="btn-add-photo" class="btn btn-info px-4">Add Photo</button>
+                        <button type="button" id="btn-add-photo" class="btn btn-info px-4">+ Tambah Foto</button>
                     </div>
-                    
+
                 </div>
 
                 <div class="card-footer">
@@ -198,14 +222,17 @@
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('.select2, .select2Year').select2({
             theme: 'bootstrap-5',
             width: '100%',
             allowClear: true,
             placeholder: '-- Pilih --',
-        
+
         });
         $('#brand, #model').select2({
             theme: 'bootstrap-5',
@@ -219,15 +246,19 @@
             $('#model').prop('disabled', true).empty().append('<option value="">Loading...</option>');
 
             if (brand) {
-                $.get('/api/models', { brand: brand }, function (data) {
+                $.get('/api/models', {
+                    brand: brand
+                }, function (data) {
                     $('#model').empty().append('<option value="">-- Pilih Model --</option>');
                     $.each(data, function (i, model) {
-                        $('#model').append(`<option value="${model}">${model}</option>`);
+                        $('#model').append(
+                            `<option value="${model}">${model}</option>`);
                     });
                     $('#model').prop('disabled', false).trigger('change');
                 });
             } else {
-                $('#model').empty().append('<option value="">-- Pilih Model --</option>').prop('disabled', true);
+                $('#model').empty().append('<option value="">-- Pilih Model --</option>').prop(
+                    'disabled', true);
             }
         });
 
@@ -251,7 +282,7 @@
 
         const inputMileageFormatted = document.getElementById('mileage_format');
         const inputMileageHidden = document.getElementById('mileage');
-    
+
         inputMileageFormatted.addEventListener('input', function () {
             let clean = this.value.replace(/\D/g, "");
             this.value = formatRupiah(clean);
@@ -263,49 +294,63 @@
         const wrapper = document.getElementById('photo-wrapper');
         const btnAdd = document.getElementById('btn-add-photo');
 
-        // Fungsi untuk preview
-        function previewImage(input, previewElement) {
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    previewElement.src = e.target.result;
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
-
-        // Tambah field baru
+        // Tambah foto baru
         btnAdd.addEventListener('click', function () {
             const newCol = document.createElement('div');
-            newCol.classList.add('col-md-4', 'mb-4', 'photo-group');
+            newCol.classList.add('col-md-3', 'mb-3', 'photo-group');
 
             newCol.innerHTML = `
-                <div class="border rounded p-3 shadow-sm position-relative text-center h-100">
-                    <img src="{{ asset('image/NoImage.png') }}" class="img-preview img-fluid mb-3" style="max-height: 150px;" />
-                    <input type="file" name="photos[]" class="form-control photo-input mb-2" accept="image/*" required>
-                    <button type="button" class="btn btn-danger w-100 btn-remove-photo">
-                        <i class="bi bi-trash"></i> Hapus
-                    </button>
-                </div>
-            `;
+            <div class="card position-relative text-center h-100 shadow-sm p-2">
+                <img src="{{ asset('image/NoImage.png') }}" class="img-preview img-fluid mb-2" style="max-height: 150px;">
+                <input type="file" name="photos[]" class="form-control photo-input mb-2" accept="image/*" required>
+                <input type="hidden" name="photo_order[]" value="0" class="photo-order">
+                <button type="button" class="btn btn-danger btn-sm w-100 btn-remove-photo">
+                    <i class="bi bi-trash"></i> Hapus
+                </button>
+            </div>
+        `;
             wrapper.appendChild(newCol);
         });
 
-        // Delegasi untuk preview dan hapus
+        // Preview image
         wrapper.addEventListener('change', function (e) {
             if (e.target.classList.contains('photo-input')) {
-                const img = e.target.closest('.photo-group').querySelector('.img-preview');
-                previewImage(e.target, img);
+                const preview = e.target.closest('.photo-group').querySelector('.img-preview');
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => preview.src = e.target.result;
+                    reader.readAsDataURL(file);
+                }
             }
         });
 
+        // Hapus photo group
         wrapper.addEventListener('click', function (e) {
             if (e.target.closest('.btn-remove-photo')) {
-                const group = e.target.closest('.photo-group');
-                group.remove();
+                const photo = e.target.closest('.photo-group');
+                photo.remove();
             }
         });
+
+        // Drag & Drop dengan SortableJS
+        new Sortable(wrapper, {
+            animation: 150,
+            draggable: '.photo-group',
+            onEnd: updatePhotoOrder,
+        });
+
+        // Update order saat submit
+        document.querySelector('form').addEventListener('submit', updatePhotoOrder);
+
+        function updatePhotoOrder() {
+            const groups = wrapper.querySelectorAll('.photo-group');
+            groups.forEach((group, index) => {
+                group.querySelector('.photo-order').value = index + 1;
+            });
+        }
     });
+
 </script>
 
 @endpush
