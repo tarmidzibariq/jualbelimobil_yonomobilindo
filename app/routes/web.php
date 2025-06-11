@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\CarPhotoController;
 use App\Http\Controllers\Admin\CarsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Web\DetailCarController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\KontakController;
 use App\Http\Controllers\Web\TestimonialController;
@@ -81,4 +82,6 @@ Route::prefix('web')->group(function () {
 
     // kontak
     Route::get('kontak', [KontakController::class, 'index'])->name('web.kontak');
+
+    Route::get('/detailMobil', [DetailCarController::class,'index'])->name('web.detailMobil');
 });

@@ -158,7 +158,6 @@
             @empty
             <div class="col-12 text-center">
                 <h4 class="text-muted mb-3 text-capitalize">{{ request('q') ?? ' ' }} {{ request('brand') ?? ' ' }} {{ request('mileage') ?? ' ' }} {{ request('year') ?? ' ' }}Tidak Ditemukan</h4>
-
                 <a href="{{ route('home') }}" class="btn btn-outline-secondary">Reset Filter</a>
             </div>
 
