@@ -2,7 +2,42 @@
 @section('web-content')
 
 @push('web-styles')
+<!-- CSS Select2 -->
+<!-- CSS Select2 -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
+<!-- Jika kamu pakai Bootstrap 5 dan ingin tampilan serasi -->
+<link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css"
+    rel="stylesheet" />
+
 <style>
+    /* padding dan tinggi agar konsisten dengan py-3 input */
+    .select2-container--bootstrap-5 .select2-selection {
+        padding: 1rem 1rem;
+        /* Sama seperti py-3 */
+        height: auto !important;
+        min-height: 48px;
+        /* Sesuaikan dengan input py-3 */
+        border: 1px solid #ced4da;
+        border-radius: 0.375rem;
+        display: flex;
+        align-items: center;
+        /* Vertikal centering */
+    }
+
+    /* Hapus padding ganda dari teks */
+    .select2-container--bootstrap-5 .select2-selection__rendered {
+        padding: 0;
+        margin: 0;
+        line-height: normal;
+    }
+
+    /* Hapus padding dari arrow dropdown */
+    .select2-container--bootstrap-5 .select2-selection__arrow {
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
     #form {
         padding-top: 120px;
     }
@@ -39,10 +74,11 @@
 {{-- start form --}}
 <section id="form">
     <div class="container my-5">
-        <form>
+        <form action="{{ route('home') }}" method="GET">
             <div class="row g-2 align-items-center">
                 <div class="col-md-9 col-sm-12">
-                    <input type="text" class="form-control py-3" placeholder="Cari mobil...">
+                    <input name="q" type="text" class="form-control py-3" placeholder="Cari mobil..."
+                        value="{{ request('q') }}">
                 </div>
                 <div class="col-md-3 col-sm-12">
                     <button type="submit" class="btn w-100 py-3"
@@ -52,25 +88,38 @@
 
             <div class="row g-2 mt-3">
                 <div class="col-4 col-sm-3">
-                    <select class="form-select py-3">
+                    <select name="brand" class="form-select py-3 brand" data-placeholder="-- Pilih Brand --">
                         <option selected disabled>Brand</option>
-                        <option value="toyota">Toyota</option>
-                        <option value="honda">Honda</option>
-                        <!-- Tambahkan pilihan lainnya -->
+                        {{-- <option></option> --}}
+                        @foreach ($brands as $brand)
+                        <option value="{{ $brand }}" {{ request('brand') == $brand ? 'selected' : '' }}>{{ $brand }}
+                        </option>
+                        @endforeach
                     </select>
                 </div>
                 <div class="col-4 col-sm-3">
-                    <select class="form-select py-3">
+                    <select name="mileage" class="form-select py-3 mileage">
                         <option selected disabled>Jarak Tempuh</option>
-                        <option value="0-5000">0 - 5.000 km</option>
-                        <option value="5000-10000">5.000 - 10.000 km</option>
+
+                        @for ($i = 0; $i < 100000; $i +=10000) @php $min=$i; $max=$i + 10000; $value="$min-$max" ;
+                            @endphp <option value="{{ $value }}" {{ request('mileage') == $value ? 'selected' : '' }}>
+                            {{ number_format($min, 0, ',', '.') }} - {{ number_format($max, 0, ',', '.') }} km
+                            </option>
+                            @endfor
+
+                            {{-- Opsi tambahan: 100.000+ km --}}
+                            <option value="100000-999999" {{ request('mileage') == '100000-999999' ? 'selected' : '' }}>
+                                100.000+ km
+                            </option>
                     </select>
                 </div>
                 <div class="col-4 col-sm-3">
-                    <select class="form-select py-3">
+                    <select name="year" class="form-select py-3 year">
                         <option selected disabled>Tahun</option>
-                        <option value="2025">2025</option>
-                        <option value="2024">2024</option>
+                        @for ($year = 2025; $year >= 2000; $year--)
+                        <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>{{ $year }}
+                        </option>
+                        @endfor
                         <!-- Tambahkan tahun lainnya -->
                     </select>
                 </div>
@@ -86,7 +135,7 @@
         <h3 class="fw-bold mb-4">Mobil Tersedia</h3>
         <div class="row g-4">
             <!-- Card 1 -->
-            @foreach ($cars as $item)
+            @forelse ($cars as $item)
             <div class="col-md-4 col-6">
                 <div class="card shadow-sm h-100 rounded-top">
                     <div
@@ -106,7 +155,14 @@
                     </div>
                 </div>
             </div>
-            @endforeach
+            @empty
+            <div class="col-12 text-center">
+                <h4 class="text-muted mb-3 text-capitalize">{{ request('q') ?? ' ' }} {{ request('brand') ?? ' ' }} {{ request('mileage') ?? ' ' }} {{ request('year') ?? ' ' }}Tidak Ditemukan</h4>
+
+                <a href="{{ route('home') }}" class="btn btn-outline-secondary">Reset Filter</a>
+            </div>
+
+            @endforelse
 
 
 
@@ -288,4 +344,23 @@
 
 </section>
 <!-- end form request Mobil -->
+
+@push('web-scripts')
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.brand, .mileage , .year').select2({
+            theme: 'bootstrap-5',
+            width: '100%',
+            allowClear: true,
+            placeholder: '-- Pilih --',
+
+        });
+    });
+
+</script>
+@endpush
+
 @endsection

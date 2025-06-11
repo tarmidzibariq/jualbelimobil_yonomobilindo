@@ -28,6 +28,8 @@
     
     {{-- js --}}
     @include('web.layouts.js')
+
+    @stack('web-scripts')
 </body>
 
 </html>
