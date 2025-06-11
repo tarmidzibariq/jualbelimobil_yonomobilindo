@@ -32,6 +32,7 @@
         const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
         loginModal.show();
     });
+
 </script>
 @endif
 
@@ -85,22 +86,29 @@
         <h3 class="fw-bold mb-4">Mobil Tersedia</h3>
         <div class="row g-4">
             <!-- Card 1 -->
-            @foreach ($car as $item)
+            @foreach ($cars as $item)
             <div class="col-md-4 col-6">
                 <div class="card shadow-sm h-100 rounded-top">
-                    <div class="ratio ratio-4x3 bg-light d-flex align-items-center justify-content-center text-dark rounded-top "
-                        style="font-weight: 500;">
-                        <img src="" alt="">
+                    <div
+                        class="ratio ratio-4x3 bg-light d-flex align-items-center justify-content-center text-dark rounded-top">
+                        <img src="{{ $item->mainPhoto && Storage::disk('public')->exists('car_photos/' . $item->mainPhoto->photo_url)
+                    ? asset('storage/car_photos/' . $item->mainPhoto->photo_url)
+                    : asset('image/NoImage.png') }}" alt="{{ $item->brand }} {{ $item->model }}"
+                            class="img-fluid object-fit-cover w-100 h-100 rounded-top">
                     </div>
                     <div class="card-body">
-                        <h6 class="card-title fw-bold text-capitalize">{{$item->brand}} {{$item->model}} {{$item->year}} </h6>
-                        <p class="mb-2 text-capitalize" style="font-size: 14px; ">{{$item->year}} | {{$item->mileage}} km | {{$item->transmission}}</p>
+                        <h6 class="card-title fw-bold text-capitalize">{{ $item->brand }} {{ $item->model }}
+                            {{ $item->year }} </h6>
+                        <p class="mb-2 text-capitalize" style="font-size: 14px;">
+                            {{ $item->year }} | {{ $item->mileage }} km | {{ $item->transmission }}
+                        </p>
                         <p class="fw-bold mb-0">Rp {{ number_format($item->price, 0, ',', '.') }}</p>
                     </div>
                 </div>
             </div>
-            
             @endforeach
+
+
 
         </div>
     </div>
@@ -281,5 +289,3 @@
 </section>
 <!-- end form request Mobil -->
 @endsection
-
-

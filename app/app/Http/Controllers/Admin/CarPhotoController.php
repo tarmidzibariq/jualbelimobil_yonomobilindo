@@ -16,13 +16,20 @@ class CarPhotoController extends Controller
     public function destroy($id)
     {
         $photo = CarPhoto::findOrFail($id);
-
+        $carId = $photo->car_id;
+        
         if (Storage::disk('public')->exists('car_photos/' . $photo->photo_url)) {
             Storage::disk('public')->delete('car_photos/' . $photo->photo_url);
         }
 
         $photo->delete();
 
+        // SUSUN ULANG NOMOR FOTO YANG TERSISA
+        $remainingPhotos = CarPhoto::where('car_id', $carId)->orderBy('number')->get();
+
+        foreach ($remainingPhotos as $index => $p) {
+            $p->update(['number' => $index + 1]);
+        }
         return response()->json(['message' => 'Photo deleted']);
     }
 }

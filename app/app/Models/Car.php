@@ -52,6 +52,11 @@ class Car extends Model
     // Define the relationship with the Car_Photo model
     public function carPhoto()
     {
-        return $this->hasMany(CarPhoto::class);
+        return $this->hasMany(CarPhoto::class)->orderBy('number');
+    }
+    // Relasi khusus untuk foto utama
+    public function mainPhoto()
+    {
+        return $this->hasOne(CarPhoto::class)->orderBy('number', 'asc');
     }
 }

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     public function index(){
-        $car = Car::orderBy('id')->paginate(5);
-        return view('web.home',compact('car'));
+        $cars = Car::with('mainPhoto')->where('status','available')->get();
+        return view('web.home', compact('cars'));
     }
 }
