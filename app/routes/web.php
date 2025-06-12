@@ -4,7 +4,9 @@ use App\Http\Controllers\Admin\CarPhotoController;
 use App\Http\Controllers\Admin\CarsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UsersController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Web\DetailCarController;
+use App\Http\Controllers\Web\DownPaymentController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\KontakController;
 use App\Http\Controllers\Web\TestimonialController;
@@ -12,7 +14,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Http\Request;
 use App\Models\CarType;
-
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -71,6 +72,7 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
 
 //Home Route
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/show-login', [LoginController::class, 'showLoginForm'])->name('showLoginModal');
 
 Route::prefix('web')->group(function () {
 
@@ -84,4 +86,6 @@ Route::prefix('web')->group(function () {
     Route::get('kontak', [KontakController::class, 'index'])->name('web.kontak');
 
     Route::get('/detailMobil/{id}', [DetailCarController::class,'index'])->name('web.detailMobil');
+
+    Route::get('/downPayment', [DownPaymentController::class,'index'])->name('web.downPayment')->middleware('auth');
 });

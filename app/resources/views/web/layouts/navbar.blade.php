@@ -34,9 +34,9 @@
                  </ul>
                  {{-- Jika belum login --}}
                  @guest
-                 <button type="button" class="btn btn-login px-5" data-bs-toggle="modal" data-bs-target="#loginModal">
+                 <a href="{{ route('showLoginModal') }}" type="button" class="btn btn-login px-5" data-bs-toggle="modal" data-bs-target="#loginModal">
                      MASUK
-                 </button>
+                 </a>
                  @endguest
 
                  {{-- Jika sudah login --}}

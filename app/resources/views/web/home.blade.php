@@ -66,17 +66,6 @@
 </style>
 @endpush
 
-{{-- showLoginModal --}}
-@if(session('showLoginModal'))
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
-        loginModal.show();
-    });
-
-</script>
-@endif
-
 {{-- start form --}}
 <section id="form">
     <div class="container my-5">
@@ -352,6 +341,15 @@
 
 </section>
 <!-- end form request Mobil -->
+
+@if(session('showLoginModal'))
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+        loginModal.show();
+    });
+</script>
+@endif
 
 @push('web-scripts')
 

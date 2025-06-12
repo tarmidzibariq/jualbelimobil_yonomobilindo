@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -38,8 +39,12 @@ class LoginController extends Controller
         $this->middleware('auth')->only('logout');
     }
 
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
-        return redirect('/')->with('showLoginModal', true);
-    }   
+        // Simpan halaman asal untuk redirect setelah login
+        session(['url.intended' => url()->previous()]);
+
+        // Tampilkan modal login saat kembali ke halaman sebelumnya
+        return redirect()->back()->with('showLoginModal', true);
+    }  
 }
