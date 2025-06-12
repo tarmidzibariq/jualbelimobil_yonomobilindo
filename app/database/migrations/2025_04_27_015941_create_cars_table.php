@@ -18,7 +18,7 @@ return new class extends Migration
 
             $table->string('brand');
             $table->string('model');
-            $table->string('year');
+            $table->integer('year');
             $table->integer('price');
             $table->enum('transmission', ['manual', 'automatic']);
             $table->text('description')->nullable();
@@ -26,6 +26,13 @@ return new class extends Migration
             $table->string('fuel_type');
             $table->string('mileage');
             $table->string('color');
+            $table->date('tax');
+            $table->integer('engine');
+            $table->integer('seat');
+            $table->boolean('bpkb');
+            $table->boolean('spare_key');
+            $table->boolean('manual_book');
+            $table->boolean('service_book');
             $table->enum('sale_type',['user','showroom']);
             $table->enum('status',['available','pending_check','sold','under_review']);
             $table->timestamps();

@@ -46,6 +46,12 @@
         margin: 50px 0;
     }
 
+    #mobil .card:hover {
+        box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        transform: translateY(-2px);
+        transition: all 0.2s ease-in-out;
+    }
+
     #testimonial {
         /* margin-top: 50px; */
         /* padding: 100px 0; */
@@ -137,27 +143,30 @@
             <!-- Card 1 -->
             @forelse ($cars as $item)
             <div class="col-md-4 col-6">
-                <div class="card shadow-sm h-100 rounded-top">
-                    <div
-                        class="ratio ratio-4x3 bg-light d-flex align-items-center justify-content-center text-dark rounded-top">
-                        <img src="{{ $item->mainPhoto && Storage::disk('public')->exists('car_photos/' . $item->mainPhoto->photo_url)
+                <a href="{{route('web.detailMobil', $item->id)}}" class="text-decoration-none">
+                    <div class="card shadow-sm h-100 rounded-top">
+                        <div
+                            class="ratio ratio-4x3 bg-light d-flex align-items-center justify-content-center text-dark rounded-top">
+                            <img src="{{ $item->mainPhoto && Storage::disk('public')->exists('car_photos/' . $item->mainPhoto->photo_url)
                     ? asset('storage/car_photos/' . $item->mainPhoto->photo_url)
                     : asset('image/NoImage.png') }}" alt="{{ $item->brand }} {{ $item->model }}"
-                            class="img-fluid object-fit-cover w-100 h-100 rounded-top">
+                                class="img-fluid object-fit-cover w-100 h-100 rounded-top">
+                        </div>
+                        <div class="card-body">
+                            <h6 class="card-title fw-bold text-capitalize">{{ $item->brand }} {{ $item->model }}
+                                {{ $item->year }} </h6>
+                            <p class="mb-2 text-capitalize" style="font-size: 14px;">
+                                {{ $item->year }} | {{ $item->mileage }} km | {{ $item->transmission }}
+                            </p>
+                            <p class="fw-bold mb-0">Rp {{ number_format($item->price, 0, ',', '.') }}</p>
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <h6 class="card-title fw-bold text-capitalize">{{ $item->brand }} {{ $item->model }}
-                            {{ $item->year }} </h6>
-                        <p class="mb-2 text-capitalize" style="font-size: 14px;">
-                            {{ $item->year }} | {{ $item->mileage }} km | {{ $item->transmission }}
-                        </p>
-                        <p class="fw-bold mb-0">Rp {{ number_format($item->price, 0, ',', '.') }}</p>
-                    </div>
-                </div>
+                </a>
             </div>
             @empty
             <div class="col-12 text-center">
-                <h4 class="text-muted mb-3 text-capitalize">{{ request('q') ?? ' ' }} {{ request('brand') ?? ' ' }} {{ request('mileage') ?? ' ' }} {{ request('year') ?? ' ' }}Tidak Ditemukan</h4>
+                <h4 class="text-muted mb-3 text-capitalize">{{ request('q') ?? ' ' }} {{ request('brand') ?? ' ' }}
+                    {{ request('mileage') ?? ' ' }} {{ request('year') ?? ' ' }}Tidak Ditemukan</h4>
                 <a href="{{ route('home') }}" class="btn btn-outline-secondary">Reset Filter</a>
             </div>
 

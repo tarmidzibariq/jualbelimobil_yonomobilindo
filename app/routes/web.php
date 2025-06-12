@@ -83,5 +83,5 @@ Route::prefix('web')->group(function () {
     // kontak
     Route::get('kontak', [KontakController::class, 'index'])->name('web.kontak');
 
-    Route::get('/detailMobil', [DetailCarController::class,'index'])->name('web.detailMobil');
+    Route::get('/detailMobil/{id}', [DetailCarController::class,'index'])->name('web.detailMobil');
 });

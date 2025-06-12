@@ -21,13 +21,22 @@ class CarSeeder extends Seeder
             'year' => '2021',
             'price' => '100000000',
             'transmission' => 'automatic',
-            'description' => 'lorem lorem lore',
+            'description' => 'Toyota Alphard menjadi salah satu mobil MPV mewah dengan angka penjualan yang cukup tinggi.
+                Ukuran yang besar dengan interior yang mewah menjadikan mobil ini sebagai mobil standar bagi
+                kalangan menengah atas di Indonesia. Segera jadwalkan untuk informasi lebih lanjut.',
             'service_history' => '2024-05-20',
             'fuel_type' => 'bensin',
             'mileage' => '100000',
             'color' => 'silver',
+            'tax' => '2025-05-20',
+            'engine' => '2500',
+            'bpkb'=> true,
+            'spare_key'=> true,
+            'manual_book'=> true,
+            'service_book'=> true,
             'sale_type' => 'showroom',
-            'status' => 'pending_check',
+            'seat' => '4',
+            'status' => 'available',
         ]);
 
         foreach (range(1, 5) as $i) {
