@@ -40,11 +40,44 @@ class LoginController extends Controller
     }
 
     public function showLoginForm(Request $request)
-    {
-        // Simpan halaman asal untuk redirect setelah login
-        session(['url.intended' => url()->previous()]);
+{
+    if ($request->has('redirect')) {
+        $redirect = $request->redirect;
 
-        // Tampilkan modal login saat kembali ke halaman sebelumnya
-        return redirect()->back()->with('showLoginModal', true);
-    }  
+        // 🔒 Jangan simpan redirect ke /login ke session
+        if (!str_contains($redirect, '/login')) {
+            session(['url.intended' => $redirect]);
+        }
+    }
+
+    // CMS pakai halaman login, lainnya pakai modal login
+    if (isset($redirect) && str_contains($redirect, '/admin')) {
+        return view('auth.login');
+    }
+
+    return redirect()->back()->with('showLoginModal', true);
+}
+
+
+    
+
+    // protected function authenticated(Request $request, $user)
+    // {
+    //     // Kalau ada redirect yang valid, gunakan
+    //     if (session()->has('url.intended') && !str_contains(session('url.intended'), '/login')) {
+    //         return redirect()->intended();
+    //     }
+
+    //     // Kalau tidak ada → arahkan berdasarkan role
+    //     if ($user->role === 'admin') {
+    //         return redirect('/admin/dashboard');
+    //     }
+
+    //     if ($user->role === 'user') {
+    //         return redirect('/user/dashboard');
+    //     }
+
+    //     return redirect('/');
+    // }
+
 }

@@ -209,7 +209,7 @@
                         <small class="fw-normal text-white" style="font-size: 12px;">Min: Rp 500.000</small>
                     </a>
                     @else
-                    <a href="{{ route('login') }}?redirect={{ urlencode(request()->fullUrl()) }}" class="btn btn-outline-primary fw-semibold px-5 py-2">
+                    <a href="{{ route('login', ['redirect' => request()->fullUrl()]) }}" class="btn btn-outline-primary fw-semibold px-5 py-2">
                         <span>Login untuk DP</span><br>
                         <small class="fw-normal text-muted" style="font-size: 12px;">Akses fitur hanya untuk pengguna
                             terdaftar</small>

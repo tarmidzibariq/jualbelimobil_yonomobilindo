@@ -72,7 +72,7 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
 
 //Home Route
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/show-login', [LoginController::class, 'showLoginForm'])->name('showLoginModal');
+// Route::get('/show-login', [LoginController::class, 'showLoginForm'])->name('showLoginModal');
 
 Route::prefix('web')->group(function () {
 
