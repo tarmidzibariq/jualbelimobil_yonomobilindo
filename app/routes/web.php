@@ -75,17 +75,23 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 // Route::get('/show-login', [LoginController::class, 'showLoginForm'])->name('showLoginModal');
 
 Route::prefix('web')->group(function () {
-
+    
     // jual mobil
     Route::resource('jualMobil', App\Http\Controllers\Web\JualMobilController::class)->names('web.jualMobil');
-
+    
     // testimonial
     Route::get('testimonial', [TestimonialController::class, 'index'])->name('web.testimonial');
-
+    
     // kontak
     Route::get('kontak', [KontakController::class, 'index'])->name('web.kontak');
-
+    
     Route::get('/detailMobil/{id}', [DetailCarController::class,'index'])->name('web.detailMobil');
+    
+    // Route::get('/downPayment/{id}', [DownPaymentController::class,'index'])->name('web.downPayment')->middleware('auth');
+    
+    // Route::post('/downPayment/{id}', [DownPaymentController::class,'store'])->name('web.downPayment')->middleware('auth');
+    
+    Route::resource('downPayment', DownPaymentController::class)->names('web.downPayment')->middleware(['auth', 'checkrole:user'])->except(['index', 'edit', 'update', 'create']);
 
-    Route::get('/downPayment', [DownPaymentController::class,'index'])->name('web.downPayment')->middleware('auth');
+    
 });

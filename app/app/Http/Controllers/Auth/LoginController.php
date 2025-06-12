@@ -40,23 +40,23 @@ class LoginController extends Controller
     }
 
     public function showLoginForm(Request $request)
-{
-    if ($request->has('redirect')) {
-        $redirect = $request->redirect;
+    {
+        if ($request->has('redirect')) {
+            $redirect = $request->redirect;
 
-        // 🔒 Jangan simpan redirect ke /login ke session
-        if (!str_contains($redirect, '/login')) {
-            session(['url.intended' => $redirect]);
+            // 🔒 Jangan simpan redirect ke /login ke session
+            if (!str_contains($redirect, '/login')) {
+                session(['url.intended' => $redirect]);
+            }
         }
-    }
 
-    // CMS pakai halaman login, lainnya pakai modal login
-    if (isset($redirect) && str_contains($redirect, '/admin')) {
-        return view('auth.login');
-    }
+        // CMS pakai halaman login, lainnya pakai modal login
+        if (isset($redirect) && str_contains($redirect, '/admin')) {
+            return view('auth.login');
+        }
 
-    return redirect()->back()->with('showLoginModal', true);
-}
+        return redirect()->back()->with('showLoginModal', true);
+    }
 
 
     

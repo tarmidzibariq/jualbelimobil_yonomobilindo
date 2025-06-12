@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('amount', 15, 2);
             $table->enum('payment_status', ['pending', 'confirmed', 'cancelled']);
             $table->timestamp('appointment_date');
+            $table->timestamp('payment_date')->nullable();
             $table->string('payment_proof')->nullable();
             $table->timestamps();
         });

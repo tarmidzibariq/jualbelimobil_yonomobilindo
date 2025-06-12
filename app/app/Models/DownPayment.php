@@ -13,9 +13,9 @@ class DownPayment extends Model
         'user_id',
         'car_id',
         'amount',
+        'appointment_date',
         'payment_status',
         'payment_date',
-        'appointment_date',
         'payment_proof',
 
     ];
