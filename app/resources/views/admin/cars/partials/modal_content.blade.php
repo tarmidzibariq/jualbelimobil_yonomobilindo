@@ -3,7 +3,7 @@
   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 </div>
 <div class="modal-body">
-  <table class="table table-bordered">
+  <table class="table table-bordered text-capitalize">
     <tr><th>ID</th><td>{{ $car->id }}</td></tr>
     <tr><th>User</th><td>{{ $car->user->name ?? 'N/A' }}</td></tr>
     <tr><th>Brand</th><td>{{ $car->brand }}</td></tr>
@@ -12,10 +12,18 @@
     <tr><th>Price</th><td>{{ 'Rp '.number_format($car->price, 0, ',', '.') }}</td></tr>
     <tr><th>Transmission</th><td>{{ $car->transmission }}</td></tr>
     <tr><th>Description</th><td>{{ $car->description }}</td></tr>
-    <tr><th>Service History</th><td>{{ $car->service_history }}</td></tr>
     <tr><th>Fuel Type</th><td>{{ $car->fuel_type }}</td></tr>
+    
     <tr><th>Mileage</th><td>{{ number_format($car->mileage, 0, ',', '.') }}</td></tr>
+    <tr><th>Service History</th><td>{{ \Carbon\Carbon::parse($car->service_history)->translatedFormat('d F Y') }}</td></tr>
+    <tr><th>Tax</th><td>{{ \Carbon\Carbon::parse($car->tax)->translatedFormat('d F Y') }}</td></tr>
+    <tr><th>Tax</th><td>{{ $car->seat . ' People' }}</td></tr>
+    <tr><th>Tax</th><td>{{ number_format($car->engine, 0, ',', '.') . ' CC' }}</td></tr>
     <tr><th>Color</th><td>{{ $car->color }}</td></tr>
+    <tr><th>BPKB</th><td>{{ $car->bpkb ? 'Yes' : 'No' }}</td></tr>
+    <tr><th>Spare Key</th><td>{{ $car->spare_key ? 'Yes' : 'No' }}</td></tr>
+    <tr><th>Manual Book</th><td>{{ $car->manual_book ? 'Yes' : 'No' }}</td></tr>
+    <tr><th>Service Book</th><td>{{ $car->service_book ? 'Yes' : 'No' }}</td></tr>
     <tr><th>Sale Type</th><td>{{ $car->sale_type }}</td></tr>
     <tr><th>Status</th><td>{{ $car->status }}</td></tr>
     <tr><th>Created At</th><td>{{ $car->created_at }}</td></tr>

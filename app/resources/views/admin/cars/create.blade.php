@@ -107,9 +107,9 @@
                         <select name="transmission" id="transmission"
                             class="form-control @error('transmission') is-invalid @enderror" required>
                             <option value="">-- Pilih Transmission --</option>
-                            <option value="automatic" {{ old('transmission') == 'Automatic' ? 'selected' : '' }}>
+                            <option value="automatic" {{ old('transmission') == 'automatic' ? 'selected' : '' }}>
                                 Automatic</option>
-                            <option value="manual" {{ old('transmission') == 'Manual' ? 'selected' : '' }}>Manual
+                            <option value="manual" {{ old('transmission') == 'manual' ? 'selected' : '' }}>Manual
                             </option>
                         </select>
                         @error('transmission')
@@ -123,16 +123,6 @@
                         <textarea cols="10" rows="2" class="form-control @error('description') is-invalid @enderror"
                             id="description" name="description" required>{{ old('description') }}</textarea>
                         @error('description')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                        @enderror
-                    </div>
-                    <div class="mb-3">
-                        <label for="service_history" class="form-label">Last Service</label>
-                        <input type="date" class="form-control @error('service_history') is-invalid @enderror"
-                            id="service_history" name="service_history" value="{{ old('service_history') }}" required />
-                        @error('service_history')
                         <span class="invalid-feedback" role="alert">
                             <strong>{{ $message }}</strong>
                         </span>
@@ -173,13 +163,77 @@
                         @enderror
                     </div>
                     <div class="mb-3">
+                        <label for="service_history" class="form-label">Last Service</label>
+                        <input type="date" class="form-control @error('service_history') is-invalid @enderror"
+                            id="service_history" name="service_history" value="{{ old('service_history') }}" required />
+                        @error('service_history')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="tax" class="form-label">Tax</label>
+                        <input type="date" class="form-control @error('tax') is-invalid @enderror" id="tax"
+                            name="tax" value="{{ old('tax') }}" required />
+                        @error('tax')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="engine" class="form-label">Engine</label>
+                        <input type="number" class="form-control @error('engine') is-invalid @enderror" id="engine"
+                            name="engine" value="{{ old('engine') }}" required />
+                        @error('engine')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="seat" class="form-label">Seat</label>
+                        <input type="number" class="form-control @error('seat') is-invalid @enderror" id="seat"
+                            name="seat" value="{{ old('seat') }}" required />
+                        @error('seat')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label d-block">Kelengkapan Dokumen & Aksesori</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="bpkb" id="bpkb" value="1"
+                                {{ old('bpkb') ? 'checked' : '' }}>
+                            <label class="form-check-label" for="bpkb">BPKB</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="spare_key" id="spare_key" value="1"
+                                {{ old('spare_key') ? 'checked' : '' }}>
+                            <label class="form-check-label" for="spare_key">Kunci Cadangan</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="manual_book" id="manual_book"
+                                value="1" {{ old('manual_book') ? 'checked' : '' }}>
+                            <label class="form-check-label" for="manual_book">Manual Book</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="service_book" id="service_book"
+                                value="1" {{ old('service_book') ? 'checked' : '' }}>
+                            <label class="form-check-label" for="service_book">Service Book</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
                         <label for="sale_type" class="form-label">Sale Type</label>
                         <select name="sale_type" id="sale_type"
                             class="form-control @error('sale_type') is-invalid @enderror" required>
                             <option value="">-- Pilih sale_type --</option>
-                            <option value="showroom" {{ old('sale_type') == 'Showroom' ? 'selected' : '' }}>Showroom
+                            <option value="showroom" {{ old('sale_type') == 'showroom' ? 'selected' : '' }}>Showroom
                             </option>
-                            <option value="user" {{ old('sale_type') == 'User' ? 'selected' : '' }}>User</option>
+                            <option value="user" {{ old('sale_type') == 'user' ? 'selected' : '' }}>User</option>
                         </select>
                         @error('sale_type')
                         <span class="invalid-feedback" role="alert">

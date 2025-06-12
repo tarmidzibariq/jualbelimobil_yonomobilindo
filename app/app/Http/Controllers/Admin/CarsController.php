@@ -82,11 +82,24 @@ class CarsController extends Controller
             'fuel_type' => 'required|string|max:50',
             'mileage' => 'required|string|max:50',
             'color' => 'required|string|max:50',
+            'tax' => 'required|date',
+            'engine' => 'required|integer|max:10000',
+            'seat' => 'required|integer|max:20',
+            'bpkb' => 'nullable|boolean',
+            'spare_key' => 'nullable|boolean',
+            'manual_book' => 'nullable|boolean',
+            'service_book' => 'nullable|boolean',
             'sale_type' => 'required|in:user,showroom',
             'photos.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
         try {
+            $request->merge([
+                'bpkb' => $request->has('bpkb'),
+                'spare_key' => $request->has('spare_key'),
+                'manual_book' => $request->has('manual_book'),
+                'service_book' => $request->has('service_book'),
+            ]);
             DB::transaction(function () use ($request) {
                 $car = Car::create([
                     'user_id' => $request->user_id,
@@ -100,8 +113,18 @@ class CarsController extends Controller
                     'fuel_type' => $request->fuel_type,
                     'mileage' => $request->mileage,
                     'color' => $request->color,
+                    'tax' => $request->tax,
+                    'engine' => $request->engine,
+                    'seat' => $request->seat,
+
                     'sale_type' => $request->sale_type,
                     'status' => "pending_check",
+
+                    // kelengkapan tambahan
+                    'bpkb' => $request->bpkb,
+                    'spare_key' => $request->spare_key,
+                    'manual_book' => $request->manual_book,
+                    'service_book' => $request->service_book,
                 ]);
 
                 $photos = $request->file('photos', []);
@@ -167,13 +190,29 @@ class CarsController extends Controller
             'fuel_type' => 'required|string|max:50',
             'mileage' => 'required|string|max:50',
             'color' => 'required|string|max:50',
+            'tax' => 'required|date',
+            'engine' => 'required|integer|max:10000',
+            'seat' => 'required|integer|max:20',
+            'bpkb' => 'nullable|boolean',
+            'spare_key' => 'nullable|boolean',
+            'manual_book' => 'nullable|boolean',
+            'service_book' => 'nullable|boolean',
             'sale_type' => 'required|in:user,showroom',
             'photos.*' => 'image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
+        // 🔁 Atur nilai default boolean
+        $request->merge([
+            'bpkb' => $request->has('bpkb'),
+            'spare_key' => $request->has('spare_key'),
+            'manual_book' => $request->has('manual_book'),
+            'service_book' => $request->has('service_book'),
+        ]);
+
+        // update data
         $car->update($request->all());
 
-        // 1. Update urutan foto yang lama
+        // 🔁 Update urutan foto lama
         $existingPhotoIds = $request->input('existing_photo_ids', []);
         $existingOrders = $request->input('existing_photo_order', []);
 
@@ -183,7 +222,7 @@ class CarsController extends Controller
             ]);
         }
 
-        // 2. Upload foto baru
+        // 🔁 Upload foto baru
         $newPhotos = $request->file('photos', []);
         $newOrders = $request->input('new_photo_order', []);
 

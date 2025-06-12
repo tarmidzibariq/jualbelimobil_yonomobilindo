@@ -170,6 +170,59 @@
                         </span>
                         @enderror
                     </div>
+                      <div class="mb-3">
+                        <label for="tax" class="form-label">Tax</label>
+                        <input type="date" class="form-control @error('tax') is-invalid @enderror" id="tax"
+                            name="tax" value="{{ old('tax', $car->tax) }}" required />
+                        @error('tax')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="engine" class="form-label">Engine</label>
+                        <input type="number" class="form-control @error('engine') is-invalid @enderror" id="engine"
+                            name="engine" value="{{ old('engine', $car->engine) }}" required />
+                        @error('engine')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label for="seat" class="form-label">Seat</label>
+                        <input type="number" class="form-control @error('seat') is-invalid @enderror" id="seat"
+                            name="seat" value="{{ old('seat', $car->seat) }}" required />
+                        @error('seat')
+                        <span class="invalid-feedback" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label d-block">Kelengkapan Dokumen & Aksesori</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="bpkb" id="bpkb" value="1"
+                                {{ old('bpkb', $car->bpkb) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="bpkb">BPKB</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="spare_key" id="spare_key" value="1"
+                                {{ old('spare_key', $car->spare_key) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="spare_key">Kunci Cadangan</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="manual_book" id="manual_book"
+                                value="1" {{ old('manual_book', $car->manual_book) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="manual_book">Manual Book</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="service_book" id="service_book"
+                                value="1" {{ old('service_book', $car->service_book) ? 'checked' : '' }}>
+                            <label class="form-check-label" for="service_book">Service Book</label>
+                        </div>
+                    </div>
                     <div class="mb-3">
                         <label for="sale_type" class="form-label">Sale Type</label>
                         <select name="sale_type" id="sale_type" class="form-control select2 @error('sale_type') is-invalid @enderror" required>
