@@ -4,6 +4,43 @@
 @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
+
+<style>
+        .check-badge {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        background-color: #f9f9f9;
+        cursor: pointer;
+        transition: 0.2s;
+        user-select: none;
+    }
+
+    .check-badge:hover {
+        background-color: #e2e6ea;
+    }
+
+    .check-badge input {
+        display: none;
+    }
+
+    .check-badge.active {
+        background-color: #cce5ff;
+        border-color: #66afe9;
+    }
+
+    .check-badge i {
+        font-size: 1rem;
+    }
+
+    .check-toggle-btn {
+        margin-bottom: 10px;
+    }
+    </style>
+
 @endpush
 
 <div class="app-content">
@@ -201,27 +238,39 @@
                         @enderror
                     </div>
                     <div class="mb-3">
-                        <label class="form-label d-block">Kelengkapan Dokumen & Aksesori</label>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="bpkb" id="bpkb" value="1"
-                                {{ old('bpkb', $car->bpkb) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="bpkb">BPKB</label>
+                        <label class="form-label">Completeness of Documents & Accessories</label>
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <label class="check-badge {{ old('bpkb', $car->bpkb ?? false) ? 'active' : '' }}">
+                                <input type="checkbox" name="bpkb" id="bpkb" value="1"
+                                    {{ old('bpkb', $car->bpkb ?? false) ? 'checked' : '' }}>
+                                <i class="bi bi-check-square"></i> BPKB
+                            </label>
+
+                            <label class="check-badge {{ old('spare_key', $car->spare_key ?? false) ? 'active' : '' }}">
+                                <input type="checkbox" name="spare_key" id="spare_key" value="1"
+                                    {{ old('spare_key', $car->spare_key ?? false) ? 'checked' : '' }}>
+                                <i class="bi bi-key"></i> Kunci Cadangan
+                            </label>
+
+                            <label
+                                class="check-badge {{ old('manual_book', $car->manual_book ?? false) ? 'active' : '' }}">
+                                <input type="checkbox" name="manual_book" id="manual_book" value="1"
+                                    {{ old('manual_book', $car->manual_book ?? false) ? 'checked' : '' }}>
+                                <i class="bi bi-book"></i> Manual Book
+                            </label>
+
+                            <label
+                                class="check-badge {{ old('service_book', $car->service_book ?? false) ? 'active' : '' }}">
+                                <input type="checkbox" name="service_book" id="service_book" value="1"
+                                    {{ old('service_book', $car->service_book ?? false) ? 'checked' : '' }}>
+                                <i class="bi bi-journal-check"></i> Service Book
+                            </label>
+
                         </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="spare_key" id="spare_key" value="1"
-                                {{ old('spare_key', $car->spare_key) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="spare_key">Kunci Cadangan</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="manual_book" id="manual_book"
-                                value="1" {{ old('manual_book', $car->manual_book) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="manual_book">Manual Book</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="checkbox" name="service_book" id="service_book"
-                                value="1" {{ old('service_book', $car->service_book) ? 'checked' : '' }}>
-                            <label class="form-check-label" for="service_book">Service Book</label>
-                        </div>
+
+                        <button type="button" class="btn btn-sm btn-outline-primary mt-2 check-toggle-btn"
+                            onclick="toggleChecklist()">☑️ All</button>
                     </div>
                     <div class="mb-3">
                         <label for="sale_type" class="form-label">Sale Type</label>
@@ -440,6 +489,27 @@
             error: function () {
                 alert('Gagal menghapus foto');
             }
+        });
+    });
+
+
+    // ceklis button kelengkapan
+    function toggleChecklist() {
+        const labels = document.querySelectorAll('.check-badge');
+        const allChecked = [...labels].every(label => label.classList.contains('active'));
+
+        labels.forEach(label => {
+            const checkbox = label.querySelector('input[type="checkbox"]');
+            checkbox.checked = !allChecked;
+            label.classList.toggle('active', !allChecked);
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.check-badge input[type="checkbox"]').forEach(cb => {
+            cb.addEventListener('change', function () {
+                this.closest('.check-badge').classList.toggle('active', this.checked);
+            });
         });
     });
 </script>
