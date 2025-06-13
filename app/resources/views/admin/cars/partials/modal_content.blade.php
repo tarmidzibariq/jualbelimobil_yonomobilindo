@@ -26,8 +26,8 @@
     <tr><th>Service Book</th><td>{{ $car->service_book ? 'Yes' : 'No' }}</td></tr>
     <tr><th>Sale Type</th><td>{{ $car->sale_type }}</td></tr>
     <tr><th>Status</th><td>{{ $car->status }}</td></tr>
-    <tr><th>Created At</th><td>{{ $car->created_at }}</td></tr>
-    <tr><th>Updated At</th><td>{{ $car->updated_at }}</td></tr>
+    <tr><th>Created At</th><td>{{ \Carbon\Carbon::parse($car->created_at)->translatedFormat('d F Y') }}</td></tr>
+    <tr><th>Updated At</th><td>{{ \Carbon\Carbon::parse($car->updated_at )->translatedFormat('d F Y') }}</td></tr>
   </table>
   <h6 class="fw-bold mb-2">Foto Mobil</h6>
   @if ($car->carPhoto->count())

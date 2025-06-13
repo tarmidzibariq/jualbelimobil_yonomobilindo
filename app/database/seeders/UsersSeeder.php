@@ -24,6 +24,8 @@ class UsersSeeder extends Seeder
             'name' => 'User Bariq',
             'email' => 'bariq@mail.com',
             'password' => Hash::make('bariq123'),
+            'phone' => '081220733216',
+            'address' => 'Depok',
             'role' => 'user',
         ]);
     }

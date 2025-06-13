@@ -1,45 +1,115 @@
 @extends('layouts.master')
 @section('content')
 <div class="app-content">
-  <!--begin::Container-->
-  <div class="container-fluid">
-    <!--begin::Row-->
-    <div class="row">
-      <!--begin::Col-->
-      <div class="col-lg-3 col-6">
-        <!--begin::Small Box Widget 1-->
-        <div class="small-box text-bg-primary">
-          <div class="inner">
-            <h3>150</h3>
-            <p>New Orders</p>
-          </div>
-          <svg
-            class="small-box-icon"
-            fill="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-          >
-            <path
-              d="M2.25 2.25a.75.75 0 000 1.5h1.386c.17 0 .318.114.362.278l2.558 9.592a3.752 3.752 0 00-2.806 3.63c0 .414.336.75.75.75h15.75a.75.75 0 000-1.5H5.378A2.25 2.25 0 017.5 15h11.218a.75.75 0 00.674-.421 60.358 60.358 0 002.96-7.228.75.75 0 00-.525-.965A60.864 60.864 0 005.68 4.509l-.232-.867A1.875 1.875 0 003.636 2.25H2.25zM3.75 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zM16.5 20.25a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0z"
-            ></path>
-          </svg>
-          <a
-            href="#"
-            class="small-box-footer link-light link-underline-opacity-0 link-underline-opacity-50-hover"
-          >
-            More info <i class="bi bi-link-45deg"></i>
-          </a>
+    <div class="container-fluid">
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="width: 10px">ID</th>
+                                <th>Dibuat</th>
+                                <th>Mobil</th>
+                                <th>Jumlah DP</th>
+                                <th>Tanggal Janjian</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse ($downPayments as $item)
+                            <tr>
+                                <td>{{ $item->id }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y H:i') }}</td>
+                                <td class="text-capitalize">
+                                    {{ $item->car->brand . ' ' . $item->car->model . ' ' . $item->car->year }}
+                                </td>
+                                <td>{{ 'Rp ' . number_format($item->amount , 0, ',', '.') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->appointment_date)->translatedFormat('d F Y H:i T') }}</td>
+                                <td>
+                                    @switch($item->payment_status)
+                                        @case('pending')
+                                            <span class="badge bg-warning text-dark">Pending</span>
+                                            @break
+                                        @case('confirmed')
+                                            <span class="badge bg-success">Confirmed</span>
+                                            @break
+                                        @case('cancelled')
+                                            <span class="badge bg-danger">Cancelled</span>
+                                            @break
+                                        @default
+                                            <span class="badge bg-secondary">{{ ucfirst($item->payment_status) }}</span>
+                                    @endswitch
+                                </td>
+                                <td>
+                                    @if ($item->payment_status == 'pending')
+                                    {{-- <a href="#" class="btn btn-sm btn-primary mb-1 pay-now-btn" data-id="{{ $item->id }}">
+                                        Bayar Sekarang
+                                    </a> --}}
+                                    <a href="{{route('user.downPayment.checkout' , $item->id)}}" class="btn btn-sm btn-primary mb-1" data-id="{{ $item->id }}">
+                                        Bayar Sekarang
+                                    </a>
+
+                                    @else
+                                    <a href="#" class="btn btn-sm btn-outline-secondary">Detail</a>
+                                    @endif
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="7" class="text-center">Data tidak tersedia.</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-        <!--end::Small Box Widget 1-->
-      </div>
-      <!--end::Col-->
     </div>
-    <!--end::Row-->
-    <!--begin::Row-->
-    
-    <!-- /.row (main row) -->
-  </div>
-  <!--end::Container-->
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const payButtons = document.querySelectorAll('.pay-now-btn');
+
+        payButtons.forEach(button => {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                const dpId = this.dataset.id;
+
+                fetch(`/user/payment/${dpId}/token`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.snapToken) {
+                            window.snap.pay(data.snapToken, {
+                                onSuccess: function (result) {
+                                    alert('Pembayaran berhasil!');
+                                    location.reload();
+                                },
+                                onPending: function (result) {
+                                    alert('Menunggu pembayaran!');
+                                },
+                                onError: function (result) {
+                                    alert('Pembayaran gagal!');
+                                },
+                                onClose: function () {
+                                    alert('Kamu menutup popup tanpa menyelesaikan pembayaran');
+                                }
+                            });
+                        } else {
+                            alert('Gagal mengambil token pembayaran');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Terjadi kesalahan saat mengambil token pembayaran.');
+                    });
+            });
+        });
+    });
+</script>
+@endpush

@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
+use App\Models\DownPayment;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Midtrans\Snap;
+use Midtrans\Config;
 
 class DownPaymentController extends Controller
 {
@@ -16,53 +20,50 @@ class DownPaymentController extends Controller
      */
     public function index()
     {
-        return view('user.downPayment.index');   
+        $downPayments = DownPayment::with('car')->where('user_id', Auth::id())->orderBy('id', 'desc')->get();
+        return view('user.downPayment.index', compact('downPayments'));   
     }
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    
+
+    public function checkout($id){
+        
+        $downPayments = DownPayment::with('car')->where('user_id', Auth::id())->findOrFail($id);
+        return view('user.downPayment.checkout', compact('downPayments'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+    // public function getSnapToken($id)
+    // {
+    //     $dp = DownPayment::findOrFail($id);
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
+    //     // Optional: pastikan hanya pemilik DP yang bisa generate token-nya
+    //     if ($dp->user_id !== auth()->id()) {
+    //         abort(403, 'Unauthorized');
+    //     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
+    //     // Set konfigurasi Midtrans (seharusnya sudah di AppServiceProvider)
+    //     Config::$serverKey = config('midtrans.server_key');
+    //     Config::$isProduction = false;
+    //     Config::$isSanitized = true;
+    //     Config::$is3ds = true;
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
+    //     $params = [
+    //         'transaction_details' => [
+    //             'order_id' => 'DP-' . $dp->id . '-' . uniqid(),
+    //             'gross_amount' => (int) $dp->amount,
+    //         ],
+    //         'customer_details' => [
+    //             'first_name' => auth()->user()->name,
+    //             'email' => auth()->user()->email,
+    //         ]
+    //     ];
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
+    //     try {
+    //         $snapToken = Snap::getSnapToken($params);
+    //         return response()->json(['snapToken' => $snapToken]);
+    //     } catch (\Exception $e) {
+    //         \Log::error('Midtrans Error: ' . $e->getMessage());
+    //         return response()->json(['error' => 'Gagal generate token'], 500);
+    //     }
+    // }
+
 }

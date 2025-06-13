@@ -57,7 +57,7 @@
           
           @elseif(auth()->user()->role === 'user')
           <li class="nav-item">
-            <a href="{{ route('user.dashboard')}}" class="nav-link {{ request()->routeIs('user.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('user.dashboard')}}" class="nav-link {{ request()->routeIs('home-cms') ? 'active' : '' }}">
               <i class="nav-icon bi bi-speedometer"></i>
               <p>
                 Dashboard

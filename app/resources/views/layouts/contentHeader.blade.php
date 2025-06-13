@@ -16,6 +16,9 @@
             @case(request()->routeIs('admin.cars.*'))
                 Cars
                 @break
+            @case(request()->routeIs('user.downPayment.*'))
+                Pembayaran DP
+                @break
             @default
                 Halaman
         @endswitch
@@ -23,7 +26,7 @@
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-end">
           <li class="breadcrumb-item">
-            <a href="{{ route('admin.dashboard') }}">Home</a>
+            <a href="{{ route('home-cms') }}">Home</a>
           </li>
       
           @switch(true)
@@ -70,6 +73,18 @@
               </li>
               <li class="breadcrumb-item active" aria-current="page">Edit</li>
               @break
+              
+             {{--user.DownPayment  --}}
+            @case(request()->routeIs('user.downPayment.index')) 
+              <li class="breadcrumb-item active" aria-current="page">Down Payment</li>
+              @break
+              
+              @case(request()->routeIs('user.downPayment.checkout')) 
+              <li class="breadcrumb-item active" aria-current="page">
+                <a href="{{route('user.downPayment.index')}}">Down Payment</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+            @break
       
             @default
               <li class="breadcrumb-item active" aria-current="page">Halaman</li>

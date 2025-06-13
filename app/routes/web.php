@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\CarsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\User\DownPaymentController as UserDownPaymentController;
+use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\Web\DetailCarController;
 use App\Http\Controllers\Web\DownPaymentController;
 use App\Http\Controllers\Web\HomeController;
@@ -61,14 +63,19 @@ Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function 
     Route::resource('cars-photo', CarPhotoController::class)->names('admin.carPhotos')->except(['show', 'edit', 'update', 'create', 'store']);
 });
 
-//group route with prefix "admin" with middleware "auth" and "checkrole:user"
+//group route with prefix "user" with middleware "auth" and "checkrole:user"
 Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function () {
 
     // Dashboard Route
     Route::get('dashboard', [App\Http\Controllers\User\DashboardController::class, 'index'])->name('user.dashboard');
 
-    Route::resource('downPayment', App\Http\Controllers\User\DownPaymentController::class)->names('user.downPayment');
+    Route::get('downPayment', [UserDownPaymentController::class, 'index'])->name('user.downPayment.index');
+
+    Route::get('downPayment/checkout/{id}', [UserDownPaymentController::class, 'checkout'])->name('user.downPayment.checkout');
+
+    // Route::get('payment/{id}/token', [PaymentController::class, 'getSnapToken'])->name('user.Payment.snapToken');
 });
+// Route::post('/midtrans/callback', [\App\Http\Controllers\User\PaymentController::class, 'handle']);
 
 //Home Route
 Route::get('/', [HomeController::class, 'index'])->name('home');
