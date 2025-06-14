@@ -15,9 +15,9 @@ class Offer extends Model
         'model',
         'year',
         'mileage',
-        'condition',
         'offered_price',
         'status',
+        'location_inspection',
         'inspection_date',
     ];
 

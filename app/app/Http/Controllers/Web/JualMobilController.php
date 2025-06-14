@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\CarType;
+use App\Models\Offer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class JualMobilController extends Controller
 {
@@ -12,7 +15,8 @@ class JualMobilController extends Controller
      */
     public function index()
     {
-        return view('web.jualMobil');
+        $brands = CarType::distinct()->pluck('brand');
+        return view('web.jualMobil', compact('brands'));
     }
 
     /**
@@ -20,7 +24,7 @@ class JualMobilController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -28,7 +32,35 @@ class JualMobilController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $user = Auth::user();
+        if (!$user || $user->role !== 'user') {
+            return redirect()->back()->with('error', 'Admin tidak diperbolehkan melakukan pembayaran DP.');
+        }
+
+        $request->validate([
+            'brand' => 'required|string|max:255',
+            'model' => 'required|string|max:255',
+            'year' => 'required|digits:4|integer|min:2000|max:' . date('Y'),
+            'mileage' => 'required|string',
+            'offered_price' => 'required|numeric|min:1000000',
+            'location_inspection' => 'required|string',
+            'inspection_date' => 'required|date|after_or_equal:today',
+        ]);
+
+        Offer::create([
+            'user_id' => Auth::id(),
+            'brand' => $request->brand,
+            'model' => $request->model,
+            'year' => $request->year,
+            'mileage' => $request->mileage,
+            'offered_price' => $request->offered_price,
+            'location_inspection' => $request->location_inspection,
+            'inspection_date' => $request->inspection_date,
+            'status' => 'pending',
+        ]);
+
+        return redirect()->route('web.jualMobil.index')->with('success', 'Data mobil berhasil disubmit!');
     }
 
     /**

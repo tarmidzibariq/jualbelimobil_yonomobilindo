@@ -10,6 +10,7 @@ use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\Web\DetailCarController;
 use App\Http\Controllers\Web\DownPaymentController;
 use App\Http\Controllers\Web\HomeController;
+use App\Http\Controllers\Web\JualMobilController;
 use App\Http\Controllers\Web\KontakController;
 use App\Http\Controllers\Web\TestimonialController;
 use Illuminate\Support\Facades\Route;
@@ -88,7 +89,9 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::prefix('web')->group(function () {
     
     // jual mobil
-    Route::resource('jualMobil', App\Http\Controllers\Web\JualMobilController::class)->names('web.jualMobil');
+    Route::get('jualMobil', [JualMobilController::class, 'index'])->name('web.jualMobil.index');
+
+    Route::post('jualMobil', [JualMobilController::class, 'store'])->name('web.jualMobil.store')->middleware(['auth', 'checkrole:user']);
     
     // testimonial
     Route::get('testimonial', [TestimonialController::class, 'index'])->name('web.testimonial');
