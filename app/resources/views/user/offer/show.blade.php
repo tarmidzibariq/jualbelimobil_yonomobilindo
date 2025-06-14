@@ -10,7 +10,7 @@
         @endif
         <div class="card mb-4">
             <div class="card-body">
-                <h3 class="fw-bold mb-4">Detail Penjualan Mobil</h3>
+                <h3 class="fw-bold mb-4">Detail Penjualan Mobil {{ $offer->brand  . ' ' . $offer->model . ' ' . $offer->year ?? '-' }} </h3>
 
                 <table class="table table-bordered">
                     <tr>

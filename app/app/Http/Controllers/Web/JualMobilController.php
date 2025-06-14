@@ -48,7 +48,7 @@ class JualMobilController extends Controller
             'inspection_date' => 'required|date|after_or_equal:today',
         ]);
 
-        Offer::create([
+        $offer = Offer::create([
             'user_id' => Auth::id(),
             'brand' => $request->brand,
             'model' => $request->model,
@@ -60,7 +60,7 @@ class JualMobilController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->route('web.jualMobil.index')->with('success', 'Data mobil berhasil disubmit!');
+        return redirect()->route('user.offer.show', $offer->id)->with('success', 'Data Penjualan mobil berhasil disubmit! Silahkan Tunggu Konfirmasi dari Admin Kontak: 081220745317');
     }
 
     /**
