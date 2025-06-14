@@ -19,6 +19,9 @@
             @case(request()->routeIs('user.downPayment.*'))
                 Pembayaran DP
                 @break
+            @case(request()->routeIs('user.offer.*'))
+                Penjualan Mobil
+                @break
             @default
                 Halaman
         @endswitch
@@ -84,6 +87,19 @@
                 <a href="{{route('user.downPayment.index')}}">Down Payment</a>
               </li>
               <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+              @break
+              
+              {{--user.Offer  --}}
+              @case(request()->routeIs('user.offer.index')) 
+              <li class="breadcrumb-item active" aria-current="page">Penjualan Mobil</li>
+              @case(request()->routeIs('user.offer.show')) 
+
+              <li class="breadcrumb-item active" aria-current="page">
+                <a href="{{route('user.offer.index')}}">Penjualan Mobil</a>
+              </li>
+              <li class="breadcrumb-item active" aria-current="page">Show</li>
+              @break
+              
             @break
       
             @default

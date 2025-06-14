@@ -6,7 +6,9 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\User\DownPaymentController as UserDownPaymentController;
+use App\Http\Controllers\User\OfferController;
 use App\Http\Controllers\User\PaymentController;
+use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\Web\DetailCarController;
 use App\Http\Controllers\Web\DownPaymentController;
 use App\Http\Controllers\Web\HomeController;
@@ -70,11 +72,14 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
     // Dashboard Route
     Route::get('dashboard', [App\Http\Controllers\User\DashboardController::class, 'index'])->name('user.dashboard');
 
+    // Down Payment Route
     Route::get('downPayment', [UserDownPaymentController::class, 'index'])->name('user.downPayment.index');
 
     Route::get('downPayment/checkout/{id}', [PaymentController::class, 'checkout'])->name('user.downPayment.checkout');
 
+    Route::resource('offer', OfferController::class)->names('user.offer')->except(['edit', 'update', 'create', 'destroy']);
     
+    Route::post('updateUser/{id}', [ProfileController::class, 'updateAddress'])->name('user.updateAdress');
 });
 Route::post('/midtrans/notification', [PaymentController::class, 'notificationHandler']);
 

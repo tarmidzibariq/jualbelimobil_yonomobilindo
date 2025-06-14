@@ -73,6 +73,15 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{route('user.offer.index')}}" class="nav-link {{ request()->routeIs('user.offer.*') ? 'active' : '' }}">
+              {{-- <i class=" nav-icon fa-solid fa-car"></i> --}}
+              <i class="nav-icon fa-solid fa-cart-shopping"></i>
+              <p>
+                Penjualan Mobil
+              </p>
+            </a>
+          </li>
         @endif
         
       @endauth
