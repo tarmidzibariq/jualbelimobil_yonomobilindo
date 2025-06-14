@@ -1,76 +1,86 @@
 <?php
 
 namespace App\Http\Controllers\User;
-
 use App\Http\Controllers\Controller;
-use App\Models\DownPayment;
+
 use Illuminate\Http\Request;
+use App\Models\DownPayment;
 use Illuminate\Support\Facades\Auth;
-use Midtrans\Snap;
 use Midtrans\Config;
-use Illuminate\Support\Facades\Log;
+use Midtrans\Snap;
 use Midtrans\Notification;
+use Illuminate\Support\Facades\Log;
 
 class PaymentController extends Controller
 {
-    public function getSnapToken($id)
+    // Menampilkan halaman Snap pembayaran
+    public function checkout($id)
     {
-        
-        $dp = DownPayment::findOrFail($id);
+        $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
 
-        // Optional: pastikan hanya pemilik DP yang bisa generate token-nya
-        if ($dp->user_id !== auth()->id()) {
-            abort(403, 'Unauthorized');
-        }
-
-        // Set konfigurasi Midtrans (seharusnya sudah di AppServiceProvider)
+        // Konfigurasi Midtrans
         Config::$serverKey = config('midtrans.server_key');
-        Config::$isProduction = false;
+        Config::$isProduction = config('midtrans.is_production');
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
-        
+        // Siapkan parameter transaksi
         $params = [
             'transaction_details' => [
-                'order_id' => 'DP-' . $dp->id . '-' . uniqid(),
-                'gross_amount' => (int) $dp->amount,
+                'order_id' => 'DP-' . $downPayment->id . '-' . time(),
+                'gross_amount' => (int) $downPayment->amount,
             ],
             'customer_details' => [
-                'first_name' => auth()->user()->name,
-                'email' => auth()->user()->email,
-            ]
+                'first_name' => $downPayment->user->name,
+                'email' => $downPayment->user->email,
+                'phone' => $downPayment->user->phone,
+            ],
         ];
 
-        try {
-            $snapToken = Snap::getSnapToken($params);
-            return response()->json(['snapToken' => $snapToken]);
-        } catch (\Exception $e) {
-            \Log::error('Midtrans Error: ' . $e->getMessage());
-            return response()->json(['error' => 'Gagal generate token'], 500);
-        }
+        $snapToken = Snap::getSnapToken($params);
+
+        return view('user.downPayment.checkout', [
+            'downPayments' => $downPayment,
+            'snapToken' => $snapToken
+        ]);
     }
 
-    public function handle(Request $request)
+    // Webhook Midtrans
+    public function notificationHandler(Request $request)
     {
-        $payload = $request->all();
-        Log::info('Midtrans callback received', $payload);
+        Log::info('Webhook Midtrans MASUK:', $request->all());
 
-        $orderId = explode('-', $payload['order_id'])[1] ?? null;
+        try {
+            $notif = new Notification();
+            $transaction = $notif->transaction_status;
+            $orderId = $notif->order_id;
 
-        $dp = DownPayment::find($orderId);
-        if (!$dp) return response()->json(['message' => 'Not found'], 404);
+            // Format order_id = DP-5-1718000000
+            $id = explode('-', $orderId)[1] ?? null;
+            $payment = DownPayment::find($id);
 
-        if ($payload['transaction_status'] === 'settlement' || $payload['transaction_status'] === 'capture') {
-            $dp->payment_status = 'confirmed';
-        } elseif (in_array($payload['transaction_status'], ['cancel', 'deny', 'expire'])) {
-            $dp->payment_status = 'cancelled';
-        } else {
-            $dp->payment_status = 'pending';
+            if (!$payment) {
+                Log::error("❌ DownPayment ID {$id} tidak ditemukan.");
+                return response()->json(['message' => 'Not found'], 404);
+            }
+
+            // Proses status dari Midtrans
+            if ($transaction == 'settlement') {
+                $payment->payment_status = 'confirmed';
+                $payment->payment_date = now();
+            } elseif ($transaction == 'expire') {
+                $payment->payment_status = 'cancelled';
+            } elseif ($transaction == 'pending') {
+                $payment->payment_status = 'pending';
+            }
+
+            $payment->save();
+            Log::info("✅ Status untuk ID {$id} diupdate menjadi {$payment->payment_status}");
+
+            return response()->json(['message' => 'Success']);
+        } catch (\Exception $e) {
+            Log::error('🔥 ERROR Webhook: ' . $e->getMessage());
+            return response()->json(['message' => 'Error handling notification'], 500);
         }
-
-        $dp->save();
-
-        return response()->json(['message' => 'OK']);
     }
-
 }

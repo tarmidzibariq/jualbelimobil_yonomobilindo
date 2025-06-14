@@ -71,10 +71,14 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
 
     Route::get('downPayment', [UserDownPaymentController::class, 'index'])->name('user.downPayment.index');
 
-    Route::get('downPayment/checkout/{id}', [UserDownPaymentController::class, 'checkout'])->name('user.downPayment.checkout');
+    Route::get('downPayment/checkout/{id}', [PaymentController::class, 'checkout'])->name('user.downPayment.checkout');
 
-    // Route::get('payment/{id}/token', [PaymentController::class, 'getSnapToken'])->name('user.Payment.snapToken');
+    
 });
+Route::post('/midtrans/notification', [PaymentController::class, 'notificationHandler']);
+
+// Route::post('/midtrans/notification', [PaymentController::class, 'notificationHandler']);
+// Route::get('payment/{id}/token', [PaymentController::class, 'getSnapToken'])->name('user.Payment.snapToken');
 // Route::post('/midtrans/callback', [\App\Http\Controllers\User\PaymentController::class, 'handle']);
 
 //Home Route
@@ -102,3 +106,4 @@ Route::prefix('web')->group(function () {
 
     
 });
+

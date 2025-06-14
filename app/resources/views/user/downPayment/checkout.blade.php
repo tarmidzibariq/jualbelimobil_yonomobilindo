@@ -77,11 +77,11 @@
                     </tr> --}}
                 </table>
 
-                @if($downPayments->payment_status == 'pending')
+                @if($downPayments->payment_status == 'pending' && isset($snapToken))
                     <div class="mt-4">
-                        <a href="" class="btn btn-primary">
+                        <button id="pay-button" class="btn btn-success mt-4">
                             <i class="fas fa-credit-card"></i> Bayar Sekarang
-                        </a>
+                        </button>
                     </div>
                 @endif
 
@@ -89,4 +89,30 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}"></script>
+
+<script type="text/javascript">
+
+    document.getElementById('pay-button')?.addEventListener('click', function () {
+        snap.pay('{{ $snapToken }}', {
+            onSuccess: function(result){
+                alert("Pembayaran berhasil!");
+                window.location.href = "{{ route('user.dashboard') }}";
+            },
+            onPending: function(result){
+                alert("Menunggu pembayaran.");
+                window.location.href = "{{ route('user.dashboard') }}";
+            },
+            onError: function(result){
+                alert("Pembayaran gagal.");
+                window.location.href = "{{ route('user.dashboard') }}";
+            },
+            onClose: function(){
+                alert("Kamu menutup popup tanpa menyelesaikan pembayaran.");
+            }
+        });
+    });
+</script>
+@endpush
 @endsection
