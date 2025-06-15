@@ -19,6 +19,7 @@ class Offer extends Model
         'status',
         'location_inspection',
         'inspection_date',
+        'note',
     ];
 
 

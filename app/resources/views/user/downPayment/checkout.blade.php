@@ -39,7 +39,7 @@
                     </tr>
                     <tr>
                         <th>Mobil</th>
-                        <td>{{ $downPayments->car->brand  . ' ' . $downPayments->car->model . ' ' . $downPayments->car->year ?? '-' }}</td>
+                        <td class="text-uppercase">{{ $downPayments->car->brand  . ' ' . $downPayments->car->model . ' ' . $downPayments->car->year . ' '. $downPayments->car->color ?? '-' }}</td>
                     </tr>
                     <tr>
                         <th>Tanggal Janji</th>
@@ -57,16 +57,14 @@
                         <th>Tanggal Pembayaran</th>
                         <td>{{ $downPayments->payment_date ? \Carbon\Carbon::parse($downPayments->payment_date)->format('d M Y H:i') : '-' }}</td>
                     </tr>
-                    {{-- <tr>
-                        <th>Bukti Pembayaran</th>
-                        <td>
-                            @if ($downPayments->payment_proof)
-                                <a href="{{ asset('storage/' . $downPayments->payment_proof) }}" target="_blank">Lihat Bukti</a>
-                            @else
-                                Belum Ada
-                            @endif
-                        </td>
-                    </tr> --}}
+                    @if ($downPayments->payment_status == 'confirmed')
+                    <tr>
+                        <th>Lokasi Showroom</th>
+                        <td>Lokasi: Pekapuran Jl 1000 RT 06/05 NO 200 SUKAMAJU BARU TAPOS, DEPOK<br>
+                            Kontak Showroom: 081220745317</td>
+                    </tr>
+                        
+                    @endif
                 </table>
 
                 @if($downPayments->payment_status == 'pending' && isset($snapToken))

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->text('location_inspection')->nullable();
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamp('inspection_date')->nullable();
+            $table->text('note')->nullable();
             // $table->text('address_car')->nullable();
             $table->timestamps();
         });

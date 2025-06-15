@@ -54,7 +54,7 @@
                         <td>{{ \Carbon\Carbon::parse($offer->appointment_date)->format('H:i T') }}</td>
                     </tr>
                     <tr>
-                        <th>Penawaran Mobil</th>
+                        <th>Penawaran Harga Mobil</th>
                         <td>Rp {{ number_format($offer->offered_price, 0, ',', '.') }}</td>
                     </tr>
                     <tr>
@@ -75,6 +75,12 @@
                             {{ $offer->location_inspection }}
                             @endif
                         </td>
+                    </tr>
+                    <tr>
+                        @if ($offer->note != null)
+                            <th>Catatan Showroom</th>
+                            <td>{{$offer->note}}</td>
+                        @endif
                     </tr>
 
                 </table>

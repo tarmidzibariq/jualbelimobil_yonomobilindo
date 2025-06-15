@@ -62,11 +62,17 @@ Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function 
     // Cars Route with custom methods
     Route::get('cars/{id}/edit-status', [CarsController::class, 'editStatus']);
     Route::post('cars/{id}/update-status', [CarsController::class, 'updateStatus']);
-
+    
     // Car Photos Route
     Route::resource('cars-photo', CarPhotoController::class)->names('admin.carPhotos')->except(['show', 'edit', 'update', 'create', 'store']);
-
+    
     Route::get('offer',[AdminOfferController::class, 'index'])->name('admin.offer.index');
+    Route::get('offer/{id}',[AdminOfferController::class, 'show'])->name('admin.offer.show');
+
+    Route::get('offer/{id}/edit-status', [AdminOfferController::class, 'editStatus']);
+    Route::post('offer/{id}/update-status', [AdminOfferController::class, 'updateStatus']);
+
+    Route::post('offer/updateNote/{id}', [AdminOfferController::class, 'updateNote'])->name('admin.offer.updateNote');
 });
 
 //group route with prefix "user" with middleware "auth" and "checkrole:user"

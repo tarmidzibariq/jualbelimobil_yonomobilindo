@@ -26,7 +26,7 @@
                                     {{ $item->car->brand . ' ' . $item->car->model . ' ' . $item->car->year }}
                                 </td>
                                 <td>{{ 'Rp ' . number_format($item->amount , 0, ',', '.') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($item->appointment_date)->translatedFormat('d F Y H:i T') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($item->appointment_date)->translatedFormat('d F Y H:i') }}</td>
                                 <td>
                                     @switch($item->payment_status)
                                         @case('pending')

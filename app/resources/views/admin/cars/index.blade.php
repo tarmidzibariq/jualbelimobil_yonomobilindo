@@ -99,9 +99,13 @@
                                     };
                                     @endphp
 
-                                    <span class="badge {{ $badgeClass }} status-label-{{ $car->id }}">
+                                    <span class="badge {{ $badgeClass }} status-label status-label-{{ $car->id }}"
+                                        data-id="{{ $car->id }}"
+                                        data-status="{{ $status }}">
                                         {{ ucfirst($status) }}
                                     </span>
+
+                                    {{-- Jika status adalah 'pending_check', tampilkan tombol update status --}}
 
                                     <!-- Tombol untuk membuka modal update status -->
                                     <button type="button" class="btn btn-sm btn-outline-primary mt-1 btn-edit-status"
@@ -259,21 +263,35 @@
                     status: newStatus
                 },
                 success: function (res) {
-                    // Tutup modal
                     $('#statusModal').modal('hide');
 
                     // Update tampilan badge status di table
-                    $(`.status-label-${carId}`).text(newStatus.charAt(0).toUpperCase() +
-                        newStatus.slice(1));
+                    const badge = $(`.status-label-${carId}`);
+                    badge.text(newStatus.charAt(0).toUpperCase() + newStatus.slice(1));
 
-                    // Optional: tampilkan alert atau notifikasi lain
-                    alert('Status updated successfully!');
+                    // Bersihkan class lama dan tambahkan class baru
+                    badge.removeClass('bg-success bg-warning text-dark bg-danger bg-info text-dark bg-secondary');
+                    badge.addClass(getBadgeClass(newStatus));
+
+                    // alert('Status updated successfully!');
                 },
+
                 error: function (xhr) {
                     console.error('Update failed:', xhr.status, xhr.responseText);
                     alert('Failed to update status');
                 }
             });
+
+            function getBadgeClass(status) {
+                switch (status) {
+                    case 'available': return 'bg-success';
+                    case 'pending_check': return 'bg-warning text-dark';
+                    case 'sold': return 'bg-danger';
+                    case 'under_review': return 'bg-info text-dark';
+                    default: return 'bg-secondary';
+                }
+            }
+
         });
 
     });

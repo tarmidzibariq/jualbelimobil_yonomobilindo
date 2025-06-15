@@ -77,7 +77,11 @@ class PaymentController extends Controller
                 "payment_status" => $status,
                 "payment_date" => $statusFromMidtrans->transaction_time ?? null
             ]);
-
+        
+        if ($status == 'confirmed') {
+            // Update status mobil menjadi sold
+            $downPayment->car->update(['status' => 'under_review']);
+        }
 
         $newDownPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
 
