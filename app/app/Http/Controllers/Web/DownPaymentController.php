@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Helpers\MidtransHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Car;
 use App\Models\DownPayment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Midtrans\Snap;
 
 class DownPaymentController extends Controller
 {
@@ -39,14 +41,17 @@ class DownPaymentController extends Controller
         $appointmentDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i', $appointmentDateTime);
 
         // Simpan data ke tabel (misal DownPayment)
-        DownPayment::create([
+        $store = DownPayment::create([
             'car_id' => $car->id,
             'user_id' => Auth::guard('web')->id(),
             'appointment_date' => $appointmentDateTime,
             'amount' => $request->amount,
         ]);
 
-        return redirect()->route('home-cms')->with('success', 'DP berhasil dikirim.');
+        $store->save();
+
+        // return redirect()->route('home-cms')->with('success', 'DP berhasil dikirim.');
+        return redirect()->route('user.downPayment.checkout' , $store->id);
     }
 
     public function show($id){
@@ -58,5 +63,38 @@ class DownPaymentController extends Controller
         }else{
             return  view('errors.404');
         }
+    }
+
+    private function goToPaymentView($id) {
+        $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
+
+        // Konfigurasi Midtrans
+        MidtransHelper::init();
+
+        $orderId = 'DP-' . $downPayment->id . '-' . time();
+
+        // Siapkan parameter transaksi
+        $params = [
+            'transaction_details' => [
+                'order_id' => $orderId,  
+                'gross_amount' => (int) $downPayment->amount,
+            ],
+            'customer_details' => [
+                'first_name' => $downPayment->user->name,
+                'email' => $downPayment->user->email,
+                'phone' => $downPayment->user->phone,
+            ],
+        ];
+
+        $snapToken = Snap::getSnapToken($params);
+
+        DownPayment::where('id', $id)
+        ->where('payment_status', 'pending')
+        ->update(['order_id' => $orderId]);
+
+        return view('user.downPayment.checkout', [
+            'downPayments' => $downPayment,
+            'snapToken' => $snapToken
+        ]);
     }
 }

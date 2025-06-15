@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Helpers\MidtransHelper;
 use App\Http\Controllers\Controller;
 use App\Models\DownPayment;
+use Illuminate\Database\Console\Migrations\StatusCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Midtrans\Snap;
 use Midtrans\Config;
+use Midtrans\Transaction;
 
 class DownPaymentController extends Controller
 {
@@ -20,7 +23,9 @@ class DownPaymentController extends Controller
      */
     public function index()
     {
+
         $downPayments = DownPayment::with('car')->where('user_id', Auth::id())->orderBy('id', 'desc')->get();
+
         return view('user.downPayment.index', compact('downPayments'));   
     }
     

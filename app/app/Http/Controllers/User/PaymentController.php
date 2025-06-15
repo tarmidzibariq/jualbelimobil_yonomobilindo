@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\User;
+
+use App\Helpers\MidtransHelper;
 use App\Http\Controllers\Controller;
 
 use Illuminate\Http\Request;
@@ -10,6 +12,7 @@ use Midtrans\Config;
 use Midtrans\Snap;
 use Midtrans\Notification;
 use Illuminate\Support\Facades\Log;
+use Midtrans\Transaction;
 
 class PaymentController extends Controller
 {
@@ -19,15 +22,14 @@ class PaymentController extends Controller
         $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
 
         // Konfigurasi Midtrans
-        Config::$serverKey = config('midtrans.server_key');
-        Config::$isProduction = config('midtrans.is_production');
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
+        MidtransHelper::init();
+
+        $orderId = 'DP-' . $downPayment->id . '-' . time();
 
         // Siapkan parameter transaksi
         $params = [
             'transaction_details' => [
-                'order_id' => 'DP-' . $downPayment->id . '-' . time(),
+                'order_id' => $orderId,  
                 'gross_amount' => (int) $downPayment->amount,
             ],
             'customer_details' => [
@@ -39,9 +41,49 @@ class PaymentController extends Controller
 
         $snapToken = Snap::getSnapToken($params);
 
+        DownPayment::where('id', $id)
+        ->where('payment_status', 'pending')
+        ->update(['order_id' => $orderId]);
+
         return view('user.downPayment.checkout', [
             'downPayments' => $downPayment,
             'snapToken' => $snapToken
+        ]);
+    }
+
+    public function changeStatus($id) {
+        $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
+        
+        MidtransHelper::init();
+
+        $statusFromMidtrans = Transaction::status($downPayment->order_id);
+        $transaction = $statusFromMidtrans->transaction_status ?? "pending";
+        // dd($transaction);
+
+        $status = "pending";
+
+        if ($transaction == 'settlement') {
+            $status = 'confirmed';
+        } elseif ($transaction == 'expire') {
+            $status = 'expired';
+        }elseif ($transaction == 'cancel') {
+            $status = 'cancelled';
+        } elseif ($transaction == 'pending') {
+            $status = 'pending';
+        }
+
+        DownPayment::where("id", $id)
+            ->update([
+                "payment_status" => $status,
+                "payment_date" => $statusFromMidtrans->transaction_time ?? null
+            ]);
+
+
+        $newDownPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
+
+        return view('user.downPayment.checkout', [
+            'downPayments' => $newDownPayment,
+            'snapToken' => ""
         ]);
     }
 

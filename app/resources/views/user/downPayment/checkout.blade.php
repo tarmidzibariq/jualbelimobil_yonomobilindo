@@ -1,12 +1,3 @@
-{{-- @if(isset($snapToken))
-<script>
-    window.snap.pay('{{ $snapToken }}', {
-        onSuccess: function(result) {
-            window.location.href = "{{ route('user.dashboard') }}";
-        }
-    });
-</script>
-@endif --}}
 
 @extends('layouts.master')
 @section('content')
@@ -28,6 +19,7 @@
                                 @if($downPayments->payment_status == 'pending') bg-warning 
                                 @elseif($downPayments->payment_status == 'confirmed') bg-success 
                                 @elseif($downPayments->payment_status == 'cancelled') bg-danger 
+                                @elseif($downPayments->payment_status == 'expired') bg-danger 
                                 @endif">
                                 {{ ucfirst($downPayments->payment_status) }}
                             </span>
@@ -97,16 +89,16 @@
     document.getElementById('pay-button')?.addEventListener('click', function () {
         snap.pay('{{ $snapToken }}', {
             onSuccess: function(result){
-                alert("Pembayaran berhasil!");
-                window.location.href = "{{ route('user.dashboard') }}";
+                // alert("Pembayaran berhasil!");
+                window.location.href = "{{ route('user.downPayment.changeStatus' , $downPayments->id) }}";
             },
             onPending: function(result){
-                alert("Menunggu pembayaran.");
-                window.location.href = "{{ route('user.dashboard') }}";
+                // alert("Menunggu pembayaran.");
+                window.location.href = "{{ route('user.downPayment.checkout' , $downPayments->id) }}";
             },
             onError: function(result){
-                alert("Pembayaran gagal.");
-                window.location.href = "{{ route('user.dashboard') }}";
+                // alert("Pembayaran gagal.");
+                window.location.href = "{{ route('user.downPayment.changeStatus' , $downPayments->id) }}";
             },
             onClose: function(){
                 alert("Kamu menutup popup tanpa menyelesaikan pembayaran.");

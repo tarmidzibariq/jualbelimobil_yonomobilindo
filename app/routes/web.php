@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\CarPhotoController;
 use App\Http\Controllers\Admin\CarsController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\OfferController as AdminOfferController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\User\DownPaymentController as UserDownPaymentController;
@@ -64,6 +65,8 @@ Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function 
 
     // Car Photos Route
     Route::resource('cars-photo', CarPhotoController::class)->names('admin.carPhotos')->except(['show', 'edit', 'update', 'create', 'store']);
+
+    Route::get('offer',[AdminOfferController::class, 'index'])->name('admin.offer.index');
 });
 
 //group route with prefix "user" with middleware "auth" and "checkrole:user"
@@ -76,6 +79,8 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
     Route::get('downPayment', [UserDownPaymentController::class, 'index'])->name('user.downPayment.index');
 
     Route::get('downPayment/checkout/{id}', [PaymentController::class, 'checkout'])->name('user.downPayment.checkout');
+
+    Route::get('downPayment/change/{id}', [PaymentController::class, 'changeStatus'])->name('user.downPayment.changeStatus');
 
     Route::resource('offer', OfferController::class)->names('user.offer')->except(['edit', 'update', 'create', 'destroy']);
     

@@ -53,6 +53,13 @@
                 Cars
               </p>
             </a>
+          <li class="nav-item">
+            <a href="{{ route('admin.offer.index') }}" class="nav-link {{ request()->routeIs('admin.offer.*') ? 'active' : '' }}">
+              <i class="nav-icon fa-solid fa-briefcase"></i>
+              <p>
+                Offer Cars
+              </p>
+            </a>
           </li>
           
           @elseif(auth()->user()->role === 'user')

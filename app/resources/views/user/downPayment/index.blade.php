@@ -38,6 +38,9 @@
                                         @case('cancelled')
                                             <span class="badge bg-danger">Cancelled</span>
                                             @break
+                                        @case('expired')
+                                            <span class="badge bg-danger">Expired</span>
+                                            @break
                                         @default
                                             <span class="badge bg-secondary">{{ ucfirst($item->payment_status) }}</span>
                                     @endswitch
@@ -47,12 +50,12 @@
                                     {{-- <a href="#" class="btn btn-sm btn-primary mb-1 pay-now-btn" data-id="{{ $item->id }}">
                                         Bayar Sekarang
                                     </a> --}}
-                                    <a href="{{route('user.downPayment.checkout' , $item->id)}}" class="btn btn-sm btn-primary mb-1" data-id="{{ $item->id }}">
+                                    <a href="{{ route('user.downPayment.checkout' , $item->id)}}" class="btn btn-sm btn-primary mb-1" data-id="{{ $item->id }}">
                                         Bayar Sekarang
                                     </a>
 
                                     @else
-                                    <a href="#" class="btn btn-sm btn-outline-secondary">Detail</a>
+                                    <a href="{{ route('user.downPayment.checkout' , $item->id)}}" class="btn btn-sm btn-outline-secondary">Detail</a>
                                     @endif
                                 </td>
                             </tr>
@@ -81,7 +84,7 @@
                 e.preventDefault();
                 const dpId = this.dataset.id;
 
-                fetch(`/user/payment/${dpId}/token`)
+                fetch(`/user/payment/${dpId}/token`)    
                     .then(response => response.json())
                     .then(data => {
                         if (data.snapToken) {
