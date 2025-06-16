@@ -2,7 +2,7 @@
   <!--begin::Sidebar Brand-->
   <div class="sidebar-brand">
     <!--begin::Brand Link-->
-    <a href="{{route('home-cms')}}" class="brand-link">
+    <a href="{{route('home')}}" class="brand-link">
       <!--begin::Brand Image-->
       <img
         src="{{ asset('image/YONO MOBILINDO LOGO 2.png') }}"

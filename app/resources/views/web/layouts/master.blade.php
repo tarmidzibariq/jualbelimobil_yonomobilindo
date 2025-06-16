@@ -4,7 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Mobilindo</title>
+    <title>Yono Mobilindo</title>
+
+    <meta name="title" content="Yono Mobilindo" />
+
+    {{-- icon --}}
+    <link rel="icon" type="image/png" href="{{ asset('image/YONO-MOBILINDO-LOGO.svg') }}">
 
     @include('web.layouts.css')
 

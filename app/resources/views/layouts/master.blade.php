@@ -3,11 +3,12 @@
   <!--begin::Head-->
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>AdminLTE v4 | Dashboard</title>
+    <title>Yono Mobilindo</title>
     <!--begin::Primary Meta Tags-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" content="AdminLTE v4 | Dashboard" />
-    <meta name="author" content="ColorlibHQ" />
+    <meta name="title" content="Yono Mobilindo Administrator" />
+    {{-- <meta name="author" content="ColorlibHQ" /> --}}
+    
     <meta
       name="description"
       content="Administrator YonoMobilindo"
@@ -15,6 +16,9 @@
     <meta
       name="keywords"
       content="Administrator YonoMobilindo"/>
+    {{-- icon --}}
+    <link rel="icon" type="image/png" href="{{ asset('image/YONO-MOBILINDO-LOGO.svg') }}">
+
     <!--end::Primary Meta Tags-->
     
     @include('layouts.css')
