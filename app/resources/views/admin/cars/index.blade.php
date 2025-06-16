@@ -142,7 +142,7 @@
                     </table>
                 </div>
 
-                <!-- Modal kosong, akan diisi konten AJAX -->
+                <!-- Modal kosong untuk show, akan diisi konten AJAX -->
                 <div class="modal fade" id="carModal" tabindex="-1" aria-labelledby="carModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content" id="carModalContent">

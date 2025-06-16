@@ -16,14 +16,17 @@
                     @case(request()->routeIs('admin.cars.*'))
                     Cars
                     @break
+                    @case(request()->routeIs('admin.offer.*'))
+                    Offer Cars
+                    @break
+                    @case(request()->routeIs('admin.downPayment.*'))
+                    Down Payment(DP)
+                    @break
                     @case(request()->routeIs('user.downPayment.*'))
                     Pembayaran DP
                     @break
                     @case(request()->routeIs('user.offer.*'))
                     Penjualan Mobil
-                    @break
-                    @case(request()->routeIs('admin.offer.*'))
-                    Offer Cars
                     @break
                     @default
                     Halaman
@@ -38,23 +41,23 @@
 
                     @switch(true)
 
-                    {{-- Dashboard --}}
+                    {{-- admin.Dashboard --}}
                     @case(request()->routeIs('admin.dashboard'))
                     <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                     @break
 
-                    {{-- Users --}}
+                    {{-- admin.users.index --}}
                     @case(request()->routeIs('admin.users.index'))
                     <li class="breadcrumb-item active" aria-current="page">Users</li>
                     @break
-
+                    {{-- admin.users.create --}}
                     @case(request()->routeIs('admin.users.create'))
                     <li class="breadcrumb-item">
                         <a href="{{ route('admin.users.index') }}">Users</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Create</li>
                     @break
-
+                    {{-- admin.users.edit --}}
                     @case(request()->routeIs('admin.users.edit'))
                     <li class="breadcrumb-item">
                         <a href="{{ route('admin.users.index') }}">Users</a>
@@ -62,18 +65,18 @@
                     <li class="breadcrumb-item active" aria-current="page">Edit</li>
                     @break
 
-                    {{-- cars --}}
+                    {{-- admin.cars.index --}}
                     @case(request()->routeIs('admin.cars.index'))
                     <li class="breadcrumb-item active" aria-current="page">Cars</li>
                     @break
-
+                    {{-- admin.cars.create --}}
                     @case(request()->routeIs('admin.cars.create'))
                     <li class="breadcrumb-item">
                         <a href="{{ route('admin.cars.index') }}">Cars</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Create</li>
                     @break
-
+                    {{-- admin.cars.edit --}}
                     @case(request()->routeIs('admin.cars.edit'))
                     <li class="breadcrumb-item">
                         <a href="{{ route('admin.cars.index') }}">Cars</a>
@@ -81,11 +84,29 @@
                     <li class="breadcrumb-item active" aria-current="page">Edit</li>
                     @break
 
-                    {{--user.DownPayment  --}}
+                    {{-- admin.offer.index --}}
+                    @case(request()->routeIs('admin.offer.index'))
+                    <li class="breadcrumb-item active" aria-current="page">Offer</li>
+                    @break
+                    {{-- admin.offer.show --}}
+                    @case(request()->routeIs('admin.offer.show'))
+                    <li class="breadcrumb-item active" aria-current="page">
+                        <a href="{{route('admin.offer.index')}}">Offer</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">Show</li>
+                    @break
+
+                    {{-- admin.downPayment.index --}}
+                    @case(request()->routeIs('admin.downPayment.index'))
+                    <li class="breadcrumb-item active" aria-current="page">Down Payment(DP)</li>
+                    @break
+
+
+                    {{--user.downPayment.index  --}}
                     @case(request()->routeIs('user.downPayment.index'))
                     <li class="breadcrumb-item active" aria-current="page">Down Payment</li>
                     @break
-
+                    {{-- user.downPayment.checkout --}}
                     @case(request()->routeIs('user.downPayment.checkout'))
                     <li class="breadcrumb-item active" aria-current="page">
                         <a href="{{route('user.downPayment.index')}}">Down Payment</a>
@@ -93,20 +114,18 @@
                     <li class="breadcrumb-item active" aria-current="page">Checkout</li>
                     @break
 
-                    {{--user.Offer  --}}
+                    {{--user.Offer.index  --}}
                     @case(request()->routeIs('user.offer.index'))
                     <li class="breadcrumb-item active" aria-current="page">Penjualan Mobil</li>
+                    @break
+                    {{-- user.offer.show --}}
                     @case(request()->routeIs('user.offer.show'))
-
                     <li class="breadcrumb-item active" aria-current="page">
                         <a href="{{route('user.offer.index')}}">Penjualan Mobil</a>
                     </li>
                     <li class="breadcrumb-item active" aria-current="page">Show</li>
                     @break
 
-                    @case(request()->routeIs('admin.offer.index'))
-                    <li class="breadcrumb-item active" aria-current="page">Offer</li>
-                    @break
 
                     {{-- @break --}}
 

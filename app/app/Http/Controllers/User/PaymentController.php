@@ -61,9 +61,11 @@ class PaymentController extends Controller
         // dd($transaction);
 
         $status = "pending";
+        $paymentMethod = null;
 
         if ($transaction == 'settlement') {
             $status = 'confirmed';
+            $paymentMethod = $statusFromMidtrans->payment_type ?? null; 
         } elseif ($transaction == 'expire') {
             $status = 'expired';
         }elseif ($transaction == 'cancel') {
@@ -75,7 +77,8 @@ class PaymentController extends Controller
         DownPayment::where("id", $id)
             ->update([
                 "payment_status" => $status,
-                "payment_date" => $statusFromMidtrans->transaction_time ?? null
+                "payment_date" => $statusFromMidtrans->transaction_time ?? null,
+                "payment_method" => $paymentMethod,
             ]);
         
         if ($status == 'confirmed') {

@@ -22,7 +22,7 @@
                 {{-- Form Filter pencarian berdasarkan Brand, Sale Type, dan Status --}}
                 <form method="GET" action="{{ route('admin.offer.index') }}" class="row g-3 mb-4">
                     <div class="col-md-4">
-                        <label for="date_range" class="form-label">Filter Tanggal</label>
+                        <label for="date_range" class="form-label">Filter Inspection Date</label>
                         <input type="text" name="date_range" id="date_range" class="form-control" value="{{ request('date_range') }}" placeholder="Pilih rentang tanggal">
                     </div>
 
@@ -58,6 +58,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>Create At</th>
+                                <th>User</th>
                                 <th>Car</th>
                                 <th>Offer Price</th>
                                 <th>Inspection Date</th>
@@ -66,10 +67,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($offers as $offer)
+                            @forelse ($offers as $offer)
                             <tr>
                                 <td>{{ $offer->id }}</td>
                                 <td>{{ \Carbon\Carbon::parse($offer->created_at)->translatedFormat('d F Y H:i') }}</td>
+                                <td>{{$offer->user->name}}</td>
                                 <td>{{ $offer->brand . ' ' . $offer->model }}</td>
                                 <td>{{ 'Rp ' . number_format($offer->offered_price, 0, ',', '.') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($offer->inspection_date)->translatedFormat('d F Y H:i') }}</td>
@@ -98,7 +100,13 @@
                                         Show
                                 </td>
                             </tr>
-                            @endforeach
+
+                            {{-- Jika tidak ada data mobil --}}
+                            @empty
+                            <tr>
+                                <td colspan="7" class="text-center">No Offers Found.</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>
@@ -116,6 +124,14 @@
                     </div>
                 </div>
 
+            
+                {{-- Pagination --}}
+                <div class="card-footer clearfix">
+                    <div class="pagination pagination-sm m-0 float-end">
+                        {{ $offers->appends(request()->query())->links('pagination::bootstrap-5') }}
+
+                    </div>
+                </div>
             </div>
         </div>
     </div>

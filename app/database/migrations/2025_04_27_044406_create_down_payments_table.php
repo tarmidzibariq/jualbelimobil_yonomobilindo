@@ -18,11 +18,18 @@ return new class extends Migration
             $table->string('order_id', 100)->unique()->nullable();
             $table->decimal('amount', 15, 2);
             $table->enum('payment_status', ['pending', 'confirmed', 'cancelled', 'expired']);
+            $table->string('payment_method')->nullable();
             $table->timestamp('appointment_date');
             $table->timestamp('payment_date')->nullable();
-            $table->string('payment_proof')->nullable();
+
+            // Perbaikan foreign key refund_id
+            $table->unsignedBigInteger('refund_id')->nullable();
+            $table->foreign('refund_id')->references('id')->on('refunds')->onDelete('set null');
+
             $table->timestamps();
         });
+
+
     }
 
     /**

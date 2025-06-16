@@ -17,7 +17,9 @@ class DownPayment extends Model
         'payment_status',
         'payment_date',
         'payment_proof',
-
+        'order_id',
+        'payment_method',
+        'refund_id',
     ];
 
     protected $casts = [
@@ -35,5 +37,11 @@ class DownPayment extends Model
     public function car()
     {
         return $this->belongsTo(Car::class);
+    }
+    
+    // Define the relationship with the Refund model
+    public function refund()
+    {
+        return $this->belongsTo(Refund::class);
     }
 }

@@ -53,9 +53,18 @@
                 Cars
               </p>
             </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ route('admin.downPayment.index') }}" class="nav-link {{ request()->routeIs('admin.downPayment.*') ? 'active' : '' }}">
+              <i class="nav-icon fa-solid fa-money-bill"></i>
+              <p>
+                DownPayment(DP)
+              </p>
+            </a>
+          </li>
           <li class="nav-item">
             <a href="{{ route('admin.offer.index') }}" class="nav-link {{ request()->routeIs('admin.offer.*') ? 'active' : '' }}">
-              <i class="nav-icon fa-solid fa-briefcase"></i>
+              <i class="nav-icon fa-solid fa-car-side"></i>
               <p>
                 Offer Cars
               </p>
@@ -73,8 +82,7 @@
           </li>
           <li class="nav-item">
             <a href="{{route('user.downPayment.index')}}" class="nav-link {{ request()->routeIs('user.downPayment.*') ? 'active' : '' }}">
-              {{-- <i class=" nav-icon fa-solid fa-car"></i> --}}
-              <i class="nav-icon fa-solid fa-cart-shopping"></i>
+              <i class="nav-icon fa-solid fa-money-bill"></i>
               <p>
                 DownPayment(DP)
               </p>
@@ -82,8 +90,7 @@
           </li>
           <li class="nav-item">
             <a href="{{route('user.offer.index')}}" class="nav-link {{ request()->routeIs('user.offer.*') ? 'active' : '' }}">
-              {{-- <i class=" nav-icon fa-solid fa-car"></i> --}}
-              <i class="nav-icon fa-solid fa-cart-shopping"></i>
+              <i class="nav-icon fa-solid fa-car-side"></i>
               <p>
                 Penjualan Mobil
               </p>

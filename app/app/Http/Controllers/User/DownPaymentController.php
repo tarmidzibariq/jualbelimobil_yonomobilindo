@@ -24,7 +24,7 @@ class DownPaymentController extends Controller
     public function index()
     {
 
-        $downPayments = DownPayment::with('car')->where('user_id', Auth::id())->orderBy('id', 'desc')->get();
+        $downPayments = DownPayment::with('car')->where('user_id', Auth::id())->orderBy('id', 'desc')->paginate(10);
 
         return view('user.downPayment.index', compact('downPayments'));   
     }

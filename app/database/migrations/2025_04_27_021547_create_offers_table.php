@@ -19,7 +19,6 @@ return new class extends Migration
             $table->integer('year');
             $table->integer('mileage');
             $table->decimal('offered_price', 15, 2);
-            
             $table->text('location_inspection')->nullable();
             $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
             $table->timestamp('inspection_date')->nullable();

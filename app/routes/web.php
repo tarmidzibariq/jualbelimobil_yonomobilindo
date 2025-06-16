@@ -20,7 +20,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Http\Request;
 use App\Models\CarType;
+use Illuminate\Support\Facades\Auth;
 
+// Auth
 // Route::get('/', function () {
 //     return view('welcome');
 // });
@@ -66,13 +68,16 @@ Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function 
     // Car Photos Route
     Route::resource('cars-photo', CarPhotoController::class)->names('admin.carPhotos')->except(['show', 'edit', 'update', 'create', 'store']);
     
+    // Offer Route
     Route::get('offer',[AdminOfferController::class, 'index'])->name('admin.offer.index');
     Route::get('offer/{id}',[AdminOfferController::class, 'show'])->name('admin.offer.show');
-
     Route::get('offer/{id}/edit-status', [AdminOfferController::class, 'editStatus']);
     Route::post('offer/{id}/update-status', [AdminOfferController::class, 'updateStatus']);
-
     Route::post('offer/updateNote/{id}', [AdminOfferController::class, 'updateNote'])->name('admin.offer.updateNote');
+
+    // Down Payment Route
+    Route::resource('downPayment', App\Http\Controllers\Admin\DownPaymentController::class)->only(['index', 'show'])->names('admin.downPayment');
+   
 });
 
 //group route with prefix "user" with middleware "auth" and "checkrole:user"
