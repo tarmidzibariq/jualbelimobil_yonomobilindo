@@ -7,30 +7,42 @@
             <div class="col-sm-6">
                 <h3 class="mb-0">
                     @switch(true)
-                    @case(request()->routeIs('admin.dashboard'))
-                    Dashboard
-                    @break
-                    @case(request()->routeIs('admin.users.*'))
-                    Users
-                    @break
-                    @case(request()->routeIs('admin.cars.*'))
-                    Cars
-                    @break
-                    @case(request()->routeIs('admin.offer.*'))
-                    Offer Cars
-                    @break
-                    @case(request()->routeIs('admin.downPayment.*'))
-                    Down Payment(DP)
-                    @break
-                    @case(request()->routeIs('user.downPayment.*'))
-                    Pembayaran DP
-                    @break
-                    @case(request()->routeIs('user.offer.*'))
-                    Penjualan Mobil
-                    @break
-                    @default
-                    Halaman
+                        @case(request()->routeIs('admin.dashboard'))
+                            Dashboard
+                            @break
+
+                        @case(request()->routeIs('admin.users.*'))
+                            Users
+                            @break
+
+                        @case(request()->routeIs('admin.cars.*'))
+                            Cars
+                            @break
+
+                        @case(request()->routeIs('admin.offer.*'))
+                            Offer Cars
+                            @break
+
+                        @case(request()->routeIs('admin.downPayment.edit'))
+                            Refund DP
+                            @break
+
+                        @case(request()->routeIs('admin.downPayment.*'))
+                            Down Payment(DP)
+                            @break
+
+                        @case(request()->routeIs('user.downPayment.*'))
+                            Pembayaran DP
+                            @break
+
+                        @case(request()->routeIs('user.offer.*'))
+                            Penjualan Mobil
+                            @break
+
+                        @default
+                            Halaman
                     @endswitch
+
                 </h3>
             </div>
             <div class="col-sm-6">

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DownPayment;
 use App\Models\Refund;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DownPaymentController extends Controller
 {
@@ -59,10 +60,16 @@ class DownPaymentController extends Controller
         return view('admin.downPayment.index', compact('downPayments', 'statuses'));
     }
 
-    public function edit($id)
+    public function show($id)
+    {
+        $downPayment = DownPayment::with(['user', 'car'])->findOrFail($id);
+        return view('admin.downPayment.partials.modal_content', compact('downPayment'));
+    }
+
+    public function addRefund($id)
     {
         $downPayment = DownPayment::findOrFail($id);
-        return view('admin.downPayment.edit', compact('downPayment'));
+        return view('admin.downPayment.refund', compact('downPayment'));
     }
 
     public function storeRefund(Request $request, $id)
@@ -87,14 +94,64 @@ class DownPaymentController extends Controller
         $downPayment->update([
             'refund_id' => $refund->id,
         ]);
+        if ($refund->refund_status = 'refund') {
+            // Update status mobil menjadi sold
+            $downPayment->car->update(['status' => 'available']);
+        }
 
         return redirect()->route('admin.downPayment.index')->with('success', 'Down payment refunded successfully.');
     }
 
-    public function show($id)
+    public function editRefund($id)
     {
-        $downPayment = DownPayment::with(['user', 'car'])->findOrFail($id);
-        return view('admin.downPayment.partials.modal_content', compact('downPayment'));
+        $downPayment = DownPayment::with('refund')->findOrFail($id);
+        return view('admin.downPayment.editRefund', compact('downPayment'));
     }
+    public function updateRefund(Request $request, $id)
+    {
+        $request->validate([
+            'no_rekening_refund' => 'required|string|max:255',
+            'refund_payment_proof' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $downPayment = DownPayment::with('refund')->findOrFail($id);
+
+        // Jika belum ada refund, buat baru
+        if (!$downPayment->refund) {
+            $refund = new Refund();
+        } else {
+            $refund = $downPayment->refund;
+        }
+
+        // Update no rekening
+        $refund->no_rekening_refund = $request->no_rekening_refund;
+
+        // Jika ada file baru
+        if ($request->hasFile('refund_payment_proof')) {
+            // Hapus file lama jika ada
+            if ($refund->refund_payment_proof && Storage::disk('public')->exists('refund/' . $refund->refund_payment_proof)) {
+                Storage::disk('public')->delete('refund/' . $refund->refund_payment_proof);
+            }
+
+            $filename = $request->file('refund_payment_proof')->hashName();
+            $request->file('refund_payment_proof')->storeAs('refund', $filename, 'public');
+            $refund->refund_payment_proof = $filename;
+        }
+
+        $refund->refund_status = 'refund'; // update atau tetap sama
+        $refund->save();
+
+        if ($refund->refund_status = 'refund') {
+            // Update status mobil menjadi sold
+            $downPayment->car->update(['status' => 'available']);
+        }
+
+        // Pastikan DownPayment terhubung ke refund
+        $downPayment->refund_id = $refund->id;
+        $downPayment->save();
+
+        return redirect()->route('admin.downPayment.index')->with('success', 'Refund berhasil diperbarui.');
+    }
+
 
 }

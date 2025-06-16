@@ -76,8 +76,12 @@ Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function 
     Route::post('offer/updateNote/{id}', [AdminOfferController::class, 'updateNote'])->name('admin.offer.updateNote');
 
     // Down Payment Route
-    Route::resource('downPayment', App\Http\Controllers\Admin\DownPaymentController::class)->only(['index','edit', 'show'])->names('admin.downPayment');
-    Route::post('downPayment/refund/{id}', [App\Http\Controllers\Admin\DownPaymentController::class, 'storeRefund'])->name('admin.downPayment.storeRefund');
+    Route::resource('downPayment', App\Http\Controllers\Admin\DownPaymentController::class)->only(['index', 'show'])->names('admin.downPayment');
+    Route::get('downPayment/addRefund/{id}', [App\Http\Controllers\Admin\DownPaymentController::class, 'addRefund'])->name('admin.downPayment.addRefund');
+    Route::post('downPayment/storeRefund/{id}', [App\Http\Controllers\Admin\DownPaymentController::class, 'storeRefund'])->name('admin.downPayment.storeRefund');
+    
+    Route::get('downPayment/editRefund/{id}', [App\Http\Controllers\Admin\DownPaymentController::class, 'editRefund'])->name('admin.downPayment.editRefund');
+    Route::post('downPayment/updateRefund/{id}', [App\Http\Controllers\Admin\DownPaymentController::class, 'updateRefund'])->name('admin.downPayment.updateRefund');
 });
 
 //group route with prefix "user" with middleware "auth" and "checkrole:user"

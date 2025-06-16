@@ -33,7 +33,11 @@
                                             <span class="badge bg-warning text-dark">Pending</span>
                                             @break
                                         @case('confirmed')
-                                            <span class="badge bg-success">Confirmed</span>
+                                            @if(optional($item->refund)->refund_status === 'refund')
+                                                <span class="badge bg-success">Confirmed</span> | <span class="badge bg-secondary">Refund</span>
+                                            @else
+                                                <span class="badge bg-success">Confirmed</span>
+                                            @endif
                                             @break
                                         @case('cancelled')
                                             <span class="badge bg-danger">Cancelled</span>

@@ -6,7 +6,7 @@
         <div class="card card-primary card-outline mb-4">
             <!--begin::Header-->
             <div class="card-header">
-                <div class="card-title">Refund #{{$downPayment->id}} </div>
+                <div class="card-title">Edit Refund #{{$downPayment->id}} </div>
             </div>
             <!--end::Header-->
 
@@ -23,9 +23,10 @@
             <!--end::Error Alert-->
 
             <!--begin::Form-->
-            <form action="{{ route('admin.downPayment.storeRefund', $downPayment->id) }}" method="POST"
+            <form action="{{ route('admin.downPayment.updateRefund', $downPayment->id) }}" method="POST"
                 enctype="multipart/form-data">
                 @csrf
+                {{-- @method('PUT') --}}
                 <div class="card-body">
 
                     <div class="mb-3">
@@ -50,8 +51,9 @@
                                 class="img-thumbnail">
                         </div>
                         <input type="file" class="form-control @error('refund_payment_proof') is-invalid @enderror"
-                            id="refund_payment_proof" name="refund_payment_proof" accept="image/*"
-                            onchange="previewImage(event)" required>
+                            id="refund_payment_proof" name="refund_payment_proof" 
+                            onchange="previewImage(event)" >
+                        <small class="text-muted">Silakan upload ulang bukti refund jika form gagal disubmit.</small>
 
                         @error('refund_payment_proof')
                         <span class="invalid-feedback" role="alert">

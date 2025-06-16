@@ -15,14 +15,26 @@
                     <tr>
                         <th>Status Pembayaran DP</th>
                         <td>
-                            <span class="badge 
-                                @if($downPayments->payment_status == 'pending') bg-warning 
-                                @elseif($downPayments->payment_status == 'confirmed') bg-success 
-                                @elseif($downPayments->payment_status == 'cancelled') bg-danger 
-                                @elseif($downPayments->payment_status == 'expired') bg-danger 
-                                @endif">
-                                {{ ucfirst($downPayments->payment_status) }}
-                            </span>
+                            @switch($downPayments->payment_status)
+                                @case('pending')
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    @break
+                                @case('confirmed')
+                                    @if(optional($downPayments->refund)->refund_status === 'refund')
+                                        <span class="badge bg-success">Confirmed</span> | <span class="badge bg-secondary">Refund</span>
+                                    @else
+                                        <span class="badge bg-success">Confirmed</span>
+                                    @endif
+                                    @break
+                                @case('cancelled')
+                                    <span class="badge bg-danger">Cancelled</span>
+                                    @break
+                                @case('expired')
+                                    <span class="badge bg-danger">Expired</span>
+                                    @break
+                                @default
+                                    <span class="badge bg-secondary">{{ ucfirst($item->payment_status) }}</span>
+                            @endswitch
                         </td>
                     </tr>
                     <tr>
@@ -65,6 +77,47 @@
                     </tr>
                         
                     @endif
+
+                    @if ($downPayments->refund_id !== null && $downPayments->payment_status === 'confirmed')
+                        <tr>
+                            <th colspan="2" class="text-muted">Informasi Refund</th>
+                        </tr>
+                        <tr>
+                            <th>No Rekening Refund</th>
+                            <td>{{ $downPayments->refund ? $downPayments->refund->no_rekening_refund : '-' }}</td>
+                        </tr>
+                        <tr>
+                            <th>Bukti Pembayaran Refund</th>
+                            <td>
+                                @if ($downPayments->refund && $downPayments->refund->refund_payment_proof)
+                                <img src="{{ asset('storage/refund/' . $downPayments->refund->refund_payment_proof) }}"
+                                    alt="Bukti Pembayaran Refund" class="img-thumbnail" style="max-height: 200px; object-fit: contain;">
+                                @else
+                                -
+                                @endif
+                            </td>
+                        </tr>
+                        {{-- <tr>
+                            
+                            <th>Status Refund</th>
+                            <td>
+                                @if ($downPayments->refund)
+                                @switch($downPayments->refund->refund_status)
+                                @case('refund')
+                                <span class="badge bg-danger">Refund</span>
+                                @break
+                                @case('no_refund')
+                                <span class="badge bg-danger">No Refund</span>
+                                @break
+                                @default
+                                <span class="badge bg-secondary">{{ ucfirst($downPayments->refund->status) }}</span>
+                                @endswitch
+                                @else
+                                -
+                                @endif
+                            </td>
+                        </tr> --}}
+                        @endif
                 </table>
 
                 @if($downPayments->payment_status == 'pending' && isset($snapToken))

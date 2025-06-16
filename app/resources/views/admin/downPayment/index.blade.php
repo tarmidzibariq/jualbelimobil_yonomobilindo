@@ -110,11 +110,16 @@
                                         Show
                                     </button>
                                     {{-- Tombol untuk edit down payment --}}
-                                    @if ( $downPayment->payment_status === 'confirmed')
-                                    <a href="{{ route('admin.downPayment.edit', $downPayment->id) }}"
-                                        class="btn btn-sm btn-secondary">
-                                        Refund
-                                    </a>
+                                    @if ( $downPayment->payment_status === 'confirmed' && $downPayment->refund_id === null)
+                                        <a href="{{ route('admin.downPayment.addRefund', $downPayment->id) }}"
+                                            class="btn btn-sm btn-secondary">
+                                            Refund
+                                        </a>
+                                    @elseif ($downPayment->payment_status === 'confirmed' && $downPayment->refund_id !== null)
+                                        <a href="{{ route('admin.downPayment.editRefund', $downPayment->id) }}"
+                                            class="btn btn-sm btn-secondary">
+                                            Edit Refund
+                                        </a>
                                     @endif
                                 </td>
                             </tr>
