@@ -78,7 +78,7 @@
                 </tr>
               @empty
                 <tr>
-                  <td colspan="5" class="text-center">No users found.</td>
+                  <td colspan="8" class="text-center">No users found.</td>
                 </tr>
               @endforelse
             </tbody>
