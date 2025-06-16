@@ -26,12 +26,15 @@
           <div class="col-md-4">
               <input type="text" name="search" class="form-control" placeholder="Search by name or email" value="{{ request('search') }}">
           </div>
-          <div class="col-md-3">
-              <select name="role" class="form-select">
-                  <option value="">All Roles</option>
-                  <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                  <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>User</option>
-              </select>
+          <div class="col-md-4">
+            <select name="role" class="form-select">
+              <option value="">All Roles</option>
+              <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+              <option value="user" {{ request('role') == 'user' ? 'selected' : '' }}>User</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+              <input type="text" name="address" class="form-control" placeholder="Search Address" value="{{ request('address') }}">
           </div>
           <div class="col-12">
               <button type="submit" class="btn btn-success">Search</button>
@@ -46,10 +49,12 @@
             <thead>
               <tr>
                 <th style="width: 10px">ID</th>
+                <th>Created At</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th>Created At</th>
+                <th>Phone</th>
+                <th>Address</th>
                 <th>Action</th>
               </tr>
             </thead>
@@ -57,10 +62,12 @@
               @forelse ($users as $item)
                 <tr class="align-middle">
                   <td>{{ $item->id }}</td>
+                  <td>{{ \Carbon\Carbon::parse($item->created_at)->translatedFormat('d F Y H:i') }}</td>
                   <td>{{ $item->name }}</td>
                   <td>{{ $item->email }}</td>
                   <td>{{ $item->role }}</td>
-                  <td>{{ $item->created_at }}</td>
+                  <td>{{ $item->phone  ?? '-'}}</td>
+                  <td>{{ $item->address ?? '-' }}</td>
                   <td>
                     <a href="{{ route('admin.users.edit', $item->id) }}" class="btn btn-warning btn-sm">Edit</a>
                     <form action="{{ route('admin.users.destroy', $item->id) }}" method="POST" class="d-inline">
