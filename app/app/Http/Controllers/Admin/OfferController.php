@@ -30,9 +30,10 @@ class OfferController extends Controller
             });
         }
 
+        // created_at filter
         if ($request->filled('date_range')) {
             [$start, $end] = explode(' to ', $request->date_range);
-            $query->whereBetween('inspection_date', [$start, $end]);
+            $query->whereBetween('created_at', [$start, $end]);
         }
         // $offers = Offer::orderB/y('id', 'desc')->paginate(10);
 

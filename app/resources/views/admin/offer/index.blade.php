@@ -22,7 +22,7 @@
                 {{-- Form Filter pencarian berdasarkan Brand, Sale Type, dan Status --}}
                 <form method="GET" action="{{ route('admin.offer.index') }}" class="row g-3 mb-4">
                     <div class="col-md-4">
-                        <label for="date_range" class="form-label">Filter Inspection Date</label>
+                        <label for="date_range" class="form-label">Created At</label>
                         <input type="text" name="date_range" id="date_range" class="form-control" value="{{ request('date_range') }}" placeholder="Pilih rentang tanggal">
                     </div>
 

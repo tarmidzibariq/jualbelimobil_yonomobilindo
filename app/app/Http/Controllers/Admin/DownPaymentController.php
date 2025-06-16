@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\DownPayment;
+use App\Models\Refund;
 use Illuminate\Http\Request;
 
 class DownPaymentController extends Controller
@@ -15,12 +16,85 @@ class DownPaymentController extends Controller
 
     public function index(Request $request)
     {
-        $downPayments = DownPayment::with(['user','car'])->orderBy('id', 'desc')->paginate(10);
-        return view('admin.downPayment.index', compact('downPayments'));
+        $query = DownPayment::query();
+
+        
+         // Filter by keyword (brand atau model mobil)
+        if ($request->filled('keyword')) {
+            $query->whereHas('car', function ($q) use ($request) {
+                $q->where('brand', 'like', '%' . $request->keyword . '%')
+                ->orWhere('model', 'like', '%' . $request->keyword . '%');
+            });
+        }
+
+        if ($request->filled('status')) {
+            [$type, $value] = explode(':', $request->status);
+
+            if ($type === 'payment') {
+                $query->where('payment_status', $value);
+            }
+
+            if ($type === 'refund') {
+                $query->whereHas('refund', function ($q) use ($value) {
+                    $q->where('refund_status', $value);
+                });
+            }
+        }
+
+        if ($request->filled('date_range')) {
+            [$start, $end] = explode(' to ', $request->date_range);
+            $query->whereBetween('created_at', [$start, $end]);
+        }
+
+        $downPayments = $query->with(['user', 'car'])->latest()->paginate(10);
+
+        $statuses = [
+            'pending' => 'Pending',
+            'confirmed' => 'Confirmed',
+            'cancelled' => 'Cancelled',
+            'expired' => 'Expired',
+            'refund' => 'Refunded',
+        ];
+        // $downPayments = DownPayment::with(['user','car'])->orderBy('id', 'desc')->paginate(10);
+        return view('admin.downPayment.index', compact('downPayments', 'statuses'));
     }
+
+    public function edit($id)
+    {
+        $downPayment = DownPayment::findOrFail($id);
+        return view('admin.downPayment.edit', compact('downPayment'));
+    }
+
+    public function storeRefund(Request $request, $id)
+    {
+        $request->validate([
+            'no_rekening_refund' => 'required|string|max:255',
+            'refund_payment_proof' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        
+        ]);
+
+        $refund_payment_proof = $request->file('refund_payment_proof');         // Ambil file
+        $filename = $refund_payment_proof->hashName();                         // Generate nama unik (berbasis hash)
+        $refund_payment_proof->storeAs('refund', $filename, 'public');         // Simpan file ke storage/app/public/refund
+
+
+        $refund = Refund::create([
+            'no_rekening_refund' => $request->no_rekening_refund,
+            'refund_payment_proof' => $filename,
+            'status' => 'refund',
+        ]);
+        $downPayment = DownPayment::findOrFail($id);
+        $downPayment->update([
+            'refund_id' => $refund->id,
+        ]);
+
+        return redirect()->route('admin.downPayment.index')->with('success', 'Down payment refunded successfully.');
+    }
+
     public function show($id)
     {
         $downPayment = DownPayment::with(['user', 'car'])->findOrFail($id);
         return view('admin.downPayment.partials.modal_content', compact('downPayment'));
     }
+
 }

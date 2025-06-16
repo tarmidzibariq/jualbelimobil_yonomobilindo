@@ -14,6 +14,43 @@
                 </div>
                 @endif
 
+                <form method="GET" action="{{ route('admin.downPayment.index') }}" class="row g-3 mb-4">
+
+                    {{-- Filter Tanggal (Created At) --}}
+                    <div class="col-md-4">
+                        <label for="date_range" class="form-label">Created At</label>
+                        <input type="text" name="date_range" id="date_range" class="form-control" value="{{ request('date_range') }}" placeholder="Pilih rentang tanggal">
+                    </div>
+                    
+                    {{-- Filter Status --}}
+                    <div class="col-md-4">
+                        <label for="status" class="form-label">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="">-- Semua Status --</option>
+                            <option value="payment:pending">Pending</option>
+                            <option value="payment:confirmed">Confirmed</option>
+                            <option value="payment:cancelled">Cancelled</option>
+                            <option value="payment:expired">Expired</option>
+                            <option value="refund:refund">Refunded</option>
+                        </select>
+                    </div>
+
+                    {{-- Filter Nama Mobil --}}
+                    <div class="col-md-4">
+                        <label for="keyword" class="form-label">Nama Mobil</label>
+                        <input type="text" class="form-control" name="keyword" id="keyword" value="{{ request('keyword') }}"
+                            placeholder="Masukkan nama mobil...">
+                    </div>
+                    
+
+                    {{-- Tombol Filter --}}
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-success">Filter</button>
+                        <a href="{{ route('admin.downPayment.index') }}" class="btn btn-secondary">Reset</a>
+                    </div>
+
+                </form>
+
                 {{-- Tabel mobil dengan fitur DataTables --}}
                 <div class="table-responsive">
                     <table id="cars-table" class="table table-bordered">
@@ -49,7 +86,11 @@
                                     <span class="badge bg-warning text-dark">Pending</span>
                                     @break
                                     @case('confirmed')
-                                    <span class="badge bg-success">Confirmed</span>
+                                        @if(optional($downPayment->refund)->refund_status === 'refund')
+                                            <span class="badge bg-success">Confirmed</span> | <span class="badge bg-secondary">Refund</span>
+                                        @else
+                                            <span class="badge bg-success">Confirmed</span>
+                                        @endif
                                     @break
                                     @case('cancelled')
                                     <span class="badge bg-danger">Cancelled</span>
@@ -68,6 +109,13 @@
                                         data-bs-target="#downPaymentModal">
                                         Show
                                     </button>
+                                    {{-- Tombol untuk edit down payment --}}
+                                    @if ( $downPayment->payment_status === 'confirmed')
+                                    <a href="{{ route('admin.downPayment.edit', $downPayment->id) }}"
+                                        class="btn btn-sm btn-secondary">
+                                        Refund
+                                    </a>
+                                    @endif
                                 </td>
                             </tr>
                             @empty
@@ -106,7 +154,17 @@
 </div>
 @push('scripts')
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/plugins/rangePlugin.js"></script>
 <script>
+    flatpickr("#date_range", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        defaultDate: @json(explode(' to ', request('date_range')))
+    });
+
     $(document).ready(function () {
 
         // ===============================
