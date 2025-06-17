@@ -70,6 +70,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('admin.salesRecord.index') }}" class="nav-link {{ request()->routeIs('admin.salesRecord.*') ? 'active' : '' }}">
+              <i class="nav-icon fa-solid fa-car-side"></i>
+              <p>
+                Transaction Sales Record 
+              </p>
+            </a>
+          </li>
           
           @elseif(auth()->user()->role === 'user')
           <li class="nav-item">

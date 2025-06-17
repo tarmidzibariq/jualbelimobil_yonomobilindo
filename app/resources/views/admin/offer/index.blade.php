@@ -104,7 +104,7 @@
                             {{-- Jika tidak ada data mobil --}}
                             @empty
                             <tr>
-                                <td colspan="7" class="text-center">No Offers Found.</td>
+                                <td colspan="8" class="text-center">No Offers Found.</td>
                             </tr>
                             @endforelse
                         </tbody>

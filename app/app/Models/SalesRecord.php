@@ -26,8 +26,13 @@ class SalesRecord extends Model
     }
 
     // Define the relationship with the User model
-    public function user()
+    public function buyer()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'buyer_id');
+    }
+    
+    public function saler()
+    {
+        return $this->belongsTo(User::class, 'seller_id');
     }
 }

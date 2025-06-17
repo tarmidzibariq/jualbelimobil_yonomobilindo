@@ -151,9 +151,11 @@
                 // alert("Pembayaran gagal.");
                 window.location.href = "{{ route('user.downPayment.changeStatus' , $downPayments->id) }}";
             },
-            onClose: function(){
-                alert("Kamu menutup popup tanpa menyelesaikan pembayaran.");
-            }
+            onClose: function(result){
+                window.location.href = "{{ route('user.downPayment.changeStatus' , $downPayments->id) }}";
+
+                // alert("Kamu menutup popup tanpa menyelesaikan pembayaran.");
+            },
         });
     });
 </script>

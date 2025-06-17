@@ -62,9 +62,18 @@ class User extends Authenticatable
     }
 
     // Define the relationship with the Sales_Record model
-    public function salesRecord()
+    // public function salesRecord()
+    // {
+    //     return $this->hasMany(SalesRecord::class);
+    // }
+    public function purchases()
     {
-        return $this->hasMany(SalesRecord::class);
+        return $this->hasMany(SalesRecord::class, 'buyer_id');
+    }
+
+    public function sales()
+    {
+        return $this->hasMany(SalesRecord::class, 'seller_id');
     }
 
     // Define the relationship with the DownPayment model

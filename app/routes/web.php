@@ -79,9 +79,11 @@ Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function 
     Route::resource('downPayment', App\Http\Controllers\Admin\DownPaymentController::class)->only(['index', 'show'])->names('admin.downPayment');
     Route::get('downPayment/addRefund/{id}', [App\Http\Controllers\Admin\DownPaymentController::class, 'addRefund'])->name('admin.downPayment.addRefund');
     Route::post('downPayment/storeRefund/{id}', [App\Http\Controllers\Admin\DownPaymentController::class, 'storeRefund'])->name('admin.downPayment.storeRefund');
-    
     Route::get('downPayment/editRefund/{id}', [App\Http\Controllers\Admin\DownPaymentController::class, 'editRefund'])->name('admin.downPayment.editRefund');
     Route::post('downPayment/updateRefund/{id}', [App\Http\Controllers\Admin\DownPaymentController::class, 'updateRefund'])->name('admin.downPayment.updateRefund');
+
+    // Sales Records Route
+    Route::resource('sales-records', App\Http\Controllers\Admin\SalesRecordController::class)->names('admin.salesRecord');
 });
 
 //group route with prefix "user" with middleware "auth" and "checkrole:user"

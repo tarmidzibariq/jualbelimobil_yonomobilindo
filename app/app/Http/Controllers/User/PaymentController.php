@@ -51,7 +51,7 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function changeStatus($id) {
+    public function changeStatus($id) {   
         $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
         
         MidtransHelper::init();
@@ -59,7 +59,7 @@ class PaymentController extends Controller
         $statusFromMidtrans = Transaction::status($downPayment->order_id);
         $transaction = $statusFromMidtrans->transaction_status ?? "pending";
         // dd($transaction);
-
+        
         $status = "pending";
         $paymentMethod = null;
 
