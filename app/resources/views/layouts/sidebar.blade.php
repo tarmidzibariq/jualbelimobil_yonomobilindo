@@ -78,6 +78,14 @@
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="{{ route('admin.offerRecord.index') }}" class="nav-link {{ request()->routeIs('admin.offerRecord.*') ? 'active' : '' }}">
+              <i class="nav-icon fa-solid fa-shop"></i>
+              <p>
+                Transaction Offer Record 
+              </p>
+            </a>
+          </li>
           
           @elseif(auth()->user()->role === 'user')
           <li class="nav-item">

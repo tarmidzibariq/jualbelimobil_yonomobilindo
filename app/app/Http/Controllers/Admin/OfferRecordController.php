@@ -3,39 +3,38 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Car;
 use App\Models\Offer;
-use App\Models\SalesRecord;
+use App\Models\OfferRecord;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class SalesRecordController extends Controller
+class OfferRecordController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
         $this->middleware('checkrole:admin');
     }
-    
-    function index(Request $request)
+
+    function index()
     {
-        $salesRecords = SalesRecord::with(['car', 'buyer', 'saler'])
+        $offerRecords = OfferRecord::with(['offer', 'buyerOfferRecord', 'salerOfferRecord'])
             ->orderBy('created_at', 'desc')
             ->paginate(10);
-        return view('admin.salesRecord.index', compact('salesRecords'));
+        return view('admin.offerRecord.index', compact('offerRecords'));
     }
-    
-    function create(Request $request)
+
+    function create()
     {
-        
-        $cars = Car::where('status', 'under_review')->orderBy('created_at', 'desc')->get();
+        $offers = Offer::where('status', 'accepted')->orderBy('created_at', 'desc')->get();
         // $offers = Offer::where('status', 'accepted')->orderBy('created_at', 'desc')->get();
         $users = User::all();
 
-        return view('admin.salesRecord.create', compact('cars', 'users'));
+        // You can add logic here to fetch necessary data for creating an offer record
+        return view('admin.offerRecord.create', compact('offers', 'users'));
     }
 
-    function store(Request $request)
+     function store(Request $request)
     {
         // dd($request->all());
         $request->validate([
@@ -46,7 +45,7 @@ class SalesRecordController extends Controller
             'sale_date' => 'required|date',
         ]);
 
-        $salesRecord = SalesRecord::create([
+        $offerRecord = OfferRecord::create([
             'car_id' => $request->car_id,
             'buyer_id' => $request->buyer_id,
             'seller_id' => $request->seller_id,
@@ -56,11 +55,11 @@ class SalesRecordController extends Controller
         ]);
         // Update the car status to 'sold'
         
-        $car = Car::findOrFail($request->car_id);
-        if ($car->status !== 'sold') {
-            $car->update(['status' => 'sold']);
+        $offer = Offer::findOrFail($request->offer_id);
+        if ($offer->status !== 'sold') {
+            $offer->update(['status' => 'sold']);
         }
 
-        return redirect()->route('admin.salesRecord.index')->with('success', 'Sales record created successfully.');
+        return redirect()->route('admin.offerRecord.index')->with('success', 'Sales record created successfully.');
     }
 }

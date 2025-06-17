@@ -83,7 +83,12 @@ Route::prefix('admin')->middleware(['auth', 'checkrole:admin'])->group(function 
     Route::post('downPayment/updateRefund/{id}', [App\Http\Controllers\Admin\DownPaymentController::class, 'updateRefund'])->name('admin.downPayment.updateRefund');
 
     // Sales Records Route
-    Route::resource('sales-records', App\Http\Controllers\Admin\SalesRecordController::class)->names('admin.salesRecord');
+    Route::resource('sales-records', App\Http\Controllers\Admin\SalesRecordController::class)->names('admin.salesRecord')->except(['show', 'edit', 'update']);
+    
+    // Offer Records Route
+    Route::resource('offer-records', App\Http\Controllers\Admin\OfferRecordController::class)->names('admin.offerRecord')->except(['show', 'edit', 'update']);
+
+    
 });
 
 //group route with prefix "user" with middleware "auth" and "checkrole:user"
