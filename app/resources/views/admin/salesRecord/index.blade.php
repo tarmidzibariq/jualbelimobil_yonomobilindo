@@ -48,12 +48,12 @@
                                 <td>{{ \Carbon\Carbon::parse($salesRecord->sale_date)->translatedFormat('d F Y H:i') }}</td>
                                 <td>
                                     {{-- <a href="{{ route('admin.salesRecord.show', $salesRecord) }}" class="btn btn-info btn-sm">Show</a> --}}
-                                    <a href="{{ route('admin.salesRecord.edit', $salesRecord) }}" class="btn btn-warning btn-sm">Edit</a>
-                                    {{-- <form action="{{ route('admin.salesRecord.destroy', $salesRecord) }}" method="POST" class="d-inline">
+                                    {{-- <a href="{{ route('admin.salesRecord.edit', $salesRecord) }}" class="btn btn-warning btn-sm">Edit</a> --}}
+                                    <form action="{{ route('admin.salesRecord.destroy', $salesRecord) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
-                                    </form> --}}
+                                    </form>
                                 </td>
                             </tr>
                             @endforeach

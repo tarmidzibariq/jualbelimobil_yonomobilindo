@@ -63,4 +63,12 @@ class SalesRecordController extends Controller
 
         return redirect()->route('admin.salesRecord.index')->with('success', 'Sales record created successfully.');
     }
+
+    public function destroy($id)
+    {
+        $salesRecord = SalesRecord::findOrFail($id);
+        $salesRecord->delete();
+
+        return redirect()->route('admin.salesRecord.index')->with('success', 'Sales record deleted successfully.');
+    }
 }
