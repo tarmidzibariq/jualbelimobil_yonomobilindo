@@ -13,14 +13,6 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 @endif
-
-                {{-- Tombol Create mobil baru --}}
-                <div class="d-flex justify-content-between mb-3">
-                    <a href="{{ route('admin.salesRecord.create') }}" class="btn btn-primary">Create</a>
-                </div>
-
-                
-
                 {{-- Tabel mobil dengan fitur DataTables --}}
                 <div class="table-responsive">
                     <table id="cars-table" class="table table-bordered">
@@ -33,27 +25,29 @@
                                 <th>Buyer</th>
                                 <th>Sale Price</th>
                                 <th>Sale Date</th>
-                                <th>Action</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($salesRecords as $salesRecord)
+                           @forelse ($salesRecords as $salesRecord)
                             <tr>
                                 <td>{{ $salesRecord->id }}</td>
                                 <td>{{ \Carbon\Carbon::parse($salesRecord->created_at)->translatedFormat('d F Y H:i') }}</td>
-                                <td>{{ $salesRecord->car->brand . ' ' . $salesRecord->car->model . ' ' . $salesRecord->car->year }}</td>
+                                <td><a href="" class="btn-show-detail" data-id="{{ $salesRecord->car->id }}" data-bs-toggle="modal" data-bs-target="#carModal">{{ $salesRecord->car->brand . ' ' . $salesRecord->car->model . ' ' . $salesRecord->car->year }}</a></td>
                                 <td>{{ $salesRecord->saler->name }}</td>
                                 <td>{{ $salesRecord->buyer->name }}</td>
                                 <td>Rp. {{ number_format($salesRecord->sale_price, 0, ',', '.') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($salesRecord->sale_date)->translatedFormat('d F Y H:i') }}</td>
                                 <td>
-                                    {{-- <a href="{{ route('admin.salesRecord.show', $salesRecord) }}" class="btn btn-info btn-sm">Show</a> --}}
-                                    {{-- <a href="{{ route('admin.salesRecord.edit', $salesRecord) }}" class="btn btn-warning btn-sm">Edit</a> --}}
-                                    <form action="{{ route('admin.salesRecord.destroy', $salesRecord) }}" method="POST" class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
-                                    </form>
+                                    @if ($salesRecord->status == 'pending')
+                                        <span class="badge bg-warning">Pending</span>
+                                    @elseif ($salesRecord->status == 'completed')
+                                        <span class="badge bg-success">Completed</span>
+                                    @elseif ($salesRecord->status == 'cancelled')
+                                        <span class="badge bg-danger">Cancelled</span>
+                                    @else
+                                        <span class="badge bg-secondary">Unknown</span>
+                                    @endif
                                 </td>
                             </tr>
                             @empty
@@ -61,14 +55,9 @@
                                 <td colspan="8" class="text-center">No sales records found.</td>
                             </tr>
                             @endforelse
-
-                            
                         </tbody>
                     </table>
                 </div>
-
-               
-
             
                 {{-- Pagination --}}
                 <div class="card-footer clearfix">
@@ -82,42 +71,5 @@
     </div>
 </div>
 
-@push('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-
-        // ===============================
-        // 1. Show detail mobil ke dalam modal
-        // ===============================
-        $('.btn-show-detail').on('click', function () {
-            let carId = $(this).data('id');
-            let modalContent = $('#carModalContent');
-
-            modalContent.html(`
-          <div class="modal-body text-center">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        `);
-
-            $.ajax({
-                url: `/admin/cars/${carId}`, // Show route: menampilkan detail mobil
-                method: 'GET',
-                success: function (response) {
-                    modalContent.html(response); // Load ke dalam modal
-                },
-                error: function () {
-                    modalContent.html(
-                        '<div class="modal-body text-danger">Failed to load data.</div>'
-                        );
-                }
-            });
-        });
-    });
-    </script>
-@endpush
 @endsection
 

@@ -17,7 +17,7 @@ class SalesRecordController extends Controller
         $this->middleware('checkrole:admin');
     }
     
-    function index(Request $request)
+    public function index()
     {
         $salesRecords = SalesRecord::with(['car', 'buyer', 'saler'])
             ->orderBy('created_at', 'desc')
@@ -25,7 +25,7 @@ class SalesRecordController extends Controller
         return view('admin.salesRecord.index', compact('salesRecords'));
     }
     
-    function create(Request $request)
+    public function create()
     {
         
         $cars = Car::where('status', 'under_review')->orderBy('created_at', 'desc')->get();
@@ -35,7 +35,7 @@ class SalesRecordController extends Controller
         return view('admin.salesRecord.create', compact('cars', 'users'));
     }
 
-    function store(Request $request)
+    public function store(Request $request)
     {
         // dd($request->all());
         $request->validate([

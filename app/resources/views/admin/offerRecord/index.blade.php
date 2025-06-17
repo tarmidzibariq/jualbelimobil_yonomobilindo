@@ -60,21 +60,6 @@
                         </tbody>
                     </table>
                 </div>
-
-                <!-- Modal kosong untuk show, akan diisi konten AJAX -->
-                <div class="modal fade" id="carModal" tabindex="-1" aria-labelledby="carModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-lg">
-                        <div class="modal-content" id="carModalContent">
-                            <!-- Konten modal akan di-load via AJAX -->
-                            <div class="modal-body text-center">
-                                <div class="spinner-border text-primary" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             
                 {{-- Pagination --}}
                 <div class="card-footer clearfix">
@@ -88,42 +73,5 @@
     </div>
 </div>
 
-@push('scripts')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script>
-        $(document).ready(function () {
-
-        // ===============================
-        // 1. Show detail mobil ke dalam modal
-        // ===============================
-        $('.btn-show-detail').on('click', function () {
-            let carId = $(this).data('id');
-            let modalContent = $('#carModalContent');
-
-            modalContent.html(`
-          <div class="modal-body text-center">
-            <div class="spinner-border text-primary" role="status">
-              <span class="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        `);
-
-            $.ajax({
-                url: `/admin/cars/${carId}`, // Show route: menampilkan detail mobil
-                method: 'GET',
-                success: function (response) {
-                    modalContent.html(response); // Load ke dalam modal
-                },
-                error: function () {
-                    modalContent.html(
-                        '<div class="modal-body text-danger">Failed to load data.</div>'
-                        );
-                }
-            });
-        });
-    });
-    </script>
-@endpush
 @endsection
 

@@ -16,7 +16,7 @@ class OfferRecordController extends Controller
         $this->middleware('checkrole:admin');
     }
 
-    function index()
+    public function index()
     {
         $offerRecords = OfferRecord::with(['offer', 'buyerOfferRecord', 'salerOfferRecord'])
             ->orderBy('created_at', 'desc')
@@ -24,7 +24,7 @@ class OfferRecordController extends Controller
         return view('admin.offerRecord.index', compact('offerRecords'));
     }
 
-    function create()
+    public function create()
     {
         $offers = Offer::where('status', 'accepted')->orderBy('created_at', 'desc')->get();
         // $offers = Offer::where('status', 'accepted')->orderBy('created_at', 'desc')->get();
@@ -34,7 +34,7 @@ class OfferRecordController extends Controller
         return view('admin.offerRecord.create', compact('offers', 'users'));
     }
 
-     function store(Request $request)
+    public function store(Request $request)
     {
         // dd($request->all());
         $request->validate([

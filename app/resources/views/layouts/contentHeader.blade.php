@@ -42,6 +42,9 @@
                         @case(request()->routeIs('user.offer.*'))
                             Penjualan Mobil
                             @break
+                        @case(request()->routeIs('user.transactionSalesRecord.*'))
+                            Transaksi Pembelian Mobil
+                            @break
 
                         @default
                             Halaman
@@ -145,6 +148,12 @@
                                 <a href="{{route('user.offer.index')}}">Penjualan Mobil</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">Show</li>
+                            @break
+
+                        {{-- user.transactionSalesRecord.index --}}
+                        @case(request()->routeIs('user.transactionSalesRecord.index'))
+                           
+                            <li class="breadcrumb-item active" aria-current="page">Transaksi Pembelian Mobil</li>
                             @break
 
 
