@@ -28,4 +28,10 @@ class Offer extends Model
     {
         return $this->belongsTo(User::class);
     }
+    
+    // Define the relationship with the OfferRecord model
+    public function offerRecords()
+    {
+        return $this->hasMany(OfferRecord::class);
+    }
 } 

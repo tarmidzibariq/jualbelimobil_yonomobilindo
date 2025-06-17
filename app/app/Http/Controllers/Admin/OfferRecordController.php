@@ -38,7 +38,7 @@ class OfferRecordController extends Controller
     {
         // dd($request->all());
         $request->validate([
-            'car_id' => 'required|exists:cars,id',
+            'offer_id' => 'required|exists:cars,id',
             'buyer_id' => 'required|exists:users,id',
             'seller_id' => 'required|exists:users,id',
             'sale_price' => 'required|numeric|min:0',
@@ -46,7 +46,7 @@ class OfferRecordController extends Controller
         ]);
 
         $offerRecord = OfferRecord::create([
-            'car_id' => $request->car_id,
+            'offer_id' => $request->offer_id,
             'buyer_id' => $request->buyer_id,
             'seller_id' => $request->seller_id,
             'sale_price' => $request->sale_price,

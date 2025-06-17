@@ -41,14 +41,14 @@
                             <tr>
                                 <td>{{ $offerRecord->id }}</td>
                                 <td>{{ \Carbon\Carbon::parse($offerRecord->created_at)->translatedFormat('d F Y H:i') }}</td>
-                                {{-- <td><a href="" class="btn-show-detail" data-id="{{ $offerRecord->offer->id }}" data-bs-toggle="modal" data-bs-target="#carModal">{{ $offerRecord->car->brand . ' ' . $offerRecord->car->model . ' ' . $offerRecord->car->year }}</a></td> --}}
+                                <td><a href="{{route('admin.offer.show',$offerRecord->offer->id)}}" >{{ $offerRecord->offer->brand . ' ' . $offerRecord->offer->model . ' ' . $offerRecord->offer->year }}</a></td>
                                 <td>{{ $offerRecord->salerOfferRecord->name }}</td>
                                 <td>{{ $offerRecord->buyerOfferRecord->name }}</td>
                                 <td>Rp. {{ number_format($offerRecord->sale_price, 0, ',', '.') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($offerRecord->sale_date)->translatedFormat('d F Y H:i') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($offerRecord->sale_date)->translatedFormat('d F Y') }}</td>
                                 <td>
                                     {{-- <a href="{{ route('admin.offerRecord.show', $offerRecord) }}" class="btn btn-info btn-sm">Show</a> --}}
-                                    <a href="{{ route('admin.offerRecord.edit', $offerRecord) }}" class="btn btn-warning btn-sm">Edit</a>
+                                    {{-- <a href="{{ route('admin.offerRecord.edit', $offerRecord) }}" class="btn btn-warning btn-sm">Edit</a> --}}
                                     {{-- <form action="{{ route('admin.offerRecord.destroy', $offerRecord) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')

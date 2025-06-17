@@ -19,7 +19,7 @@ class OfferRecord extends Model
     // Define the relationship with the Car model
     public function offer()
     {
-        return $this->belongsTo(Car::class);
+        return $this->belongsTo(Offer::class);
     }
 
     // Define the relationship with the User model

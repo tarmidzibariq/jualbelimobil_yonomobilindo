@@ -25,30 +25,34 @@
                     {{-- Buyer --}}
                     <div class="mb-3">
                         <label for="buyer_id" class="form-label">Buyer</label>
-                        <select class="form-select @error('buyer_id') is-invalid @enderror" id="buyer_id" name="buyer_id" required>
+                        <select class="form-select @error('buyer_id') is-invalid @enderror" id="buyer_id"
+                            name="buyer_id" required>
                             <option value="">-- Select Buyer --</option>
                             @foreach($users as $user)
-                                <option value="{{ $user->id }}"
-                                    {{ old('buyer_id', auth()->user()->id) == $user->id ? 'selected' : '' }}>
-                                    {{ $user->name }}
-                                </option>
+                            
+
+                            <option value="{{ $user->id }}"
+                                {{ old('user_id', auth()->user()->id) == $user->id ? 'selected' : '' }}>
+                                {{ $user->name }}
+                            </option>
                             @endforeach
                         </select>
                         @error('buyer_id')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
-                    
                     {{-- Seller --}}
                     <div class="mb-3">
                         <label for="seller_id" class="form-label">Seller</label>
-                        <select class="form-select @error('seller_id') is-invalid @enderror" id="seller_id" name="seller_id" required>
+                        <select class="form-select @error('seller_id') is-invalid @enderror" id="seller_id"
+                            name="seller_id" required>
                             <option value="">-- Select Seller --</option>
                             @foreach($users as $user)
-                            <option value="{{ $user->id }}"
-                                {{ old('seller_id') == $user->id ? 'selected' : '' }}>
+                            @if(old('buyer_id') != $user->id) {{-- Exclude user yang sama dengan seller --}}
+                            <option value="{{ $user->id }}" {{ old('seller_id') == $user->id ? 'selected' : '' }}>
                                 {{ $user->name }}
                             </option>
+                            @endif
                             @endforeach
                         </select>
                         @error('seller_id')
@@ -56,11 +60,9 @@
                         @enderror
                     </div>
 
-                    
-
                     {{-- Car --}}
                     <div class="mb-3">
-                        <label for="offer_id" class="form-label">Car</label>
+                        <label for="offer_id" class="form-label">Offer</label>
                         <select class="form-select @error('offer_id') is-invalid @enderror" id="offer_id" name="offer_id" required>
                             <option value="">-- Select Offer --</option>
                             @foreach($offers as $offer)
@@ -77,12 +79,12 @@
 
                     {{-- Sale Price --}}
                     <div class="mb-3">
-                        <label for="offered_price" class="form-label fw-medium">Offer Price</label>
+                        <label for="offered_price" class="form-label fw-medium">Sale Price</label>
                         <input type="text" class="form-control py-2 @error('offered_price') is-invalid @enderror"
                             id="offered_price_format"
                             value="{{ old('offered_price') ? number_format(old('offered_price'), 0, ',', '.') : '' }}" />
 
-                        <input type="hidden" name="offered_price" id="offered_price" value="{{ old('offered_price') }}" />
+                        <input type="hidden" name="sale_price" id="offered_price" value="{{ old('offered_price') }}" />
                         @error('offered_price')
                         <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
@@ -124,21 +126,31 @@
     }
 
     document.addEventListener('DOMContentLoaded', function () {
+        // Filter buyer options based on selected seller
+        // Filter buyer options based on selected seller
         const sellerSelect = document.getElementById('seller_id');
         const buyerSelect = document.getElementById('buyer_id');
 
-        function filterBuyerOptions() {
-            const selectedSeller = sellerSelect.value;
-            for (let option of buyerSelect.options) {
-                option.hidden = option.value === selectedSeller;
+        function filterSellerOptions() {
+            const selectedBuyer = buyerSelect.value;
+
+            for (let option of sellerSelect.options) {
+                option.hidden = false;
+                if (option.value === selectedBuyer) {
+                    option.hidden = true;
+                }
             }
-            if (buyerSelect.value === selectedSeller) {
-                buyerSelect.value = "";
+
+            // Jika buyer saat ini sama dengan seller, reset buyer
+            if (sellerSelect.value === selectedBuyer) {
+                sellerSelect.value = "";
             }
         }
 
-        sellerSelect.addEventListener('change', filterBuyerOptions);
-        filterBuyerOptions();
+        buyerSelect.addEventListener('change', filterSellerOptions);
+
+        // Jalankan saat pertama kali load (jika ada old value)
+        filterSellerOptions();
 
         const offerSelect = document.getElementById('offer_id');
         const priceInput = document.getElementById('offered_price');
