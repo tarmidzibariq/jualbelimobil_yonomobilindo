@@ -3,11 +3,17 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class TestimonialController extends Controller
 {
     public function index(){
-        return view('web.testimonial');
+        $reviews = Review::where('status', 'approved')
+            ->with(['car', 'user'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('web.testimonial', compact('reviews'));
     }
 }

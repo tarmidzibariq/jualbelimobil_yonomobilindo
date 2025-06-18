@@ -29,4 +29,9 @@ class Review extends Model
     {
         return $this->belongsTo(Car::class);
     }
+    // defining the relationship with the SalesRecord model
+    public function salesRecord()
+    {
+        return $this->belongsTo(SalesRecord::class);
+    }
 }

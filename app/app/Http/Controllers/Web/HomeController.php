@@ -5,12 +5,20 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\Car;
 use App\Models\CarType;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
     public function index(Request $request){
 
+        // Ambil 3 review terbaru yang sudah disetujui
+        $reviews = Review::where('status', 'approved')
+            ->with(['car', 'user'])
+            ->orderBy('created_at', 'desc')
+            ->take(3)
+            ->get();
+        
         $query = Car::query();
 
         // Filter pencarian bebas
@@ -42,6 +50,6 @@ class HomeController extends Controller
 
         $brands = CarType::distinct()->pluck('brand');
         // $cars = Car::with('mainPhoto')->where('status','available')->get();
-        return view('web.home', compact('cars', 'brands'));
+        return view('web.home', compact('cars', 'brands', 'reviews'));
     }
 }
