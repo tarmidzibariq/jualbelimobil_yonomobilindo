@@ -35,6 +35,10 @@
                             Transaction Sales Record
                             @break  
 
+                        @case(request()->routeIs('admin.offerRecord.*'))
+                            Transaction Offer Record
+                            @break  
+
                         @case(request()->routeIs('user.downPayment.*'))
                             Pembayaran DP
                             @break
@@ -125,6 +129,9 @@
                             <li class="breadcrumb-item active" aria-current="page">Transaction Sales Records</li>
                             @break
 
+                        @case(request()->routeIs('admin.offerRecord.index'))
+                            <li class="breadcrumb-item active" aria-current="page">Transaction Offer Records</li>
+                            @break
 
                         {{--user.downPayment.index  --}}
                         @case(request()->routeIs('user.downPayment.index'))
@@ -156,8 +163,13 @@
                             <li class="breadcrumb-item active" aria-current="page">Transaksi Pembelian Mobil</li>
                             @break
 
+                        {{-- user.transactionOfferRecord.index --}}
+                        @case(request()->routeIs('user.transactionOfferRecord.index'))
+                           
+                            <li class="breadcrumb-item active" aria-current="page">Transaksi Penjualan Mobil</li>
+                            @break
 
-                        {{-- @break --}}
+
 
                         @default
                             <li class="breadcrumb-item active" aria-current="page">Halaman</li>

@@ -10,6 +10,7 @@ use App\Http\Controllers\User\DownPaymentController as UserDownPaymentController
 use App\Http\Controllers\User\OfferController;
 use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\TransactionOfferRecordController;
 use App\Http\Controllers\User\TransactionSalesRecordController;
 use App\Http\Controllers\Web\DetailCarController;
 use App\Http\Controllers\Web\DownPaymentController;
@@ -113,6 +114,9 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
     Route::get('transaction-sales-record', [TransactionSalesRecordController::class, 'index'])->name('user.transactionSalesRecord.index');
     Route::get('transaction-sales-record/createTesti/{id}', [TransactionSalesRecordController::class, 'createTesti'])->name('user.transactionSalesRecord.createTesti');
     Route::post('transaction-sales-record/storeTesti/{id}', [TransactionSalesRecordController::class, 'storeTesti'])->name('user.transactionSalesRecord.storeTesti');
+   
+    // Transaction Offer Record Route
+    Route::get('transaction-offer-record', [TransactionOfferRecordController::class, 'index'])->name('user.transactionOfferRecord.index');
 });
 Route::post('/midtrans/notification', [PaymentController::class, 'notificationHandler']);
 

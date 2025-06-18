@@ -9,8 +9,8 @@ use Illuminate\Http\Request;
 class TestimonialController extends Controller
 {
     public function index(){
-        $reviews = Review::where('status', 'approved')
-            ->with(['car', 'user'])
+        $reviews = Review::
+            with(['car', 'user'])
             ->orderBy('created_at', 'desc')
             ->get();
 

@@ -13,8 +13,8 @@ class HomeController extends Controller
     public function index(Request $request){
 
         // Ambil 3 review terbaru yang sudah disetujui
-        $reviews = Review::where('status', 'approved')
-            ->with(['car', 'user'])
+        $reviews = Review::
+            with(['car', 'user'])
             ->orderBy('created_at', 'desc')
             ->take(3)
             ->get();
