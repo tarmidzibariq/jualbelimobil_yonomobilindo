@@ -29,54 +29,52 @@
                                 <th>ID</th>
                                 <th>Create At</th>
                                 <th>Car</th>
-                                <th>Saler</th>
                                 <th>Buyer</th>
+                                <th>Saler</th>
                                 <th>Sale Price</th>
                                 <th>Sale Date</th>
                                 <th>Status</th>
-                                <th>Aksi</th>
+                                {{-- <th>Aksi</th> --}}
                             </tr>
                         </thead>
-                        {{-- <tbody>
-                            @forelse ($salesRecords as $salesRecord)
+                        <tbody>
+                            @forelse ($offerRecords as $offerRecord)
                             <tr>
-                                <td>{{ $salesRecord->id }}</td>
-                                <td>{{ \Carbon\Carbon::parse($salesRecord->created_at)->translatedFormat('d F Y H:i') }}
+                                <td>{{ $offerRecord->id }}</td>
+                                <td>{{ \Carbon\Carbon::parse($offerRecord->created_at)->translatedFormat('d F Y H:i') }}
                                 </td>
-                                <td><a href="" class="btn-show-detail" data-id="{{ $salesRecord->car->id }}"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#carModal">{{ $salesRecord->car->brand . ' ' . $salesRecord->car->model . ' ' . $salesRecord->car->year }}</a>
+                                <td>{{ $offerRecord->offer->brand . ' ' . $offerRecord->offer->model . ' ' . $offerRecord->offer->year }}</a>
                                 </td>
-                                <td>{{ $salesRecord->saler->name }}</td>
-                                <td>{{ $salesRecord->buyer->name }}</td>
-                                <td>Rp. {{ number_format($salesRecord->sale_price, 0, ',', '.') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($salesRecord->sale_date)->translatedFormat('d F Y H:i') }}
+                                <td>{{ $offerRecord->buyerOfferRecord->name }}</td>
+                                <td>{{ $offerRecord->salerOfferRecord->name }}</td>
+                                <td>Rp. {{ number_format($offerRecord->sale_price, 0, ',', '.') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($offerRecord->sale_date)->translatedFormat('d F Y H:i') }}
                                 </td>
                                 <td>
-                                    @if ($salesRecord->status == 'pending')
+                                    @if ($offerRecord->status == 'pending')
                                     <span class="badge bg-warning">Pending</span>
-                                    @elseif ($salesRecord->status == 'completed')
+                                    @elseif ($offerRecord->status == 'completed')
                                     <span class="badge bg-success">Completed</span>
-                                    @elseif ($salesRecord->status == 'cancelled')
+                                    @elseif ($offerRecord->status == 'cancelled')
                                     <span class="badge bg-danger">Cancelled</span>
                                     @else
                                     <span class="badge bg-secondary">Unknown</span>
                                     @endif
                                 </td>
-                                <td>
-                                    @if ($salesRecord->status == 'completed')
-                                    <a href="{{ route('user.transactionSalesRecord.createTesti', $salesRecord->id) }}"
+                                {{-- <td>
+                                    @if ($offerRecord->status == 'completed')
+                                    <a href="{{ route('user.transactionofferRecord.createTesti', $offerRecord->id) }}"
                                         class="btn btn-primary btn-sm">Testimoni</a>
 
                                     @endif
-                                </td>
+                                </td> --}}
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="8" class="text-center">No sales records found.</td>
+                                <td colspan="8" class="text-center">Data Tidak Tersedia.</td>
                             </tr>
                             @endforelse
-                        </tbody> --}}
+                        </tbody>
                     </table>
                 </div>
 

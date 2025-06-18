@@ -73,7 +73,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="8" class="text-center">No sales records found.</td>
+                                <td colspan="9" class="text-center">Data Tidak Tersedia</td>
                             </tr>
                             @endforelse
                         </tbody>

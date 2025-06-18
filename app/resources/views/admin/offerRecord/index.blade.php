@@ -37,7 +37,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($offerRecords as $offerRecord)
+                            @forelse ($offerRecords as $offerRecord)
                             <tr>
                                 <td>{{ $offerRecord->id }}</td>
                                 <td>{{ \Carbon\Carbon::parse($offerRecord->created_at)->translatedFormat('d F Y H:i') }}</td>
@@ -56,7 +56,11 @@
                                     </form> --}}
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                                <tr>
+                                    <td colspan="8" class="text-center">No offer records found.</td>
+                                </tr>
+                            @endforelse
                         </tbody>
                     </table>
                 </div>

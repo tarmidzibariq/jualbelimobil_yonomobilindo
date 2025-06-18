@@ -108,7 +108,7 @@
             <a href="{{route('user.transactionSalesRecord.index')}}" class="nav-link {{ request()->routeIs('user.transactionSalesRecord.index') ? 'active' : '' }}">
               <i class="nav-icon fa-solid fa-cart-shopping"></i>
               <p>
-                Transaksi Mobil
+                Transaksi Pembelian
               </p>
             </a>
           </li>
@@ -116,7 +116,15 @@
             <a href="{{route('user.offer.index')}}" class="nav-link {{ request()->routeIs('user.offer.*') ? 'active' : '' }}">
               <i class="nav-icon fa-solid fa-car-side"></i>
               <p>
-                Penjualan Mobil
+                Permintaan Penjualan 
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{route('user.transactionOfferRecord.index')}}" class="nav-link {{ request()->routeIs('user.transactionOfferRecord.*') ? 'active' : '' }}">
+              <i class="nav-icon fa-solid fa-cart-shopping"></i>
+              <p>
+                Transaksi Penjualan 
               </p>
             </a>
           </li>

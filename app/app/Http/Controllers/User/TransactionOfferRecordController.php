@@ -16,7 +16,7 @@ class TransactionOfferRecordController extends Controller
 
     public function index(Request $request)
     {
-        $offerRecords = OfferRecord::with(['offer_id', 'buyer', 'saler'])->where('buyer_id', Auth::id())->orderBy('created_at', 'desc')->paginate(10);;
+        $offerRecords = OfferRecord::with(['offer', 'buyerOfferRecord', 'salerOfferRecord'])->where('seller_id', Auth::id())->orderBy('created_at', 'desc')->paginate(10);;
     
         return view('user.transactionOfferRecord.index', compact('offerRecords'));
     }

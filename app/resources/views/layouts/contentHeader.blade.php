@@ -49,6 +49,9 @@
                         @case(request()->routeIs('user.transactionSalesRecord.*'))
                             Transaksi Pembelian Mobil
                             @break
+                        @case(request()->routeIs('user.transactionOfferRecord.*'))
+                            Transaksi Penjualan Mobil
+                            @break
 
                         @default
                             Halaman
