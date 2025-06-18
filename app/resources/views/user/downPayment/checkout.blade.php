@@ -120,6 +120,7 @@
                         @endif
                 </table>
 
+
                 @if($downPayments->payment_status == 'pending' && isset($snapToken))
                     <div class="mt-4">
                         <button id="pay-button" class="btn btn-success mt-4">
