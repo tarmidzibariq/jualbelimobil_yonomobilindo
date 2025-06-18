@@ -13,6 +13,14 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 @endif
+                @if (session('error'))
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{ session('error') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                @endif
+
+                {{-- Alert Notifikasi Gagal --}}
                 {{-- Tabel mobil dengan fitur DataTables --}}
                 <div class="table-responsive">
                     <table id="cars-table" class="table table-bordered">
@@ -26,27 +34,40 @@
                                 <th>Sale Price</th>
                                 <th>Sale Date</th>
                                 <th>Status</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                           @forelse ($salesRecords as $salesRecord)
+                            @forelse ($salesRecords as $salesRecord)
                             <tr>
                                 <td>{{ $salesRecord->id }}</td>
-                                <td>{{ \Carbon\Carbon::parse($salesRecord->created_at)->translatedFormat('d F Y H:i') }}</td>
-                                <td><a href="" class="btn-show-detail" data-id="{{ $salesRecord->car->id }}" data-bs-toggle="modal" data-bs-target="#carModal">{{ $salesRecord->car->brand . ' ' . $salesRecord->car->model . ' ' . $salesRecord->car->year }}</a></td>
+                                <td>{{ \Carbon\Carbon::parse($salesRecord->created_at)->translatedFormat('d F Y H:i') }}
+                                </td>
+                                <td><a href="" class="btn-show-detail" data-id="{{ $salesRecord->car->id }}"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#carModal">{{ $salesRecord->car->brand . ' ' . $salesRecord->car->model . ' ' . $salesRecord->car->year }}</a>
+                                </td>
                                 <td>{{ $salesRecord->saler->name }}</td>
                                 <td>{{ $salesRecord->buyer->name }}</td>
                                 <td>Rp. {{ number_format($salesRecord->sale_price, 0, ',', '.') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($salesRecord->sale_date)->translatedFormat('d F Y H:i') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($salesRecord->sale_date)->translatedFormat('d F Y H:i') }}
+                                </td>
                                 <td>
                                     @if ($salesRecord->status == 'pending')
-                                        <span class="badge bg-warning">Pending</span>
+                                    <span class="badge bg-warning">Pending</span>
                                     @elseif ($salesRecord->status == 'completed')
-                                        <span class="badge bg-success">Completed</span>
+                                    <span class="badge bg-success">Completed</span>
                                     @elseif ($salesRecord->status == 'cancelled')
-                                        <span class="badge bg-danger">Cancelled</span>
+                                    <span class="badge bg-danger">Cancelled</span>
                                     @else
-                                        <span class="badge bg-secondary">Unknown</span>
+                                    <span class="badge bg-secondary">Unknown</span>
+                                    @endif
+                                </td>
+                                <td>
+                                    @if ($salesRecord->status == 'completed')
+                                    <a href="{{ route('user.transactionSalesRecord.createTesti', $salesRecord->id) }}"
+                                        class="btn btn-primary btn-sm">Testimoni</a>
+
                                     @endif
                                 </td>
                             </tr>
@@ -58,7 +79,7 @@
                         </tbody>
                     </table>
                 </div>
-            
+
                 {{-- Pagination --}}
                 <div class="card-footer clearfix">
                     <div class="pagination pagination-sm m-0 float-end">
@@ -72,4 +93,3 @@
 </div>
 
 @endsection
-

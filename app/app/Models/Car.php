@@ -41,7 +41,8 @@ class Car extends Model
     // Define the relationship with the Sales model
     public function salesRecords()
     {
-        return $this->hasMany(SalesRecord::class);
+        // return $this->hasMany(SalesRecord::class);
+        return $this->hasOne(SalesRecord::class);
     }
 
     // Define the relationship with the DownPayment model
@@ -53,7 +54,8 @@ class Car extends Model
     // Define the relationship with the reviews model
     public function review()
     {
-        return $this->hasMany(Review::class);
+        // return $this->hasMany(Review::class);
+        return $this->hasOne(Review::class);
     }
 
     // Define the relationship with the Car_Photo model

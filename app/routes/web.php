@@ -100,16 +100,19 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
 
     // Down Payment Route
     Route::get('downPayment', [UserDownPaymentController::class, 'index'])->name('user.downPayment.index');
-
     Route::get('downPayment/checkout/{id}', [PaymentController::class, 'checkout'])->name('user.downPayment.checkout');
-
     Route::get('downPayment/change/{id}', [PaymentController::class, 'changeStatus'])->name('user.downPayment.changeStatus');
 
+    // Offer Route
     Route::resource('offer', OfferController::class)->names('user.offer')->except(['edit', 'update', 'create', 'destroy']);
     
+    // updateAddress Route
     Route::post('updateUser/{id}', [ProfileController::class, 'updateAddress'])->name('user.updateAdress');
 
+    // Transaction Sales Record Route
     Route::get('transaction-sales-record', [TransactionSalesRecordController::class, 'index'])->name('user.transactionSalesRecord.index');
+    Route::get('transaction-sales-record/createTesti/{id}', [TransactionSalesRecordController::class, 'createTesti'])->name('user.transactionSalesRecord.createTesti');
+    Route::post('transaction-sales-record/storeTesti/{id}', [TransactionSalesRecordController::class, 'storeTesti'])->name('user.transactionSalesRecord.storeTesti');
 });
 Route::post('/midtrans/notification', [PaymentController::class, 'notificationHandler']);
 
@@ -136,10 +139,7 @@ Route::prefix('web')->group(function () {
     
     Route::get('/detailMobil/{id}', [DetailCarController::class,'index'])->name('web.detailMobil');
     
-    // Route::get('/downPayment/{id}', [DownPaymentController::class,'index'])->name('web.downPayment')->middleware('auth');
-    
-    // Route::post('/downPayment/{id}', [DownPaymentController::class,'store'])->name('web.downPayment')->middleware('auth');
-    
+    // Down Payment Route
     Route::resource('downPayment', DownPaymentController::class)->names('web.downPayment')->middleware(['auth', 'checkrole:user'])->except(['index', 'edit', 'update', 'create']);
 
     

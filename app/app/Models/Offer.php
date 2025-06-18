@@ -32,6 +32,7 @@ class Offer extends Model
     // Define the relationship with the OfferRecord model
     public function offerRecords()
     {
-        return $this->hasMany(OfferRecord::class);
+        // return $this->hasMany(OfferRecord::class);
+        return $this->hasOne(OfferRecord::class);
     }
 } 
