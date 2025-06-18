@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('car_id')->constrained('cars')->onDelete('cascade');
-            // $table->string('order_id', 100)->unique()->nullable();
+            $table->string('order_id', 100)->unique()->nullable();
             $table->decimal('amount', 15, 2);
             $table->enum('payment_status', ['pending', 'confirmed', 'cancelled', 'expired'])->default('pending');
             $table->string('payment_method')->nullable();
