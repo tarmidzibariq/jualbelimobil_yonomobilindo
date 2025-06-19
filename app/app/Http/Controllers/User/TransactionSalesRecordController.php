@@ -66,7 +66,7 @@ class TransactionSalesRecordController extends Controller
             'rating' => $request->rating,
             'comment' => $request->comment,
             'photo_review' => $filename,
-            'status' => 'pending', // Status awal adalah pending
+            // 'status' => 'pending', // Status awal adalah pending
         ]);
 
         return redirect()->route('user.transactionSalesRecord.index')->with('success', 'Testimoni berhasil disimpan.');
