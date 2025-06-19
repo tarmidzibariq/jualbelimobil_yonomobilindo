@@ -4,7 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Helpers\MidtransHelper;
 use App\Http\Controllers\Controller;
-
+use App\Models\Car;
 use Illuminate\Http\Request;
 use App\Models\DownPayment;
 use Illuminate\Support\Facades\Auth;
@@ -20,6 +20,13 @@ class PaymentController extends Controller
     public function checkout($id)
     {
         $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
+
+        $car = Car::findOrFail($downPayment->car_id);
+        // dd($car->status);
+        // Cek apakah mobil sudah terjual
+        if ($car->status === 'sold' || $car->status === 'under_review' || $car->status === 'pending_check') {
+            return redirect()->back()->with('error', 'Mobil ini sudah terjual.');
+        }
 
         // Konfigurasi Midtrans
         MidtransHelper::init();

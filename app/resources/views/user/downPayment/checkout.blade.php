@@ -59,7 +59,7 @@
                     </tr>
                     <tr>
                         <th>Jam Janji</th>
-                        <td>{{ \Carbon\Carbon::parse($downPayments->appointment_date)->format('H:i T') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($downPayments->appointment_date) }}</td>
                     </tr>
                     <tr>
                         <th>Jumlah Pembayaran</th>

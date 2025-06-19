@@ -28,26 +28,31 @@
                                 <td>{{ 'Rp ' . number_format($item->amount , 0, ',', '.') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->appointment_date)->translatedFormat('d F Y H:i') }}</td>
                                 <td>
-                                    @switch($item->payment_status)
-                                        @case('pending')
-                                            <span class="badge bg-warning text-dark">Pending</span>
-                                            @break
-                                        @case('confirmed')
-                                            @if(optional($item->refund)->refund_status === 'refund')
-                                                <span class="badge bg-success">Confirmed</span> | <span class="badge bg-secondary">Refund</span>
-                                            @else
-                                                <span class="badge bg-success">Confirmed</span>
-                                            @endif
-                                            @break
-                                        @case('cancelled')
-                                            <span class="badge bg-danger">Cancelled</span>
-                                            @break
-                                        @case('expired')
-                                            <span class="badge bg-danger">Expired</span>
-                                            @break
-                                        @default
-                                            <span class="badge bg-secondary">{{ ucfirst($item->payment_status) }}</span>
-                                    @endswitch
+                                    @if ($item->car->status === 'available')
+                                        @switch($item->payment_status)
+                                            @case('pending')
+                                                <span class="badge bg-warning text-dark">Pending</span>
+                                                @break
+                                            @case('confirmed')
+                                                @if(optional($item->refund)->refund_status === 'refund')
+                                                    <span class="badge bg-success">Confirmed</span> | <span class="badge bg-secondary">Refund</span>
+                                                @else
+                                                    <span class="badge bg-success">Confirmed</span>
+                                                @endif
+                                                @break
+                                            @case('cancelled')
+                                                <span class="badge bg-danger">Cancelled</span>
+                                                @break
+                                            @case('expired')
+                                                <span class="badge bg-danger">Expired</span>
+                                                @break
+                                            @default
+                                                <span class="badge bg-secondary">{{ ucfirst($item->payment_status) }}</span>
+                                        @endswitch
+                                        
+                                    @else
+                                        <span class="badge bg-secondary">Mobil Tidak Tersedia</span>
+                                    @endif
                                 </td>
                                 <td>
                                     @if ($item->payment_status == 'pending')
