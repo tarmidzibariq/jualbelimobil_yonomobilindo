@@ -52,7 +52,7 @@ class SalesRecordController extends Controller
             'seller_id' => $request->seller_id,
             'sale_price' => $request->sale_price,
             'sale_date' => $request->sale_date,
-            'status' => 'completed', // Assuming the status is set to completed
+            // 'status' => 'completed', // Assuming the status is set to completed
         ]);
         // Update the car status to 'sold'
         
