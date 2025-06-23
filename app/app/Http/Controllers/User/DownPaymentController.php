@@ -31,9 +31,9 @@ class DownPaymentController extends Controller
     
 
     public function checkout($id){
-        
+        $snapToken = 'xxx';
         $downPayments = DownPayment::with('car')->where('user_id', Auth::id())->findOrFail($id);
-        return view('user.downPayment.checkout', compact('downPayments'));
+        return view('user.downPayment.checkout', compact('downPayments', 'snapToken'));
     }
 
     // public function getSnapToken($id)

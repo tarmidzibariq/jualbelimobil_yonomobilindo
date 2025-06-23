@@ -61,8 +61,8 @@
                                 <th>User</th>
                                 <th>Car</th>
                                 <th>Amount DP</th>
-                                <th>Inspection Date </th>
-                                <th>Inspection Time</th>
+                                <th>Appointment Date </th>
+                                <th>Appointment Time</th>
                                 <th>status</th>
                                 <th>Action</th>
                             </tr>
@@ -76,9 +76,12 @@
                                 <td>{{$downPayment->user->name}} </td>
                                 <td>{{ $downPayment->car->brand . ' ' . $downPayment->car->model }}</td>
                                 <td>Rp. {{ number_format($downPayment->amount, 0, ',', '.') }}</td>
-                                <td>{{ \Carbon\Carbon::parse($downPayment->inspection_date)->translatedFormat('d F Y') }}
+                                {{-- @php
+                                    dd($downPayment->appointment_date);
+                                @endphp --}}
+                                <td>{{ \Carbon\Carbon::parse($downPayment->appointment_date)->translatedFormat('d F Y') }}
                                 </td>
-                                <td>{{ \Carbon\Carbon::parse($downPayment->inspection_time)->translatedFormat('H:i') .' WIB' }}
+                                <td>{{ \Carbon\Carbon::parse($downPayment->appointment_date)->translatedFormat('H:i') .' WIB' }}
                                 </td>
                                 <td>
                                     @switch($downPayment->payment_status)

@@ -56,16 +56,16 @@
                         <td>{{ $offer->brand  . ' ' . $offer->model . ' ' . $offer->year ?? '-' }}</td>
                     </tr>
                     <tr>
+                        <th>Penawaran Harga Mobil</th>
+                        <td>Rp {{ number_format($offer->offered_price, 0, ',', '.') }}</td>
+                    </tr>
+                    <tr>
                         <th>Tanggal Janji</th>
-                        <td>{{ \Carbon\Carbon::parse($offer->appointment_date)->format('d M Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($offer->inspection_date)->format('d M Y') }}</td>
                     </tr>
                     <tr>
                         <th>Jam Janji</th>
-                        <td>{{ \Carbon\Carbon::parse($offer->appointment_date)->format('H:i T') }}</td>
-                    </tr>
-                    <tr>
-                        <th>Penawaran Harga Mobil</th>
-                        <td>Rp {{ number_format($offer->offered_price, 0, ',', '.') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($offer->inspection_date)->format('H:i T') }}</td>
                     </tr>
                     <tr>
                         <th>Lokasi Inspeksi</th>

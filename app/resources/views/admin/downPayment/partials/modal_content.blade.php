@@ -28,10 +28,10 @@
         <tr>
             <th>Appointment Date</th>
             @if ($downPayment->payment_status === 'confirmed' )
-                <td><span class=" bg-info">{{ \Carbon\Carbon::parse($downPayment->inspection_date)->format('d M Y - H:i') }}</span></td> 
+                <td><span class=" bg-info">{{ \Carbon\Carbon::parse($downPayment->appointment_date)->format('d M Y - H:i') }}</span></td> 
                 
             @else
-                <td>{{ \Carbon\Carbon::parse($downPayment->inspection_date)->format('d M Y - H:i') }}</td> 
+                <td>{{ \Carbon\Carbon::parse($downPayment->appointment_date)->format('d M Y - H:i') }}</td> 
                 
             @endif
         </tr>

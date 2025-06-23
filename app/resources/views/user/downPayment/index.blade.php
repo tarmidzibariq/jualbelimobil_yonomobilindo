@@ -28,7 +28,7 @@
                                 <td>{{ 'Rp ' . number_format($item->amount , 0, ',', '.') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->appointment_date)->translatedFormat('d F Y H:i') }}</td>
                                 <td>
-                                    @if ($item->car->status === 'available')
+                                    @if ($item->car->status === 'available' || $item->car->status === 'under_review')
                                         @switch($item->payment_status)
                                             @case('pending')
                                                 <span class="badge bg-warning text-dark">Pending</span>
@@ -64,7 +64,7 @@
                                     </a>
 
                                     @else
-                                    <a href="{{ route('user.downPayment.checkout' , $item->id)}}" class="btn btn-sm btn-outline-secondary">Detail</a>
+                                    <a href="{{ route('user.downPayment.show' , $item->id)}}" class="btn btn-sm btn-outline-secondary">Detail</a>
                                     @endif
                                 </td>
                             </tr>

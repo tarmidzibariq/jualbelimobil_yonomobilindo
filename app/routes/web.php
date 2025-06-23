@@ -101,6 +101,7 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
 
     // Down Payment Route
     Route::get('downPayment', [UserDownPaymentController::class, 'index'])->name('user.downPayment.index');
+    Route::get('downPayment/{id}', [UserDownPaymentController::class, 'checkout'])->name('user.downPayment.show');
     Route::get('downPayment/checkout/{id}', [PaymentController::class, 'checkout'])->name('user.downPayment.checkout');
     Route::get('downPayment/change/{id}', [PaymentController::class, 'changeStatus'])->name('user.downPayment.changeStatus');
 
