@@ -55,7 +55,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    @if ($item->payment_status == 'pending')
+                                    @if ($item->payment_status == 'pending' && $item->car->status === 'available')
                                     {{-- <a href="#" class="btn btn-sm btn-primary mb-1 pay-now-btn" data-id="{{ $item->id }}">
                                         Bayar Sekarang
                                     </a> --}}

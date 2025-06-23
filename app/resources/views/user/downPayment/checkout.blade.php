@@ -13,6 +13,31 @@
                         <td>{{ '#'. $downPayments->id ?? '-'}}</td>
                     </tr>
                     <tr>
+                        <th>Mobil</th>
+                        <td class="text-uppercase">{{ $downPayments->car->brand  . ' ' . $downPayments->car->model . ' ' . $downPayments->car->year . ' '. $downPayments->car->color ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nama Pengguna</th>
+                        <td>{{ $downPayments->user->name ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ $downPayments->user->email ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <th>Nomor Telepon</th>
+                        <td>{{ $downPayments->user->phone ?? '-' }}</td>
+                    </tr>
+                    
+                    <tr>
+                        <th>Tanggal Janji</th>
+                        <td>{{ \Carbon\Carbon::parse($downPayments->appointment_date)->format('d M Y') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Jam Janji</th>
+                        <td>{{\Carbon\Carbon::parse($downPayments->appointment_date)->format('H:i') . ' WIB'  }}</td>
+                    </tr>
+                    <tr>
                         <th>Status Pembayaran DP</th>
                         <td>
                             @switch($downPayments->payment_status)
@@ -38,28 +63,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <th>Nama Pengguna</th>
-                        <td>{{ $downPayments->user->name ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Email</th>
-                        <td>{{ $downPayments->user->email ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Nomor Telepon</th>
-                        <td>{{ $downPayments->user->phone ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Mobil</th>
-                        <td class="text-uppercase">{{ $downPayments->car->brand  . ' ' . $downPayments->car->model . ' ' . $downPayments->car->year . ' '. $downPayments->car->color ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <th>Tanggal Janji</th>
-                        <td>{{ \Carbon\Carbon::parse($downPayments->appointment_date)->format('d M Y') }}</td>
-                    </tr>
-                    <tr>
-                        <th>Jam Janji</th>
-                        <td>{{ \Carbon\Carbon::parse($downPayments->appointment_date) }}</td>
+                        <th>Metode Pembayaran</th>
+                        <td>{{ $downPayments->payment_method ?? 'Belum Dibayar'}}</td>
                     </tr>
                     <tr>
                         <th>Jumlah Pembayaran</th>
