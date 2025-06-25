@@ -14,6 +14,9 @@
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
+    {{-- Icon --}}
+    <link rel="icon" type="image/png" href="{{ asset('image/YONO-MOBILINDO-LOGO.svg') }}">
+
     <!-- Bootstrap & Vite -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
