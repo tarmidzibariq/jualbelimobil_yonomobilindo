@@ -92,9 +92,12 @@
                         <select name="brand" id="brand" class="form-control" required>
                             <option value="">-- Pilih Brand --</option>
                             @foreach ($brands as $brand)
-                            <option value="{{ $brand }}" {{ old('brand', $car->brand) == $brand ? 'selected' : '' }}>{{ $brand }}</option>
+                                <option value="{{ $brand }}" {{ old('brand', $car->brand) == $brand ? 'selected' : '' }}>
+                                    {{ $brand }}
+                                </option>
                             @endforeach
                         </select>
+
                         
                         @error('brand')
                         <span class="invalid-feedback" role="alert">

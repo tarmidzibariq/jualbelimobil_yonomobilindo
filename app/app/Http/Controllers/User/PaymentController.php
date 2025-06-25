@@ -22,13 +22,13 @@ class PaymentController extends Controller
     {
         $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
 
-        $car = Car::findOrFail($downPayment->car_id);
-        // dd($car->status);
+        // $car = Car::findOrFail($downPayment->car_id);
+        // // dd($car->status);
 
-        // Cek apakah mobil sudah terjual
-        if ($car->status === 'sold' || $car->status === 'under_review' || $car->status === 'pending_check') {
-            return redirect()->back()->with('error', 'Mobil ini sudah terjual.');
-        }
+        // // Cek apakah mobil sudah terjual
+        //  if ($car->status !== 'available') {
+        //     return redirect()->route('user.downPayment.index')->with('error', 'Mobil tidak tersedia untuk pembayaran.');
+        // }
         
         // Konfigurasi Midtrans
         MidtransHelper::init();
@@ -208,6 +208,10 @@ class PaymentController extends Controller
         $downPayment = DownPayment::findOrFail($id);  
         
         // dd($downPayment);
+        $car = Car::findOrFail($downPayment->car_id);
+        if ($car->status === 'sold' || $car->status === 'under_review' || $car->status === 'pending_check') {
+            return response()->json(['status' => $car->status], 200);
+        }
 
         $serverKey = config('services.midtrans.server_key');
         $encodedKey = base64_encode($serverKey . ':');

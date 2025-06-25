@@ -3,6 +3,20 @@
 @section('content')
 <div class="app-content">
     <div class="container-fluid">
+        {{-- Alert Notifikasi Sukses --}}
+        @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
+        {{-- Alert Notifikasi Error --}}
+        @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        @endif
         <div class="card mb-4">
             <div class="card-body">
                 <h3 class="fw-bold mb-4">Detail Pembayaran</h3>
@@ -160,7 +174,10 @@
         .then(response => response.json())
                     .then(data => {
                         console.log("Cek status:", data.status);
-                        if (data.status === 'confirmed' || data.status === 'cancelled') {
+                        if (data.status == "under_review" || data.status == "sold" || data.status == "pending_check") {
+                            alert("Mobil tidak tersedia")
+                            window.location = "{{ route('user.downPayment.index') }}"
+                        }else if (data.status === 'confirmed' || data.status === 'cancelled') {
                             window.location.href = "{{ route('user.downPayment.changeStatus', $downPayments->id) }}";
                         }else if (data.status == "error") {
                             snap.pay(data.snap_token, {
