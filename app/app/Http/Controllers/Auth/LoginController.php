@@ -44,19 +44,24 @@ class LoginController extends Controller
         if ($request->has('redirect')) {
             $redirect = $request->redirect;
 
-            // 🔒 Jangan simpan redirect ke /login ke session
-            if (!str_contains($redirect, '/login')) {
+            // Hindari menyimpan redirect ke /login atau ke /user/dashboard
+            if (!str_contains($redirect, '/login') && !str_contains($redirect, '/dashboard')) {
                 session(['url.intended' => $redirect]);
             }
         }
 
-        // CMS pakai halaman login, lainnya pakai modal login
         if (isset($redirect) && str_contains($redirect, '/admin')) {
             return view('auth.login');
         }
 
+        // Hindari redirect loop kalau asalnya dari halaman butuh login
+        if (url()->previous() === url()->current() || str_contains(url()->previous(), '/dashboard')) {
+            return redirect('/');
+        }
+
         return redirect()->back()->with('showLoginModal', true);
     }
+
 
 
     
