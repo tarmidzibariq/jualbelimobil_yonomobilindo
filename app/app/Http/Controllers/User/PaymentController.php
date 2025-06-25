@@ -8,6 +8,7 @@ use App\Models\Car;
 use Illuminate\Http\Request;
 use App\Models\DownPayment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 use Midtrans\Config;
 use Midtrans\Snap;
 use Midtrans\Notification;
@@ -16,20 +17,27 @@ use Midtrans\Transaction;
 
 class PaymentController extends Controller
 {
-    // Menampilkan halaman Snap pembayaran
+        // Menampilkan halaman Snap pembayaran
     public function checkout($id)
     {
         $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
 
         $car = Car::findOrFail($downPayment->car_id);
         // dd($car->status);
+
         // Cek apakah mobil sudah terjual
         if ($car->status === 'sold' || $car->status === 'under_review' || $car->status === 'pending_check') {
             return redirect()->back()->with('error', 'Mobil ini sudah terjual.');
         }
-
+        
         // Konfigurasi Midtrans
         MidtransHelper::init();
+
+        $checkStatus = $this->checkMidtransStatus($id);
+        // dd($checkStatus);
+        if ($checkStatus->original['status'] != "error") {
+            $this->changeStatus($id);
+        }
 
         $orderId = 'DP-' . $downPayment->id . '-' . time();
 
@@ -46,11 +54,14 @@ class PaymentController extends Controller
             ],
         ];
 
-        $snapToken = Snap::getSnapToken($params);
+        $snapToken = !empty($downPayment->snap_token) ? $snapToken = $downPayment->snap_token : $snapToken = Snap::getSnapToken($params);
 
         DownPayment::where('id', $id)
         ->where('payment_status', 'pending')
-        ->update(['order_id' => $orderId]);
+        ->update([
+            'order_id' => $orderId,
+            'snap_token' => $snapToken
+        ]);
 
         return view('user.downPayment.checkout', [
             'downPayments' => $downPayment,
@@ -58,15 +69,20 @@ class PaymentController extends Controller
         ]);
     }
 
-    public function changeStatus($id) {   
+    public function changeStatus($id) {
         $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
         
         MidtransHelper::init();
 
-        $statusFromMidtrans = Transaction::status($downPayment->order_id);
+        $statusFromMidtrans = null;
+
+        try {
+            $statusFromMidtrans = Transaction::status($downPayment->order_id);
+        } catch (\Throwable $th) {
+        }
+
         $transaction = $statusFromMidtrans->transaction_status ?? "pending";
-        // dd($transaction);
-        
+
         $status = "pending";
         $paymentMethod = null;
 
@@ -81,12 +97,46 @@ class PaymentController extends Controller
             $status = 'pending';
         }
 
-        DownPayment::where("id", $id)
+        if ($transaction != 'pending') {
+            DownPayment::where("id", $id)
             ->update([
                 "payment_status" => $status,
                 "payment_date" => $statusFromMidtrans->transaction_time ?? null,
                 "payment_method" => $paymentMethod,
+                'snap_token' => null
             ]);
+        }else {
+            $orderId = 'DP-' . $downPayment->id . '-' . time();
+
+            // Siapkan parameter transaksi
+            $params = [
+                'transaction_details' => [
+                    'order_id' => $orderId,  
+                    'gross_amount' => (int) $downPayment->amount,
+                ],
+                'customer_details' => [
+                    'first_name' => $downPayment->user->name,
+                    'email' => $downPayment->user->email,
+                    'phone' => $downPayment->user->phone,
+                ],
+            ];
+
+            $snapToken = !empty($downPayment->snap_token) ? $snapToken = $downPayment->snap_token : $snapToken = Snap::getSnapToken($params);
+
+            DownPayment::where('id', $id)
+            ->where('payment_status', 'pending')
+            ->update([
+                'order_id' => $orderId,
+                'snap_token' => $snapToken
+            ]);
+
+            $newDownPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
+
+            return view('user.downPayment.checkout', [
+                'downPayments' => $newDownPayment,
+                'snapToken' => $snapToken
+            ]);
+        }
         
         if ($status == 'confirmed') {
             // Update status mobil menjadi sold
@@ -104,6 +154,7 @@ class PaymentController extends Controller
     // Webhook Midtrans
     public function notificationHandler(Request $request)
     {
+        MidtransHelper::init();
         Log::info('Webhook Midtrans MASUK:', $request->all());
 
         try {
@@ -121,14 +172,26 @@ class PaymentController extends Controller
             }
 
             // Proses status dari Midtrans
+            $status = "pending";
+            $paymentMethod = null;
+
             if ($transaction == 'settlement') {
-                $payment->payment_status = 'confirmed';
-                $payment->payment_date = now();
+                $status = 'confirmed';
+                $paymentMethod = $data['payment_type'] ?? null; 
             } elseif ($transaction == 'expire') {
-                $payment->payment_status = 'cancelled';
+                $status = 'expired';
+            }elseif ($transaction == 'cancel') {
+                $status = 'cancelled';
             } elseif ($transaction == 'pending') {
-                $payment->payment_status = 'pending';
+                $status = 'pending';
             }
+    
+            DownPayment::where("id", $id)
+                ->update([
+                    "payment_status" => $status,
+                    "payment_date" => $notif->transaction_time ?? null,
+                    "payment_method" => $paymentMethod,
+                ]);
 
             $payment->save();
             Log::info("✅ Status untuk ID {$id} diupdate menjadi {$payment->payment_status}");
@@ -136,7 +199,82 @@ class PaymentController extends Controller
             return response()->json(['message' => 'Success']);
         } catch (\Exception $e) {
             Log::error('🔥 ERROR Webhook: ' . $e->getMessage());
-            return response()->json(['message' => 'Error handling notification'], 500);
+            return response()->json(['message' => $e->getMessage()], 500);
         }
+    }
+
+    public function checkMidtransStatus($id)
+    {
+        $downPayment = DownPayment::findOrFail($id);  
+        
+        // dd($downPayment);
+
+        $serverKey = config('services.midtrans.server_key');
+        $encodedKey = base64_encode($serverKey . ':');
+
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Basic ' . $encodedKey
+        ])->get("https://api.sandbox.midtrans.com/v2/{$downPayment->order_id}/status");
+
+        if ($response->successful()) {
+            $data = $response->json();
+
+            // dd($data);
+
+            // Convert status Midtrans ke sistem lokal (optional)
+            if ($data["status_code"] == 200) {
+                $status = match ($data['transaction_status']) {
+                    'settlement' => 'confirmed',
+                    'expire' => 'cancelled',
+                    'pending' => 'pending',
+                    default => 'unknown',
+                };
+
+                $transaction = $data['transaction_status'];
+
+                if ($transaction == 'settlement') {
+                    $status = 'confirmed';
+                    $paymentMethod = $data['payment_type'] ?? null; 
+                } elseif ($transaction == 'expire') {
+                    $status = 'expired';
+                }elseif ($transaction == 'cancel') {
+                    $status = 'cancelled';
+                } elseif ($transaction == 'pending') {
+                    $status = 'pending';
+                }
+        
+                DownPayment::where("id", $id)
+                    ->update([
+                        "payment_status" => $status,
+                        "payment_date" => $data['transaction_time'] ?? null,
+                        "payment_method" => $paymentMethod,
+                        "snap_token" => null
+                    ]);
+    
+                return response()->json(['status' => $status]);
+            }else {
+                $id = DownPayment::where("id", $id)
+                ->update([
+                    'snap_token' => null
+                ]);
+
+            // dd($id);
+
+            return response()->json(
+                [
+                    'status' => 'error',
+                    'snap_token' => $downPayment->snap_token
+                ], 
+                $response->status());
+            }
+        }
+
+        DownPayment::where("id", $id)
+            ->update([
+                'snap_token' => null
+        ]);
+
+        return response()->json(['status' => 'error'], $response->status());
     }
 }

@@ -21,7 +21,9 @@ return new class extends Migration
             $table->string('payment_method')->nullable();
             $table->dateTime('appointment_date');
             $table->dateTime('payment_date')->nullable();
-            $table->string('payment_proof')->nullable();
+            // $table->string('payment_proof')->nullable();
+            $table->string('snap_token', 255)->unique()->nullable();
+
             // Perbaikan foreign key refund_id
             $table->unsignedBigInteger('refund_id')->nullable();
             $table->foreign('refund_id')->references('id')->on('refunds')->onDelete('set null');

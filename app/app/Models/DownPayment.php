@@ -16,8 +16,9 @@ class DownPayment extends Model
         'appointment_date',
         'payment_status',
         'payment_date',
-        'payment_proof',
+        // 'payment_proof',
         'order_id',
+        'snap_token',
         'payment_method',
         'refund_id',
     ];
