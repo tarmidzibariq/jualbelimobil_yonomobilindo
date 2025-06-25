@@ -36,8 +36,9 @@
             @endif
         </tr>
         <tr>
-            <th>Amount</th>
-            <td>Rp {{ number_format($downPayment->amount, 0, ',', '.') }}</td>
+            <th>Lokasi Showroom</th>
+            <td>Lokasi: Pekapuran Jl 1000 RT 06/05 NO 200 SUKAMAJU BARU TAPOS, DEPOK<br>
+                Kontak Showroom: 081220745317</td>
         </tr>
         <tr>
             <th colspan="2" class="text-muted">Informasi Pembayaran</th>
@@ -70,6 +71,14 @@
                 <span class="badge bg-secondary">{{ ucfirst($downPayment->payment_status) }}</span>
                 @endswitch
             </td>
+        </tr>
+        <tr>
+            <th>Metode Pembayaran</th>
+            <td>{{ $downPayment->payment_method ?? 'Belum Dibayar'}}</td>
+        </tr>
+        <tr>
+            <th>Amount</th>
+            <td>Rp {{ number_format($downPayment->amount, 0, ',', '.') }}</td>
         </tr>
         <tr>
             <th>Tanggal Pembayaran</th>

@@ -147,6 +147,12 @@
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">Checkout</li>
                             @break
+                        @case(request()->routeIs('user.downPayment.show'))
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <a href="{{route('user.downPayment.index')}}">Down Payment</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Show</li>
+                            @break
 
                         {{--user.Offer.index  --}}
                         @case(request()->routeIs('user.offer.index'))

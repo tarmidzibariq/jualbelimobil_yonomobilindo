@@ -13,8 +13,12 @@
                         <td>{{ '#'. $downPayments->id ?? '-'}}</td>
                     </tr>
                     <tr>
+                        <th>Dibuat</th>
+                        <td>{{ \Carbon\Carbon::parse($downPayments->created_at)->format('d M Y') }}</td>
+                    </tr>
+                    <tr>
                         <th>Mobil</th>
-                        <td class="text-uppercase">{{ $downPayments->car->brand  . ' ' . $downPayments->car->model . ' ' . $downPayments->car->year . ' '. $downPayments->car->color ?? '-' }}</td>
+                        <td class="text-uppercase">#{{ $downPayments->car_id }} {{ $downPayments->car->brand  . ' ' . $downPayments->car->model . ' ' . $downPayments->car->year . ' '. $downPayments->car->color ?? '-' }}</td>
                     </tr>
                     <tr>
                         <th>Nama Pengguna</th>
@@ -36,6 +40,18 @@
                     <tr>
                         <th>Jam Janji</th>
                         <td>{{\Carbon\Carbon::parse($downPayments->appointment_date)->format('H:i') . ' WIB'  }}</td>
+                    </tr>
+                    <tr>
+                        <th>Lokasi Showroom</th>
+                        <td>Lokasi: Pekapuran Jl 1000 RT 06/05 NO 200 SUKAMAJU BARU TAPOS, DEPOK<br>
+                            Kontak Showroom: 081220745317</td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" class="text-muted">Informasi Pembayaran</th>
+                    </tr>
+                     <tr>
+                        <th>Order ID</th>
+                        <td>{{ $downPayments->order_id ?? '-' }}</td>
                     </tr>
                     <tr>
                         <th>Status Pembayaran DP</th>
@@ -75,11 +91,7 @@
                         <td>{{ $downPayments->payment_date ? \Carbon\Carbon::parse($downPayments->payment_date)->format('d M Y H:i') : '-' }}</td>
                     </tr>
                     @if ($downPayments->payment_status == 'confirmed')
-                    <tr>
-                        <th>Lokasi Showroom</th>
-                        <td>Lokasi: Pekapuran Jl 1000 RT 06/05 NO 200 SUKAMAJU BARU TAPOS, DEPOK<br>
-                            Kontak Showroom: 081220745317</td>
-                    </tr>
+                    
                         
                     @endif
 
