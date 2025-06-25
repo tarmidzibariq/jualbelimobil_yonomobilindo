@@ -50,7 +50,7 @@
             <a href="{{ route('admin.cars.index') }}" class="nav-link {{ request()->routeIs('admin.cars.*') ? 'active' : '' }}">
               <i class=" nav-icon fa-solid fa-car"></i>
               <p>
-                Cars
+                Mobil
               </p>
             </a>
           </li>
@@ -63,18 +63,20 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('admin.offer.index') }}" class="nav-link {{ request()->routeIs('admin.offer.*') ? 'active' : '' }}">
-              <i class="nav-icon fa-solid fa-car-side"></i>
+            <a href="{{ route('admin.salesRecord.index') }}" class="nav-link {{ request()->routeIs('admin.salesRecord.*') ? 'active' : '' }}">
+              {{-- <i class="nav-icon fa-solid fa-cart"></i> --}}
+              <i class="fa-solid fa-cart-shopping"></i>
               <p>
-                Offer Cars
+                Catatan Transaksi Pembelian
               </p>
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{ route('admin.salesRecord.index') }}" class="nav-link {{ request()->routeIs('admin.salesRecord.*') ? 'active' : '' }}">
-              <i class="nav-icon fa-solid fa-car-side"></i>
+            <a href="{{ route('admin.offer.index') }}" class="nav-link {{ request()->routeIs('admin.offer.*') ? 'active' : '' }}">
+              {{-- <i class="nav-icon fa-solid fa-car-side"></i> --}}
+              <i class="nav-icon fa-solid fa-store"></i>
               <p>
-                Transaction Sales Record 
+                Permintaan Penjualan Mobil
               </p>
             </a>
           </li>
@@ -82,10 +84,12 @@
             <a href="{{ route('admin.offerRecord.index') }}" class="nav-link {{ request()->routeIs('admin.offerRecord.*') ? 'active' : '' }}">
               <i class="nav-icon fa-solid fa-shop"></i>
               <p>
-                Transaction Offer Record 
+                Catatan Transaksi Penjualan
               </p>
             </a>
           </li>
+          
+          
           
           @elseif(auth()->user()->role === 'user')
           <li class="nav-item">

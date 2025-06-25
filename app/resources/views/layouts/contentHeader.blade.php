@@ -16,7 +16,7 @@
                             @break
 
                         @case(request()->routeIs('admin.cars.*'))
-                            Cars
+                            Mobil
                             @break
 
                         @case(request()->routeIs('admin.downPayment.edit'))
@@ -28,15 +28,15 @@
                             @break
 
                         @case(request()->routeIs('admin.offer.*'))
-                            Offer Cars
+                            Permintaan Penjualan 
                             @break
 
                         @case(request()->routeIs('admin.salesRecord.*'))
-                            Transaction Sales Record
+                            Catatan Transaksi Pembelian
                             @break  
 
                         @case(request()->routeIs('admin.offerRecord.*'))
-                            Transaction Offer Record
+                            Catatan Transaksi Penjualan
                             @break  
 
                         @case(request()->routeIs('user.downPayment.*'))
@@ -93,31 +93,31 @@
 
                         {{-- admin.cars.index --}}
                         @case(request()->routeIs('admin.cars.index'))
-                            <li class="breadcrumb-item active" aria-current="page">Cars</li>
+                            <li class="breadcrumb-item active" aria-current="page">Mobil</li>
                             @break
                         {{-- admin.cars.create --}}
                         @case(request()->routeIs('admin.cars.create'))
                             <li class="breadcrumb-item">
-                                <a href="{{ route('admin.cars.index') }}">Cars</a>
+                                <a href="{{ route('admin.cars.index') }}">Mobil</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">Create</li>
                             @break
                         {{-- admin.cars.edit --}}
                         @case(request()->routeIs('admin.cars.edit'))
                             <li class="breadcrumb-item">
-                                <a href="{{ route('admin.cars.index') }}">Cars</a>
+                                <a href="{{ route('admin.cars.index') }}">Mobil</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">Edit</li>
                             @break
 
                         {{-- admin.offer.index --}}
                         @case(request()->routeIs('admin.offer.index'))
-                            <li class="breadcrumb-item active" aria-current="page">Offer</li>
+                            <li class="breadcrumb-item active" aria-current="page">Permintaan Penjualan</li>
                             @break
                         {{-- admin.offer.show --}}
                         @case(request()->routeIs('admin.offer.show'))
                             <li class="breadcrumb-item active" aria-current="page">
-                                <a href="{{route('admin.offer.index')}}">Offer</a>
+                                <a href="{{route('admin.offer.index')}}">Permintaan Penjualan</a>
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">Show</li>
                             @break
@@ -129,11 +129,11 @@
 
                         {{-- admin.salesRecord.index --}}
                         @case(request()->routeIs('admin.salesRecord.index'))
-                            <li class="breadcrumb-item active" aria-current="page">Transaction Sales Records</li>
+                            <li class="breadcrumb-item active" aria-current="page">Catatan Transaksi Pembelian</li>
                             @break
 
                         @case(request()->routeIs('admin.offerRecord.index'))
-                            <li class="breadcrumb-item active" aria-current="page">Transaction Offer Records</li>
+                            <li class="breadcrumb-item active" aria-current="page">Catatan Transaksi Penjualan</li>
                             @break
 
                         {{--user.downPayment.index  --}}
