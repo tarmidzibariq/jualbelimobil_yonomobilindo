@@ -212,11 +212,18 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="inspection_date" class="form-label fw-medium">Tanggal Inspeksi*</label>
-                                <input type="date" name="inspection_date" class="form-control py-2 border-0"
-                                    id="inspection_date" placeholder="Ketik" required>
+                                <label for="inspection_date" class="form-label fw-medium">Tanggal & Waktu Inspeksi*</label>
+                                <input type="datetime-local" 
+                                    name="inspection_date" 
+                                    class="form-control py-2 border-0"
+                                    id="inspection_date" 
+                                    placeholder="Ketik"
+                                    value="{{ old('inspection_date', \Carbon\Carbon::now()->format('Y-m-d\TH:i')) }}"
+                                    min="{{ \Carbon\Carbon::now()->format('Y-m-d\TH:i') }}"
+                                    required>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

@@ -52,9 +52,12 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label for="tanggal" class="form-label fw-medium">Tanggal Janji Temu</label>
-                                <input type="date" name="appointment_date"
-                                    class="form-control py-2 @error('appointment_date') is-invalid @enderror" value="{{old('appointment_date')}}"
-                                    id="tanggal">
+                                <input type="date" 
+                                    name="appointment_date"
+                                    class="form-control py-2 @error('appointment_date') is-invalid @enderror" 
+                                    value="{{ old('appointment_date')}}"
+                                    id="tanggal"
+                                    min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}">
                                 @error('appointment_date')
                                 <span class="invalid-feedback" role="alert">
                                     <strong>{{ $message }}</strong>
@@ -111,7 +114,7 @@
                                     <p class="fw-bold text-capitalize">
                                         {{$car->year . ' - ' . $car->brand . ' ' . $car->model . ' ' . $car->color}}</p>
                                     <p class="text-capitalize">
-                                        {{ number_format($car->mileage, 0, ',', '.') . ' KM |' . $car->transmission }}
+                                        {{ number_format($car->mileage, 0, ',', '.') . ' KM | ' . $car->transmission }}
                                     </p>
                                 </div>
                             </div>

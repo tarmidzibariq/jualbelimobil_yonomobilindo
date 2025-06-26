@@ -47,11 +47,11 @@
                     </tr>
                     <tr>
                         <th>Tanggal Janji</th>
-                        <td>{{ \Carbon\Carbon::parse($offer->appointment_date)->format('d M Y') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($offer->inspection_date)->format('d M Y') }}</td>
                     </tr>
                     <tr>
                         <th>Jam Janji</th>
-                        <td>{{ \Carbon\Carbon::parse($offer->appointment_date)->format('H:i T') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($offer->inspection_date)->format('H:i T') }}</td>
                     </tr>
                     <tr>
                         <th>Penawaran Harga Mobil</th>

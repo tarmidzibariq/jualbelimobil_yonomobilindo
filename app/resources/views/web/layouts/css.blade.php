@@ -166,6 +166,17 @@
         background-color: #032145;
     }
 
+    .custom-link {
+        color: rgba(255, 255, 255, 0.5);
+        text-decoration: none;
+        transition: color 0.2s ease-in-out;
+    }
+
+    .custom-link:hover {
+        color: #ffffff; /* Putih penuh saat hover */
+        text-decoration: none;
+    }
+
     /* #reqCar{
       background-color: #ffffff;
     } */

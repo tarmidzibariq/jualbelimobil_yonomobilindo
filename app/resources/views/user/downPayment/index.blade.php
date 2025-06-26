@@ -44,7 +44,7 @@
                                 <td>{{ 'Rp ' . number_format($item->amount , 0, ',', '.') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($item->appointment_date)->translatedFormat('d F Y H:i') }}</td>
                                 <td>
-                                    @if ($item->car->status === 'available' || $item->car->status === 'under_review')
+                                    @if ($item->car->status === 'available' || $item->car->status === 'under_review' || $item->car->status === 'sold' )
                                         @switch($item->payment_status)
                                             @case('pending')
                                                 <span class="badge bg-warning text-dark">Pending</span>

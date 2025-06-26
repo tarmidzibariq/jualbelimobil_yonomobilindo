@@ -45,19 +45,31 @@
 
                          </div>
                          <div class="col-md-4 mt-4">
-                             <h6 class="fw-semibold text-white">Lainnya</h6>
-                             <ul class="list-unstyled mt-3 ">
-                                 <li class="mb-2 text-white-50"><i class="fas fa-car-side me-2 text-white-50"></i>
-                                     Beli Mobil</li>
-                                 <li class="mb-2 text-white-50"><i class="fas fa-car me-2 text-white-50"></i> Jual
-                                     Mobil</li>
-                                 <li class="mb-2 text-white-50"><i class="fas fa-comments me-2 text-white-50"></i>
-                                     Testimoni</li>
-                                 <li class=" text-white-50"><i class="fas fa-phone me-2 text-white-50"></i> Kontak
-                                 </li>
-                             </ul>
+                            <h6 class="fw-semibold text-white">Lainnya</h6>
+                            <ul class="list-unstyled mt-3">
+                                <li class="mb-2 text-white-50">
+                                    <a href="{{ route('home') }}" class="custom-link">
+                                        <i class="fas fa-car-side me-2 text-white-50"></i> Beli Mobil
+                                    </a>
+                                </li>
+                                <li class="mb-2 text-white-50">
+                                    <a href="{{ route('web.jualMobil.index') }}" class="custom-link">
+                                        <i class="fas fa-car me-2 text-white-50"></i> Jual Mobil
+                                    </a>
+                                </li>
+                                <li class="mb-2 text-white-50">
+                                    <a href="{{ route('web.testimonial') }}" class="custom-link">
+                                        <i class="fas fa-comments me-2 text-white-50"></i> Testimoni
+                                    </a>
+                                </li>
+                                <li class="text-white-50">
+                                    <a href="{{ route('web.kontak') }}" class="custom-link">
+                                        <i class="fas fa-phone me-2 text-white-50"></i> Kontak
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
 
-                         </div>
                      </div>
                  </div>
              </div>
