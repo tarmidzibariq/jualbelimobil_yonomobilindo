@@ -151,12 +151,11 @@
             </div>
 
             {{-- Pagination --}}
-            {{-- <div class="card-footer clearfix">
+            <div class="card-footer clearfix">
                 <div class="pagination pagination-sm m-0 float-end">
-                    {{ $cars->appends(request()->query())->links('pagination::bootstrap-5') }}
-
-        </div>
-    </div> --}}
+                    {{ $downPayments->appends(request()->query())->links('pagination::bootstrap-5') }}
+                </div>
+            </div>
 </div>
 </div>
 </div>

@@ -100,14 +100,19 @@
 
                     {{-- Sale Date --}}
                     <div class="mb-3">
-                        <label for="sale_date" class="form-label">Sale Date</label>
-                        <input type="date" class="form-control @error('sale_date') is-invalid @enderror" id="sale_date"
-                            name="sale_date" value="{{ old('sale_date', date('Y-m-d')) }}" min="{{ date('Y-m-d') }}"
+                        <label for="sale_date" class="form-label">Sale Date & Time</label>
+                        <input type="datetime-local" 
+                            class="form-control @error('sale_date') is-invalid @enderror" 
+                            id="sale_date"
+                            name="sale_date"
+                            value="{{ old('sale_date', \Carbon\Carbon::now()->format('Y-m-d\TH:i')) }}"
+                            min="{{ \Carbon\Carbon::now()->format('Y-m-d\TH:i') }}"
                             required />
                         @error('sale_date')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
+
 
 
                     {{-- Status --}}
