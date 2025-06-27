@@ -49,11 +49,11 @@
                                 <td>
                                     {{-- <a href="{{ route('admin.offerRecord.show', $offerRecord) }}" class="btn btn-info btn-sm">Show</a> --}}
                                     {{-- <a href="{{ route('admin.offerRecord.edit', $offerRecord) }}" class="btn btn-warning btn-sm">Edit</a> --}}
-                                    {{-- <form action="{{ route('admin.offerRecord.destroy', $offerRecord) }}" method="POST" class="d-inline">
+                                    <form action="{{ route('admin.offerRecord.destroy', $offerRecord) }}" method="POST" class="d-inline">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this record?')">Delete</button>
-                                    </form> --}}
+                                    </form>
                                 </td>
                             </tr>
                             @empty

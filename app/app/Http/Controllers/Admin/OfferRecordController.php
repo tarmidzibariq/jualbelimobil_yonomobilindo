@@ -62,4 +62,17 @@ class OfferRecordController extends Controller
 
         return redirect()->route('admin.offerRecord.index')->with('success', 'Sales record created successfully.');
     }
+    public function destroy($id){
+        $offerRecord = OfferRecord::findOrFail($id);
+        // dd($offerRecord->offer_id);
+        $offer = Offer::findOrFail($offerRecord->offer_id);
+        if ($offer->status === 'sold') {
+            $offer->update(['status' => 'accepted']);
+        }
+        $offerRecord->delete();
+
+        return redirect()->route('admin.offerRecord.index')->with('success', 'Sales record created successfully.');
+
+
+    }
 }

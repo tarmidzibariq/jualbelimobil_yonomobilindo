@@ -1,6 +1,8 @@
 @extends('layouts.master')
 @section('content')
-
+@push('styles')
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+@endpush
 <div class="app-content">
     <div class="container-fluid">
         <div class="card card-primary card-outline mb-4">
@@ -93,12 +95,17 @@
                     {{-- Sale Date --}}
                     <div class="mb-3">
                         <label for="sale_date" class="form-label">Sale Date</label>
-                        <input type="date" class="form-control @error('sale_date') is-invalid @enderror" id="sale_date"
-                            name="sale_date" value="{{ old('sale_date', date('Y-m-d')) }}" min="{{ date('Y-m-d') }}" required />
+                        <input type="text"
+                            class="form-control @error('sale_date') is-invalid @enderror"
+                            id="sale_date"
+                            name="sale_date"
+                            value="{{ old('sale_date') }}"
+                            required>
                         @error('sale_date')
                         <span class="invalid-feedback">{{ $message }}</span>
                         @enderror
                     </div>
+
                 </div>
 
                 <div class="card-footer">
@@ -110,7 +117,9 @@
 </div>
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
+
     function formatRupiah(angka) {
         // Hapus karakter selain angka dan titik (untuk desimal)
         let numberString = angka.replace(/[^\d.]/g, "");
@@ -176,6 +185,11 @@
 
         offerSelect.addEventListener('change', updatePrice);
         updatePrice(); // Jalankan jika ada old value
+    });
+    flatpickr("#sale_date", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minDate: "{{ date('Y-m-d') }}",
     });
 </script>
 @endpush
