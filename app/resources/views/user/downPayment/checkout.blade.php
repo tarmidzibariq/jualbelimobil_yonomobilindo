@@ -152,7 +152,7 @@
                 </table>
 
                 {{-- Tombol bayar --}}
-                @if($downPayments->payment_status == 'pending' && $downPayments->car->status == "available" && isset($snapToken))
+                @if($downPayments->payment_status == 'pending' && $downPayments->car->status == "available")
                 <div class="mt-4">
                     <button id="pay-button" class="btn btn-success mt-4">
                         <i class="fas fa-credit-card"></i> Bayar Sekarang
