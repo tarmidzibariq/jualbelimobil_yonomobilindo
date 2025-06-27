@@ -153,11 +153,11 @@
 
                 {{-- Tombol bayar --}}
                 @if($downPayments->payment_status == 'pending' && $downPayments->car->status == "available" && isset($snapToken))
-                    <div class="mt-4">
-                        <button id="pay-button" class="btn btn-success mt-4">
-                            <i class="fas fa-credit-card"></i> Bayar Sekarang
-                        </button>
-                    </div>
+                <div class="mt-4">
+                    <button id="pay-button" class="btn btn-success mt-4">
+                        <i class="fas fa-credit-card"></i> Bayar Sekarang
+                    </button>
+                </div>
                 @endif
 
             </div>
@@ -220,5 +220,90 @@
                     });
     });
 </script>
+{{-- <script type="text/javascript">
+
+    document.getElementById('pay-button')?.addEventListener('click', function () {
+        fetch(`/api/check-midtrans-status/{{ $downPayments->id }}`)
+            .then(response => response.json())
+            .then(data => {
+                console.log("Cek status:", data.status);
+
+                if (data.status === "under_review" || data.status === "sold" || data.status === "pending_check") {
+                    alert("Mobil tidak tersedia");
+                    window.location = "{{ route('user.downPayment.index') }}";
+                    return;
+                }
+
+                if (data.status === "confirmed" || data.status === "cancelled" || data.status === "expired") {
+                    window.location.href = "{{ route('user.downPayment.changeStatus', $downPayments->id) }}";
+                    return;
+                }
+
+                if (data.status === "pending") {
+                    // Gunakan snap_token lama
+                    snap.pay(data.snap_token, {
+                        onSuccess: function (result) {
+                            window.location.href = "{{ route('user.downPayment.changeStatus' , $downPayments->id) }}";
+                        },
+                        onPending: function (result) {
+                            window.location.href = "{{ route('user.downPayment.checkout' , $downPayments->id) }}";
+                        },
+                        onError: function (result) {
+                            window.location.href = "{{ route('user.downPayment.changeStatus' , $downPayments->id) }}";
+                        },
+                        onClose: function () {
+                            alert("Kamu menutup popup tanpa menyelesaikan pembayaran.");
+                        }
+                    });
+                    return;
+                }
+
+                if (data.status === "error") {
+                    // Status error → buat Snap baru
+                    snap.pay('{{ $snapToken }}', {
+                        onSuccess: function (result) {
+                            window.location.href = "{{ route('user.downPayment.changeStatus' , $downPayments->id) }}";
+                        },
+                        onPending: function (result) {
+                            window.location.href = "{{ route('user.downPayment.checkout' , $downPayments->id) }}";
+                        },
+                        onError: function (result) {
+                            window.location.href = "{{ route('user.downPayment.changeStatus' , $downPayments->id) }}";
+                        },
+                        onClose: function () {
+                            alert("Kamu menutup popup tanpa menyelesaikan pembayaran.");
+                        }
+                    });
+                    return;
+                }
+
+                // Fallback → jika status tidak diketahui
+                alert("Terjadi kesalahan. Silakan coba lagi.");
+                window.location.href = "{{ route('user.downPayment.index') }}";
+
+            })
+            .catch(error => {
+                console.error(error);
+                // Gagal panggil API → jalankan Snap baru
+                snap.pay('{{ $snapToken }}', {
+                    onSuccess: function (result) {
+                        window.location.href = "{{ route('user.downPayment.changeStatus' , $downPayments->id) }}";
+                    },
+                    onPending: function (result) {
+                        window.location.href = "{{ route('user.downPayment.checkout' , $downPayments->id) }}";
+                    },
+                    onError: function (result) {
+                        window.location.href = "{{ route('user.downPayment.changeStatus' , $downPayments->id) }}";
+                    },
+                    onClose: function () {
+                        alert("Kamu menutup popup tanpa menyelesaikan pembayaran.");
+                    }
+                });
+            });
+    });
+
+</script> --}}
+
+
 @endpush
 @endsection

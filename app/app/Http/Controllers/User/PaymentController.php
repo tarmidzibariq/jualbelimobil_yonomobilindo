@@ -18,33 +18,104 @@ use Midtrans\Transaction;
 class PaymentController extends Controller
 {
         // Menampilkan halaman Snap pembayaran
+    // public function checkout($id)
+    // {
+    //     $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
+
+    //     // $car = Car::findOrFail($downPayment->car_id);
+    //     // // dd($car->status);
+
+    //     // // Cek apakah mobil sudah terjual
+    //     //  if ($car->status !== 'available') {
+    //     //     return redirect()->route('user.downPayment.index')->with('error', 'Mobil tidak tersedia untuk pembayaran.');
+    //     // }
+        
+    //     // Konfigurasi Midtrans
+    //     MidtransHelper::init();
+
+    //     $checkStatus = $this->checkMidtransStatus($id);
+    //     // dd($checkStatus);
+    //     if ($checkStatus->original['status'] != "error") {
+    //         $this->changeStatus($id);
+    //     }
+
+    //     $orderId = 'DP-' . $downPayment->id . '-' . time();
+
+    //     // Siapkan parameter transaksi
+    //     $params = [
+    //         'transaction_details' => [
+    //             'order_id' => $orderId,  
+    //             'gross_amount' => (int) $downPayment->amount,
+    //         ],
+    //         'customer_details' => [
+    //             'first_name' => $downPayment->user->name,
+    //             'email' => $downPayment->user->email,
+    //             'phone' => $downPayment->user->phone,
+    //         ],
+    //     ];
+
+    //     $snapToken = !empty($downPayment->snap_token) ? $snapToken = $downPayment->snap_token : $snapToken = Snap::getSnapToken($params);
+
+    //     DownPayment::where('id', $id)
+    //     ->where('payment_status', 'pending')
+    //     ->update([
+    //         'order_id' => $orderId,
+    //         'snap_token' => $snapToken
+    //     ]);
+
+    //     return view('user.downPayment.checkout', [
+    //         'downPayments' => $downPayment,
+    //         'snapToken' => $snapToken
+    //     ]);
+    // }
     public function checkout($id)
     {
         $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
 
-        // $car = Car::findOrFail($downPayment->car_id);
-        // // dd($car->status);
-
-        // // Cek apakah mobil sudah terjual
-        //  if ($car->status !== 'available') {
-        //     return redirect()->route('user.downPayment.index')->with('error', 'Mobil tidak tersedia untuk pembayaran.');
-        // }
-        
-        // Konfigurasi Midtrans
         MidtransHelper::init();
 
-        $checkStatus = $this->checkMidtransStatus($id);
-        // dd($checkStatus);
-        if ($checkStatus->original['status'] != "error") {
-            $this->changeStatus($id);
+        // Cek status order lama dulu
+        if ($downPayment->order_id) {
+            try {
+                $midtransStatus = Transaction::status($downPayment->order_id);
+
+                $transaction = $midtransStatus->transaction_status ?? null;
+
+                if ($transaction === 'settlement') {
+                    $downPayment->update([
+                        'payment_status' => 'confirmed',
+                        'payment_date' => $midtransStatus->transaction_time,
+                        'payment_method' => $midtransStatus->payment_type,
+                        'snap_token' => null,
+                    ]);
+
+                    $downPayment->car->update(['status' => 'under_review']);
+
+                    return redirect()->route('user.downPayment.show', $id)
+                        ->with('success', 'Pembayaran berhasil!');
+                } elseif ($transaction === 'expire' || $transaction === 'cancel') {
+                    $downPayment->update([
+                        'payment_status' => $transaction === 'expire' ? 'expired' : 'cancelled',
+                        'snap_token' => null,
+                    ]);
+                } elseif ($transaction === 'pending') {
+                    // masih pending → pakai snap_token lama
+                    return view('user.downPayment.checkout', [
+                        'downPayments' => $downPayment,
+                        'snapToken' => $downPayment->snap_token,
+                    ]);
+                }
+            } catch (\Throwable $e) {
+                // fallback → buat order baru
+            }
         }
 
+        // Jika belum ada order atau sudah expire/cancel
         $orderId = 'DP-' . $downPayment->id . '-' . time();
 
-        // Siapkan parameter transaksi
         $params = [
             'transaction_details' => [
-                'order_id' => $orderId,  
+                'order_id' => $orderId,
                 'gross_amount' => (int) $downPayment->amount,
             ],
             'customer_details' => [
@@ -54,20 +125,20 @@ class PaymentController extends Controller
             ],
         ];
 
-        $snapToken = !empty($downPayment->snap_token) ? $snapToken = $downPayment->snap_token : $snapToken = Snap::getSnapToken($params);
+        $snapToken = Snap::getSnapToken($params);
 
-        DownPayment::where('id', $id)
-        ->where('payment_status', 'pending')
-        ->update([
+        $downPayment->update([
             'order_id' => $orderId,
-            'snap_token' => $snapToken
+            'snap_token' => $snapToken,
+            'payment_status' => 'pending',
         ]);
 
         return view('user.downPayment.checkout', [
             'downPayments' => $downPayment,
-            'snapToken' => $snapToken
+            'snapToken' => $snapToken,
         ]);
     }
+
 
     public function changeStatus($id) {
         $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
