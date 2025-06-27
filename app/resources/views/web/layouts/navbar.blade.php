@@ -20,7 +20,7 @@
              <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                  <ul class="navbar-nav mb-2 mb-lg-0">
                      <li class="nav-item">
-                         <a class="nav-link {{ request()->routeIs('home') ? 'active' : '' }}" href="{{route('home')}}">BELI MOBIL</a>
+                         <a class="nav-link {{ request()->routeIs('home') || request()->routeIs('web.detailMobil') || request()->routeIs('web.downPayment.show') ? 'active' : '' }}" href="{{route('home')}}">BELI MOBIL</a>
                      </li>
                      <li class="nav-item">
                          <a class="nav-link {{ request()->routeIs('web.jualMobil.*') ? 'active' : '' }}" href="{{ route('web.jualMobil.index')}}">JUAL MOBIL</a>

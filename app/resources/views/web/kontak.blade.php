@@ -10,7 +10,7 @@
 @endpush
 
 <section id="kontak">
-    <div class="container py-5">
+    <div class="container py-5 text-center">
         <h3 class="fw-bold mb-5">
             Kontak Kami
         </h3>

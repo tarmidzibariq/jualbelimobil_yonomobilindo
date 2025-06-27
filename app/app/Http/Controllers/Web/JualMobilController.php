@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Models\CarType;
 use App\Models\Offer;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +17,12 @@ class JualMobilController extends Controller
     public function index()
     {
         $brands = CarType::distinct()->pluck('brand');
-        return view('web.jualMobil', compact('brands'));
+        $reviews = Review::
+            with(['car', 'user'])
+            ->inRandomOrder()
+            ->take(3)
+            ->get();
+        return view('web.jualMobil', compact('brands', 'reviews'));
     }
 
     /**

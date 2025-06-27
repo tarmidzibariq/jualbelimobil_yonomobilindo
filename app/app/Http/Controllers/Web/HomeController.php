@@ -15,7 +15,7 @@ class HomeController extends Controller
         // Ambil 3 review terbaru yang sudah disetujui
         $reviews = Review::
             with(['car', 'user'])
-            ->orderBy('created_at', 'desc')
+            ->inRandomOrder()
             ->take(3)
             ->get();
         

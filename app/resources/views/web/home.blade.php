@@ -176,8 +176,8 @@
         <div class="row g-4 justify-content-center">
             <!-- Testimonial Card -->
             @forelse ($reviews as $review)
-                <div class="col-md-4 col-sm-6">
-                    <div class="card border-0 shadow-sm h-100 rounded-4 overflow-hidden">
+                <div class="col-md-4 col-6">
+                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
                         <img src="{{asset('storage/photo_review/' . $review->photo_review)}}" class="img-fluid" alt="Foto Pelanggan">
                         <div class="card-body text-center">
                             <h5 class="card-title">{{$review->user->name}}</h5>
