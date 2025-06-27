@@ -16,16 +16,16 @@ return new class extends Migration
             // relationship with users table
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');   
 
-            $table->string('brand');
-            $table->string('model');
-            $table->integer('year');
+            $table->string('brand',50);
+            $table->string('model',50);
+            $table->string('year',5);
             $table->integer('price');
             $table->enum('transmission', ['manual', 'automatic']);
             $table->text('description')->nullable();
             $table->date('service_history')->nullable();
-            $table->string('fuel_type');
-            $table->string('mileage');
-            $table->string('color');
+            $table->string('fuel_type',10);
+            $table->string('mileage',10);
+            $table->string('color',15);
             $table->date('tax');
             $table->integer('engine');
             $table->integer('seat');

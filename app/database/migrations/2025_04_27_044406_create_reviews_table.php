@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('car_id')->nullable()->constrained('cars')->onDelete('cascade');
             $table->integer('rating')->nullable()->default(5);
             $table->text('comment')->nullable();
-            $table->string('photo_review')->nullable();
+            $table->string('photo_review',255)->nullable();
             // $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->timestamps();
         });

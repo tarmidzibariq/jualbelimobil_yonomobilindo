@@ -2,9 +2,15 @@
 @section('web-content')
 
 @push('web-styles')
+
+{{-- select 2 --}}
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.2.0/dist/select2-bootstrap-5-theme.min.css"
     rel="stylesheet" />
+
+{{-- flatPickr --}}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+
 <style>
         .select2-container--bootstrap-5 .select2-selection {
         padding: 0.5em 1rem;
@@ -163,7 +169,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="mileage" class="form-label fw-medium">Jarak Tempuh (KM)*</label>
+                                <label for="mileage_format" class="form-label fw-medium">Jarak Tempuh (KM)*</label>
                                 {{-- <input type="number" name="mileage" id="mileage"
                                     class="form-control py-2 @error('mileage') is-invalid @enderror"
                                     value="{{ old('mileage') }}" placeholder="Ketik" required /> --}}
@@ -175,7 +181,7 @@
                         <div class="col-md-6">
                             <div class="mb-3">
                                 
-                                <label for="offered_price" class="form-label fw-medium">Penawaran Harga*</label>
+                                <label for="offered_price_format" class="form-label fw-medium">Penawaran Harga*</label>
                                 <input type="text" class="form-control py-2 @error('offered_price') is-invalid @enderror" id="offered_price_format"
                                     value="{{ old('offered_price') ? number_format(old('offered_price'), 0, ',', '.') : '' }}" required />
 
@@ -373,8 +379,13 @@
 
 @push('web-scripts')
 
+{{-- select2 --}}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+{{-- flatpickr --}}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/id.js"></script>
 <script>
     $(document).ready(function () {
 
@@ -442,6 +453,14 @@
             this.value = formatMileage(clean);
             inputHidden.value = clean;
         });
+    });
+
+    // flatpickr
+    flatpickr("#inspection_date", {
+        enableTime: true,
+        dateFormat: "Y-m-d H:i",
+        minDate: "{{ date('Y-m-d') }}",
+        locale: "id"
     });
 </script>
 

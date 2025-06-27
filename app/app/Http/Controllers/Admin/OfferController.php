@@ -43,6 +43,7 @@ class OfferController extends Controller
             'accepted' => 'Accepted',
             'pending' => 'Pending',
             'rejected' => 'Rejected',
+            'sold' => 'Sold',
         ];
 
         return view('admin.offer.index', compact('offers', 'statuses'));

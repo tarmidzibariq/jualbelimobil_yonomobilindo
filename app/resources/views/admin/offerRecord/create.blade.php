@@ -99,7 +99,7 @@
                             class="form-control @error('sale_date') is-invalid @enderror"
                             id="sale_date"
                             name="sale_date"
-                            value="{{ old('sale_date') }}"
+                             value="{{ old('sale_date', date('Y-m-d\TH:i')) }}"
                             required>
                         @error('sale_date')
                         <span class="invalid-feedback">{{ $message }}</span>
@@ -118,6 +118,7 @@
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/id.js"></script>
 <script>
 
     function formatRupiah(angka) {
@@ -189,7 +190,8 @@
     flatpickr("#sale_date", {
         enableTime: true,
         dateFormat: "Y-m-d H:i",
-        minDate: "{{ date('Y-m-d') }}",
+        // minDate: "{{ date('Y-m-d') }}",
+        locale: "id"
     });
 </script>
 @endpush

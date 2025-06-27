@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('order_id', 100)->unique()->nullable();
             $table->decimal('amount', 15, 2);
             $table->enum('payment_status', ['pending', 'confirmed', 'cancelled', 'expired'])->default('pending');
-            $table->string('payment_method')->nullable();
+            $table->string('payment_method',20)->nullable();
             $table->dateTime('appointment_date');
             $table->dateTime('payment_date')->nullable();
             // $table->string('payment_proof')->nullable();
