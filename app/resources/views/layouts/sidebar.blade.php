@@ -109,7 +109,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="{{route('user.transactionSalesRecord.index')}}" class="nav-link {{ request()->routeIs('user.transactionSalesRecord.index') ? 'active' : '' }}">
+            <a href="{{route('user.transactionSalesRecord.index')}}" class="nav-link {{ request()->routeIs('user.transactionSalesRecord.index') || request()->routeIs('user.transactionSalesRecord.createTesti') ? 'active' : '' }}">
               <i class="nav-icon fa-solid fa-cart-shopping"></i>
               <p>
                 Transaksi Pembelian

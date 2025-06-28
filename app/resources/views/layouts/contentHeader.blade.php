@@ -165,11 +165,19 @@
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">Show</li>
                             @break
-
-                        {{-- user.transactionSalesRecord.index --}}
-                        @case(request()->routeIs('user.transactionSalesRecord.index'))
-                           
+                            
+                            {{-- user.transactionSalesRecord.index --}}
+                            @case(request()->routeIs('user.transactionSalesRecord.index'))
+                            
                             <li class="breadcrumb-item active" aria-current="page">Transaksi Pembelian Mobil</li>
+                            @break
+                            
+                            @case(request()->routeIs('user.transactionSalesRecord.createTesti'))
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <a href="{{route('user.transactionSalesRecord.index')}}">Transaksi Pembelian Mobil</a>
+                            </li>
+                            
+                            <li class="breadcrumb-item active" aria-current="page">Testimoni</li>
                             @break
 
                         {{-- user.transactionOfferRecord.index --}}

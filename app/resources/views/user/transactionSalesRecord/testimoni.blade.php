@@ -1,5 +1,33 @@
 @extends('layouts.master')
 @section('content')
+@push('styles')
+    <style>
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #ffc107;
+        }
+
+
+    </style>
+@endpush
 <div class="app-content">
     <!--begin::Container-->
     <div class="container-fluid">
@@ -28,16 +56,6 @@
                 @csrf
                 <div class="card-body">
 
-                    {{-- Rating --}}
-                    <div class="mb-3">
-                        <label for="rating" class="form-label">Rating (1 - 5)</label>
-                        <input type="number" class="form-control @error('rating') is-invalid @enderror" id="rating"
-                            name="rating" min="1" max="5" value="{{ old('rating') }}" required>
-                        @error('rating')
-                        <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
-                        @enderror
-                    </div>
-
                     {{-- Comment --}}
                     <div class="mb-3">
                         <label for="comment" class="form-label">Komentar</label>
@@ -47,6 +65,36 @@
                         <span class="invalid-feedback" role="alert"><strong>{{ $message }}</strong></span>
                         @enderror
                     </div>
+
+                    {{-- Rating --}}
+                    <div class="mb-3">
+                        <label class="form-label">Rating (1 - 5)</label>
+                        <div class="star-rating">
+                            @for ($i = 5; $i >= 1; $i--)
+                                <input 
+                                    type="radio" 
+                                    name="rating" 
+                                    id="rating-{{ $i }}" 
+                                    value="{{ $i }}" 
+                                    {{ old('rating') == $i ? 'checked' : '' }} 
+                                    required
+                                >
+                                <label for="rating-{{ $i }}">
+                                    ★
+                                </label>
+                            @endfor
+                        </div>
+                        @error('rating')
+                        <span class="invalid-feedback d-block" role="alert">
+                            <strong>{{ $message }}</strong>
+                        </span>
+                        @enderror
+                    </div>
+
+
+
+
+                    
 
                     {{-- Photo Review --}}
                     <div class="mb-3">

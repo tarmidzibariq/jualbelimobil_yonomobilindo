@@ -32,6 +32,7 @@ class TransactionSalesRecordController extends Controller
 
     public function storeTesti(Request $request, $id)
     {
+        // dd($request);
         $user_id = Auth::id();
         $salesRecord = SalesRecord::findOrFail($id);
         $car = Car::findOrFail($salesRecord->car_id);
