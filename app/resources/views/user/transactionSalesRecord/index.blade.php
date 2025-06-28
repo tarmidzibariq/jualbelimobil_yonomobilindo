@@ -60,8 +60,15 @@
                                     <span class="badge bg-secondary">Unknown</span>
                                     @endif
                                 </td>
+                                    @php
+                                        // $car = ;
+                                        // dd($car)
+                                        $existingReview = App\Models\Review::where('sales_record_id', $salesRecord->id)
+                                            ->where('car_id', $salesRecord->car->id)
+                                            ->first();
+                                    @endphp
                                 <td>
-                                    @if ($salesRecord->status == 'completed')
+                                    @if ($salesRecord->status == 'completed' && $existingReview == false)
                                     <a href="{{ route('user.transactionSalesRecord.createTesti', $salesRecord->id) }}"
                                         class="btn btn-primary btn-sm">Testimoni</a>
 

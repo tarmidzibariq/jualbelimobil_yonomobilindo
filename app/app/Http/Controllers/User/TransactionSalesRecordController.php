@@ -25,6 +25,14 @@ class TransactionSalesRecordController extends Controller
 
     public function createTesti($id) {
         $salesRecord = SalesRecord::findOrFail($id);
+        $car = Car::findOrFail($salesRecord->car_id);
+        $existingReview = Review::where('sales_record_id', $salesRecord->id)
+            ->where('car_id', $car->id)
+            ->first();
+
+        if ($existingReview) {
+            return redirect()->route('user.transactionSalesRecord.index')->with('error', 'Testimoni untuk transaksi ID #' . $salesRecord->id . ' ini sudah pernah dibuat.');
+        }
         // $car = Car::findOrFail($id);
 
         return view('user.transactionSalesRecord.testimoni', compact('salesRecord'));
@@ -39,7 +47,7 @@ class TransactionSalesRecordController extends Controller
 
         $request->validate([
             'rating' => 'required|numeric|min:1|max:5',
-            'comment' => 'required|string|max:1000',
+            'comment' => 'required|string|max:255',
             'photo_review' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             // 'status' => 'required|in:pending,approved,rejected',
         ]);
