@@ -43,10 +43,7 @@
                                 <td>{{ $salesRecord->id }}</td>
                                 <td>{{ \Carbon\Carbon::parse($salesRecord->created_at)->translatedFormat('d F Y H:i') }}
                                 </td>
-                                <td><a href="" class="btn-show-detail" data-id="{{ $salesRecord->car->id }}"
-                                        data-bs-toggle="modal"
-                                        data-bs-target="#carModal">{{ $salesRecord->car->brand . ' ' . $salesRecord->car->model . ' ' . $salesRecord->car->year }}</a>
-                                </td>
+                                <td>{{ $salesRecord->car->brand . ' ' . $salesRecord->car->model . ' ' . $salesRecord->car->year }}</td>
                                 <td>{{ $salesRecord->saler->name }}</td>
                                 <td>{{ $salesRecord->buyer->name }}</td>
                                 <td>Rp. {{ number_format($salesRecord->sale_price, 0, ',', '.') }}</td>
