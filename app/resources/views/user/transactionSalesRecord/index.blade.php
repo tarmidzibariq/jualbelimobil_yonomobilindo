@@ -27,12 +27,12 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Create At</th>
-                                <th>Car</th>
-                                <th>Saler</th>
-                                <th>Buyer</th>
-                                <th>Sale Price</th>
-                                <th>Sale Date</th>
+                                <th>Dibuat</th>
+                                <th>Mobil</th>
+                                <th>Penjual</th>
+                                {{-- <th>Buyer</th> --}}
+                                <th>Harga</th>
+                                <th>Tanggal Dibeli</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -45,7 +45,7 @@
                                 </td>
                                 <td>{{ $salesRecord->car->brand . ' ' . $salesRecord->car->model . ' ' . $salesRecord->car->year }}</td>
                                 <td>{{ $salesRecord->saler->name }}</td>
-                                <td>{{ $salesRecord->buyer->name }}</td>
+                                {{-- <td>{{ $salesRecord->buyer->name }}</td> --}}
                                 <td>Rp. {{ number_format($salesRecord->sale_price, 0, ',', '.') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($salesRecord->sale_date)->translatedFormat('d F Y H:i') }}
                                 </td>

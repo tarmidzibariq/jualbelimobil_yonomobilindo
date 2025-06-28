@@ -14,7 +14,7 @@
 
                 <table class="table table-bordered">
                     <tr>
-                        <th>ID Pembayaran</th>
+                        <th>ID Penjualan</th>
                         <td>{{ '#'. $offer->id ?? '-'}}</td>
                     </tr>
                     <tr>

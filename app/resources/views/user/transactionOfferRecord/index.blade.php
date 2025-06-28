@@ -27,12 +27,12 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Create At</th>
-                                <th>Car</th>
-                                <th>Buyer</th>
-                                <th>Saler</th>
-                                <th>Sale Price</th>
-                                <th>Sale Date</th>
+                                <th>Dibuat</th>
+                                <th>Mobil</th>
+                                <th>Pembeli</th>
+                                {{-- <th>Saler</th> --}}
+                                <th>Harga</th>
+                                <th>Tanggal Terjual</th>
                                 <th>Status</th>
                                 {{-- <th>Aksi</th> --}}
                             </tr>
@@ -46,7 +46,7 @@
                                 <td>{{ $offerRecord->offer->brand . ' ' . $offerRecord->offer->model . ' ' . $offerRecord->offer->year }}</a>
                                 </td>
                                 <td>{{ $offerRecord->buyerOfferRecord->name }}</td>
-                                <td>{{ $offerRecord->salerOfferRecord->name }}</td>
+                                {{-- <td>{{ $offerRecord->salerOfferRecord->name }}</td> --}}
                                 <td>Rp. {{ number_format($offerRecord->sale_price, 0, ',', '.') }}</td>
                                 <td>{{ \Carbon\Carbon::parse($offerRecord->sale_date)->translatedFormat('d F Y H:i') }}
                                 </td>
