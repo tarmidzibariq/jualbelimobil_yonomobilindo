@@ -82,7 +82,7 @@ class OfferController extends Controller
     {
         // Validasi bahwa status adalah salah satu dari 4 nilai yang diperbolehkan
         $request->validate([
-            'status' => 'required|in:accepted,pending,rejected',
+            'status' => 'required|in:accepted,pending,rejected,sold',
         ]);
 
         // Ambil data mobil berdasarkan ID

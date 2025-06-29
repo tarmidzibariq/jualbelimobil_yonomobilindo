@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h5 class="modal-title">Update Offer Status</h5>
+  <h5 class="modal-title">Perbarui Status Permintaan Penjualan</h5>
   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
 </div>
 <div class="modal-body">
@@ -9,7 +9,7 @@
     <div class="mb-3">
       <label for="new-status" class="form-label">Select Status</label>
       <select name="status" id="new-status" class="form-select">
-        @foreach(['accepted', 'pending', 'rejected'] as $status)
+        @foreach(['accepted', 'pending', 'rejected', 'sold'] as $status)
           <option value="{{ $status }}" {{ $offer->status === $status ? 'selected' : '' }}>
             {{ ucfirst($status) }}
           </option>
