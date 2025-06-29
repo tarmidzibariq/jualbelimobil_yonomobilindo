@@ -121,21 +121,49 @@
                             </li>
                             <li class="breadcrumb-item active" aria-current="page">Show</li>
                             @break
-
+                            
                         {{-- admin.downPayment.index --}}
                         @case(request()->routeIs('admin.downPayment.index'))
                             <li class="breadcrumb-item active" aria-current="page">Down Payment(DP)</li>
+                            @break
+                        {{-- admin.downPayment.addRefund --}}
+                        @case(request()->routeIs('admin.downPayment.addRefund'))
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <a href="{{route('admin.downPayment.index')}}">Down Payment</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Refund</li>
+                            @break
+                        {{-- admin.downPayment.editRefund --}}
+                        @case(request()->routeIs('admin.downPayment.editRefund'))
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <a href="{{route('admin.downPayment.index')}}">Down Payment</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Edit Refund</li>
                             @break
 
                         {{-- admin.salesRecord.index --}}
                         @case(request()->routeIs('admin.salesRecord.index'))
                             <li class="breadcrumb-item active" aria-current="page">Catatan Transaksi Pembelian</li>
                             @break
-
+                        {{-- admin.salesRecord.create --}}
+                        @case(request()->routeIs('admin.salesRecord.create'))
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <a href="{{route('admin.salesRecord.index')}}">Catatan Transaksi Pembelian</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Create</li>
+                            @break
+                        {{-- admin.offerRecord.index --}}
                         @case(request()->routeIs('admin.offerRecord.index'))
                             <li class="breadcrumb-item active" aria-current="page">Catatan Transaksi Penjualan</li>
                             @break
-
+                        {{-- admin.offerRecord.create --}}
+                        @case(request()->routeIs('admin.offerRecord.create'))
+                            <li class="breadcrumb-item active" aria-current="page">
+                                <a href="{{route('admin.offerRecord.index')}}">Catatan Transaksi Penjualan</a>
+                            </li>
+                            <li class="breadcrumb-item active" aria-current="page">Create</li>
+                            @break
+                            
                         {{--user.downPayment.index  --}}
                         @case(request()->routeIs('user.downPayment.index'))
                             <li class="breadcrumb-item active" aria-current="page">Down Payment</li>
