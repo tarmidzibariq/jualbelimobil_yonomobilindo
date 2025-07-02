@@ -223,7 +223,7 @@
                 <!-- Kolom Foto -->
                 <div class="col-lg-5 mb-4 mb-lg-0">
                     <div class="border rounded-3 overflow-hidden shadow-sm" style="height: 100%; max-height: 350px;">
-                        <img src="{{asset('image/Tangkapan Layar 2025-05-20 pukul 16.42.21.png')}}"
+                        <img src="{{asset('image/Showroom.jpeg')}}"
                             alt="YONOMOBILINDO SHOWROOM" class="img-fluid w-100 h-100 object-fit-cover">
                     </div>
                 </div>
