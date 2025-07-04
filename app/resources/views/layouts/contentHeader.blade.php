@@ -7,7 +7,7 @@
             <div class="col-sm-6">
                 <h3 class="mb-0">
                     @switch(true)
-                        @case(request()->routeIs('admin.dashboard'))
+                        @case(request()->routeIs('admin.dashboard') || request()->routeIs('home-cms') )
                             Dashboard
                             @break
 
@@ -68,7 +68,7 @@
                     @switch(true)
 
                         {{-- admin.Dashboard --}}
-                        @case(request()->routeIs('admin.dashboard'))
+                        @case(request()->routeIs('admin.dashboard') || request()->routeIs('home-cms') )
                             <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
                             @break
 

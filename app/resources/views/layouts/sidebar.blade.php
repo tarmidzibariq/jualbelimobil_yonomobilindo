@@ -30,7 +30,7 @@
       @auth
         @if(auth()->user()->role === 'admin')
           <li class="nav-item">
-            <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') || request()->routeIs('home-cms')   ? 'active' : '' }}">
               <i class="nav-icon bi bi-speedometer"></i>
               <p>
                 Dashboard

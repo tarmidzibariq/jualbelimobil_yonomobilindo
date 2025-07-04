@@ -46,8 +46,8 @@
 
                     {{-- Tombol Submit Filter dan Reset --}}
                     <div class="col-12">
-                        <button type="submit" class="btn btn-success">Filter</button>
                         <a href="{{ route('admin.cars.index') }}" class="btn btn-secondary">Reset</a>
+                        <button type="submit" class="btn btn-success">Filter</button>
                     </div>
                 </form>
 

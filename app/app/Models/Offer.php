@@ -22,7 +22,9 @@ class Offer extends Model
         'note',
     ];
 
-
+    protected $casts = [
+        'inspection_date' => 'datetime',
+    ];
     // Define the relationship with the User model
     public function user()
     {

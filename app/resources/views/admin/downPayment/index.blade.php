@@ -27,12 +27,13 @@
                         <label for="status" class="form-label">Status</label>
                         <select name="status" class="form-select">
                             <option value="">-- Semua Status --</option>
-                            <option value="payment:pending">Pending</option>
-                            <option value="payment:confirmed">Confirmed</option>
-                            <option value="payment:cancelled">Cancelled</option>
-                            <option value="payment:expired">Expired</option>
-                            <option value="refund:refund">Refunded</option>
+                            @foreach ($statuses as $key => $label)
+                            <option value="{{ 'payment:'.$key }}" {{ request('status') == 'payment:'.$key ? 'selected' : '' }}>
+                                {{ $label }}
+                            </option>
+                            @endforeach
                         </select>
+
                     </div>
 
                     {{-- Filter Nama Mobil --}}
@@ -45,8 +46,8 @@
 
                     {{-- Tombol Filter --}}
                     <div class="col-12">
-                        <button type="submit" class="btn btn-success">Filter</button>
                         <a href="{{ route('admin.downPayment.index') }}" class="btn btn-secondary">Reset</a>
+                        <button type="submit" class="btn btn-success">Filter</button>
                     </div>
 
                 </form>

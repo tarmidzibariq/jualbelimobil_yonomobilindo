@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\DownPayment;
 use App\Models\Refund;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -31,10 +32,16 @@ class DownPaymentController extends Controller
         if ($request->filled('status')) {
             [$type, $value] = explode(':', $request->status);
 
+            
             if ($type === 'payment') {
                 $query->where('payment_status', $value);
             }
+            if ($type === 'payment' && $value === 'confirmed') {
+                $query->whereNotIn('payment_status', ['pending', 'cancelled', 'expired'])
+                    ->whereNull('refund_id');
+            }
 
+            // Jika statusnya refund, kita cek relasi refund
             if ($type === 'refund') {
                 $query->whereHas('refund', function ($q) use ($value) {
                     $q->where('refund_status', $value);
@@ -42,11 +49,19 @@ class DownPaymentController extends Controller
             }
         }
 
+        // Filter by date range
         if ($request->filled('date_range')) {
-            [$start, $end] = explode(' to ', $request->date_range);
+            $dates = explode(' to ', $request->date_range);
+            $startDate = trim($dates[0]);
+            $endDate = trim($dates[1] ?? $dates[0]);
+
+            $start = Carbon::parse($startDate)->startOfDay();
+            $end = Carbon::parse($endDate)->endOfDay();
+
             $query->whereBetween('created_at', [$start, $end]);
         }
-
+        
+        // Ambil data down payment dengan relasi user dan car
         $downPayments = $query->with(['user', 'car'])->latest()->paginate(10);
 
         $statuses = [

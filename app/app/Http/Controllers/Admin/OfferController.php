@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Offer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class OfferController extends Controller
@@ -30,9 +31,15 @@ class OfferController extends Controller
             });
         }
 
-        // created_at filter
+        // Filter by date range
         if ($request->filled('date_range')) {
-            [$start, $end] = explode(' to ', $request->date_range);
+            $dates = explode(' to ', $request->date_range);
+            $startDate = trim($dates[0]);
+            $endDate = trim($dates[1] ?? $dates[0]);
+
+            $start = Carbon::parse($startDate)->startOfDay();
+            $end = Carbon::parse($endDate)->endOfDay();
+
             $query->whereBetween('created_at', [$start, $end]);
         }
         // $offers = Offer::orderB/y('id', 'desc')->paginate(10);
