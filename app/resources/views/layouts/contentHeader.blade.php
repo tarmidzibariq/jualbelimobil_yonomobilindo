@@ -39,6 +39,10 @@
                             Catatan Transaksi Penjualan
                             @break  
 
+                        @case(request()->routeIs('user.dashboard') || request()->routeIs('home-cms') )
+                            Dashboard
+                            @break
+
                         @case(request()->routeIs('user.downPayment.*'))
                             Pembayaran DP
                             @break
@@ -164,6 +168,11 @@
                             <li class="breadcrumb-item active" aria-current="page">Create</li>
                             @break
                             
+                        {{-- user.dashboard --}}
+                        @case(request()->routeIs('user.dashboard') || request()->routeIs('home-cms') )
+                            <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                            @break
+
                         {{--user.downPayment.index  --}}
                         @case(request()->routeIs('user.downPayment.index'))
                             <li class="breadcrumb-item active" aria-current="page">Down Payment</li>
