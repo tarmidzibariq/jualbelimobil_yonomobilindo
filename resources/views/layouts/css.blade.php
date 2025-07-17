@@ -23,7 +23,7 @@ crossorigin="anonymous"
 />
 <!--end::Third Party Plugin(Bootstrap Icons)-->
 <!--begin::Required Plugin(AdminLTE)-->
-<link rel="stylesheet" href="{{ asset('adminLTE/dist/css/adminlte.css')}}" />
+<link rel="stylesheet" href="{{ asset('AdminLTE/dist/css/adminlte.css')}}" />
 <!--end::Required Plugin(AdminLTE)-->
 <!-- apexcharts -->
 <linkz

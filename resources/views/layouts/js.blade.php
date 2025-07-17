@@ -11,7 +11,7 @@
 <!--end::Required Plugin(Bootstrap 5)-->
 
 <!--begin::Required Plugin(AdminLTE)-->
-<script src="{{ asset('adminLTE/dist/js/adminlte.js') }}"></script>
+<script src="{{ asset('AdminLTE/dist/js/adminlte.js') }}"></script>
 <!--end::Required Plugin(AdminLTE)-->
 
 <!--begin::OverlayScrollbars Configure-->
