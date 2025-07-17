@@ -308,6 +308,11 @@
                                             <p class="text-danger fw-bold">
                                                 File tidak ditemukan. Silakan upload ulang.
                                             </p>
+                                            <button type="button"
+                                                class="btn btn-danger w-100 btn-delete-photo"
+                                                data-photo-id="{{ $photo->id }}">
+                                                🗑 Hapus
+                                            </button>
                                         @endif
                                     </div>
                                 </div>
