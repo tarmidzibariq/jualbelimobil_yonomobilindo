@@ -25,6 +25,7 @@ class DashboardController extends Controller
         // Menghitung jumlah down payment dengan status confirmed 
         $downPayment = DownPayment::where('payment_status', 'confirmed')
             // ->where('created_at', '>=', now()->subDays(30))
+            ->whereNull('refund_id')
             ->count();
 
         // Menghitung jumlah permintaan penjualan dengan status pending 
