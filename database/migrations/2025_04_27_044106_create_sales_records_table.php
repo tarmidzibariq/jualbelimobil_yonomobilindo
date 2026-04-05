@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('car_id')->constrained('cars')->onDelete('cascade');
             $table->foreignId('buyer_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('seller_id')->constrained('users')->onDelete('cascade');
-            $table->decimal('sale_price', 15, 2);
+            $table->decimal('sale_price', 10);
             $table->dateTime('sale_date');
             $table->enum('status', ['completed', 'pending', 'cancelled']);
             $table->timestamps();

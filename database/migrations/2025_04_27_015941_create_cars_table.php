@@ -16,19 +16,19 @@ return new class extends Migration
             // relationship with users table
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');   
 
-            $table->string('brand',50);
+            $table->string('brand',30);
             $table->string('model',50);
-            $table->string('year',5);
-            $table->integer('price');
+            $table->string('year',4);
+            $table->decimal('price', 12, 2);
             $table->enum('transmission', ['manual', 'automatic']);
             $table->text('description')->nullable();
             $table->date('service_history')->nullable();
             $table->string('fuel_type',10);
-            $table->string('mileage',10);
+            $table->string('mileage',6);
             $table->string('color',15);
             $table->date('tax');
-            $table->integer('engine');
-            $table->integer('seat');
+            $table->string('engine', 4);
+            $table->string('seat', 2);
             $table->boolean('bpkb');
             $table->boolean('spare_key');
             $table->boolean('manual_book');

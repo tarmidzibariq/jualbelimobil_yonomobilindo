@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('brand',50);
+            $table->string('brand',30);
             $table->string('model',50);
-            $table->integer('year');
-            $table->integer('mileage');
-            $table->decimal('offered_price', 15, 2);
+            $table->string('year', 4);
+            $table->string('mileage', 6);
+            $table->decimal('offered_price', 12, 2);
             $table->text('location_inspection')->nullable();
             $table->enum('status', ['pending', 'accepted', 'rejected','sold'])->default('pending');
             $table->dateTime('inspection_date')->nullable();

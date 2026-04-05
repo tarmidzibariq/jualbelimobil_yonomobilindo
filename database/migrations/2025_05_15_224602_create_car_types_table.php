@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('car_types', function (Blueprint $table) {
             $table->id();
-            $table->string('tahun',5);
-            $table->string('brand',50);
+            $table->string('tahun',4);
+            $table->string('brand',30);
             $table->string('model',50);
             $table->timestamps();
         });

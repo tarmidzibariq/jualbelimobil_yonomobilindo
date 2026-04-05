@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('refunds', function (Blueprint $table) {
             $table->id();
-            $table->string('no_rekening_refund');
+            $table->string('no_rekening_refund', 20);
             $table->enum('refund_status',['refund','no_refund']);
-            $table->string('refund_payment_proof');
+            $table->string('refund_payment_proof', 50);
             $table->timestamps();
         });
     }

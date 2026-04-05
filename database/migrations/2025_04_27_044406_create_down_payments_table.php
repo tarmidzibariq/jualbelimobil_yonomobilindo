@@ -15,14 +15,14 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('car_id')->constrained('cars')->onDelete('cascade');
-            $table->string('order_id', 100)->unique()->nullable();
-            $table->decimal('amount', 15, 2);
+            $table->string('order_id', 10)->unique()->nullable();
+            $table->decimal('amount', 10, 2);
             $table->enum('payment_status', ['pending', 'confirmed', 'cancelled', 'expired'])->default('pending');
             $table->string('payment_method',20)->nullable();
             $table->dateTime('appointment_date');
             $table->dateTime('payment_date')->nullable();
             // $table->string('payment_proof')->nullable();
-            $table->string('snap_token', 255)->unique()->nullable();
+            $table->string('snap_token', 65)->unique()->nullable();
 
             // Perbaikan foreign key refund_id
             $table->unsignedBigInteger('refund_id')->nullable();

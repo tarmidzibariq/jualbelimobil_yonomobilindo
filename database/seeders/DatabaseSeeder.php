@@ -13,13 +13,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Admin Showroom',
-        //     'email' => 'admin@mail.com',
-        //     'password' => bcrypt('admin123'),
-        //     'role' => 'admin',
-        // ]);
+        $this->call([
+            UsersSeeder::class,      // ← pertama, karena tabel lain butuh user_id
+            CarTypeSeeder::class,    // ← kedua, kalau cars butuh car_type_id
+            CarSeeder::class,        // ← ketiga
+            ReviewSeeder::class,     // ← terakhir, karena butuh car & user
+        ]);
     }
 }
