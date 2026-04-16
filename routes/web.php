@@ -12,6 +12,7 @@ use App\Http\Controllers\User\PaymentController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\TransactionOfferRecordController;
 use App\Http\Controllers\User\TransactionSalesRecordController;
+use App\Http\Controllers\Web\ChatbotController;
 use App\Http\Controllers\Web\DetailCarController;
 use App\Http\Controllers\Web\DownPaymentController;
 use App\Http\Controllers\Web\HomeController;
@@ -146,6 +147,9 @@ Route::prefix('web')->group(function () {
     
     // Down Payment Route
     Route::resource('downPayment', DownPaymentController::class)->names('web.downPayment')->middleware(['auth', 'checkrole:user'])->except(['index', 'edit', 'update', 'create']);
+
+    // Chatbot Route
+    Route::post('/chatbot', [ChatbotController::class, 'chat'])->name('chatbot.chat');
 
     
 });

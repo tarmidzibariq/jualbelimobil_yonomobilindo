@@ -3,7 +3,6 @@
 
 @push('web-styles')
 <!-- CSS Select2 -->
-<!-- CSS Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
 <!-- Jika kamu pakai Bootstrap 5 dan ingin tampilan serasi -->
@@ -55,7 +54,7 @@
     #testimonial {
         /* margin-top: 50px; */
         /* padding: 100px 0; */
-        background: linear-gradient(to bottom, var(--background), var(--yellow));
+        /* background: linear-gradient(to bottom, var(--background), var(--yellow)); */
     }
 
     #testimonial h5 {
@@ -131,7 +130,7 @@
         <div class="row g-4">
             <!-- Card 1 -->
             @forelse ($cars as $item)
-            <div class="col-md-4 col-6">
+            <div class="col-md-3 col-12">
                 <a href="{{route('web.detailMobil', $item->id)}}" class="text-decoration-none">
                     <div class="card shadow-sm h-100 rounded-top">
                         <div

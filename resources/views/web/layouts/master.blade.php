@@ -27,6 +27,9 @@
     {{-- content --}}
     @yield('web-content')
 
+    {{-- chatbot --}}
+    @include('web.chatBot')
+
     <!-- start footer -->
    @include('web.layouts.footer')
     <!-- end footer -->
