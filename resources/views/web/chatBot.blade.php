@@ -153,15 +153,19 @@
                     .replace(/</g, '&lt;')
                     .replace(/>/g, '&gt;');
 
-                // ✅ Ganti [CAR_ID:X] jadi link teks kecil with no whitespace
-                bubble.innerHTML = escaped.replace(
-                    /\[CAR_ID:(\d+)\]/g,
-                    (match, id) => `<a href="${baseUrl}/${id}" class="car-detail-link"
-                        onmouseover="this.style.background='rgba(39,84,138,0.05)';"
-                        onmouseout="this.style.background='';">
-                        <i class="fa-solid fa-arrow-up-right-from-square"></i>Lihat Detail
-                    </a>`
-                );
+                // ✅ Handle Markdown images + [CAR_ID:X] → thumbnail + link
+                let processed = escaped
+                    // Images: ![alt](url) → small img
+                    .replace(/!\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, 
+                        '<img src="$2" alt="$1" class="car-thumb" loading="lazy" onerror="this.style.display=\'none\'">')
+                    // [CAR_ID:X] → link
+                    .replace(/\[CAR_ID:(\d+)\]/g,
+                        (m, id) => `<a href="${baseUrl}/${id}" class="car-detail-link"
+                            onmouseover="this.style.background='rgba(39,84,138,0.05)';"
+                            onmouseout="this.style.background='';">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>Lihat Detail
+                        </a>`);
+                bubble.innerHTML = processed;
             }
 
             wrap.appendChild(bubble);

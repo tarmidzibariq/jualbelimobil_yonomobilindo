@@ -7,6 +7,7 @@ use App\Models\Car;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ChatbotController extends Controller
 {
@@ -17,7 +18,8 @@ class ChatbotController extends Controller
         $userMessage = $request->input('message');
         $history     = $request->input('history', []);
 
-        $cars = Car::where('status', 'available')
+        $cars = Car::with('mainPhoto')
+            ->where('status', 'available')
             ->limit(10) // batasi agar tidak terlalu banyak token
             ->get()
             ->map(fn($car) => [
@@ -41,6 +43,9 @@ class ChatbotController extends Controller
                 'manual_book'   => $car->manual_book,
                 'service_book'  => $car->service_book, 
                 'sale_type'     => $car->sale_type,
+                'first_photo'   => $car->mainPhoto && Storage::disk('public')->exists('car_photos/' . $car->mainPhoto->photo_url)
+                    ? asset('storage/car_photos/' . $car->mainPhoto->photo_url)
+                    : asset('image/NoImage.png'),
             ]);
 
         $systemPrompt = "
@@ -63,15 +68,16 @@ class ChatbotController extends Controller
             PENTING - Format menampilkan mobil:
             Setiap kali menampilkan mobil, WAJIB tulis ID mobil dengan format: [CAR_ID:angka_id]
             
-            Contoh format jawaban yang BENAR:
-            🚗 Toyota Avanza 2021
+            Contoh format jawaban yang BENAR (gunakan data dari JSON):
+            🚗 ![Toyota Avanza](first_photo)
             💰 Rp 100.000.000
             ⚙️ Otomatis | Bensin | 50.000 km
             [CAR_ID:3]
 
-            Gunakan id dari field 'id' pada data mobil.
-            Jangan skip format [CAR_ID:X], selalu sertakan di setiap mobil yang ditampilkan.
-        ";
+            Jika first_photo tersedia, WAJIB gunakan format Markdown ![Brand Model](first_photo_url) tepat sebelum detail mobil.
+            Selalu sertakan [CAR_ID:X] untuk setiap mobil.
+            Jangan ubah format ini.
+        "; 
 
         $messages = [['role' => 'system', 'content' => $systemPrompt]];
 

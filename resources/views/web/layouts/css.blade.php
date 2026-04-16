@@ -211,6 +211,18 @@
         padding: 0 !important;
     }
 
+    /* Chatbot car thumbnail */
+    .car-thumb {
+        width: 48px !important;
+        height: 36px !important;
+        object-fit: cover !important;
+        border-radius: 6px !important;
+        border: 1px solid rgba(39,84,138,0.2) !important;
+        margin: 0.25rem 0 !important;
+        display: block !important;
+        vertical-align: middle;
+    }
+
 
 
 </style>
