@@ -47,6 +47,7 @@ class ChatbotController extends Controller
                     ? asset('storage/car_photos/' . $car->mainPhoto->photo_url)
                     : asset('image/NoImage.png'),
             ]);
+        $carPhotos = $cars->pluck('first_photo', 'id');
 
         $systemPrompt = "
             Kamu adalah asisten virtual YonoMobilindo, platform jual beli mobil bekas terpercaya di Indonesia.
@@ -65,19 +66,24 @@ class ChatbotController extends Controller
             - Jika mobil tidak ditemukan sesuai kriteria, sarankan alternatif terdekat
             - Jangan menjawab pertanyaan di luar topik mobil
 
-            PENTING - Format menampilkan mobil:
-            Setiap kali menampilkan mobil, WAJIB tulis ID mobil dengan format: [CAR_ID:angka_id]
-            
-            Contoh format jawaban yang BENAR (gunakan data dari JSON):
-            🚗 ![Toyota Avanza](first_photo)
+            PENTING - Jika user meminta daftar/rekomendasi/tampilkan mobil, format menampilkan mobil HARUS persis seperti ini (urutan tidak boleh diubah):
+            🚗 [Brand] [Model] [Year]
+            💰 [Price]
+            ⚙️ [Transmission] | [Fuel Type] | [Mileage] km
+            [CAR_ID:id_mobil]
+
+            Contoh yang BENAR:
+            🚗 Toyota Avanza 2021
             💰 Rp 100.000.000
             ⚙️ Otomatis | Bensin | 50.000 km
             [CAR_ID:3]
 
-            Jika first_photo tersedia, WAJIB gunakan format Markdown ![Brand Model](first_photo_url) tepat sebelum detail mobil.
-            Selalu sertakan [CAR_ID:X] untuk setiap mobil.
-            Jangan ubah format ini.
-        "; 
+            Ketentuan tambahan:
+            - Saat menampilkan mobil, berikan maksimal 3 mobil paling relevan agar mudah dibaca
+            - Jangan gunakan format Markdown ![...](...)
+            - Jangan ubah urutan format di atas
+            - Jangan skip [CAR_ID:X] untuk setiap mobil yang ditampilkan
+        ";
 
         $messages = [['role' => 'system', 'content' => $systemPrompt]];
 
@@ -109,6 +115,9 @@ class ChatbotController extends Controller
         // ✅ return reply jika berhasil
         $reply = $response->json('choices.0.message.content');
 
-        return response()->json(['reply' => $reply]);
+        return response()->json([
+            'reply' => $reply,
+            'carPhotos' => $carPhotos,
+            ]);
     }
 }
