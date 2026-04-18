@@ -117,6 +117,48 @@
         color: #1f436f;
     }
 
+    .chatbot-wa-strip {
+        flex-shrink: 0;
+        border-top: 1px solid rgba(39, 84, 138, 0.12);
+        background: #fffdf6;
+        font-size: 12px;
+        color: #171513;
+    }
+
+    .chatbot-wa-strip .chatbot-wa-strip-line {
+        line-height: 1.35;
+    }
+
+    #chatbot-box .chatbot-wa-cta-btn,
+    #chatbot-box .chatbot-wa-cta-btn:visited {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+        margin-top: 2px;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        line-height: 1.2;
+        text-decoration: none !important;
+        color: #fff !important;
+        background: #25d366 !important;
+    }
+
+    #chatbot-box .chatbot-wa-cta-btn:hover,
+    #chatbot-box .chatbot-wa-cta-btn:focus {
+        color: #fff !important;
+        background: #1ebe57 !important;
+    }
+
+    #chatbot-box .chatbot-bubble-bot .chatbot-wa-cta-btn {
+        width: auto;
+        min-width: 8rem;
+    }
+
     #chatbot-box .chatbot-bubble-user {
         border-radius: 16px 16px 4px 16px;
         color: #fffdf6;
@@ -271,6 +313,17 @@
 
         <div id="chatbot-messages" class="flex-grow-1 overflow-auto p-3 d-flex flex-column gap-2"></div>
 
+        {{-- <div class="chatbot-wa-strip px-3 py-2">
+            <div class="chatbot-wa-strip-line mb-1">
+                <i class="fa-brands fa-whatsapp" style="color:#25d366;" aria-hidden="true"></i>
+                WhatsApp: <strong>62 895-3888-70708</strong>
+            </div>
+            <a href="https://wa.me/62895388870708" target="_blank" rel="noopener noreferrer" class="chatbot-wa-cta-btn">
+                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                Klik di sini
+            </a>
+        </div> --}}
+
         <div class="chatbot-input-wrap d-flex gap-2 p-2 flex-shrink-0">
             <input id="chatbot-input" type="text" class="form-control rounded-pill" placeholder="Ketik pesan...">
             <button id="chatbot-send" class="btn rounded-pill px-3 d-flex align-items-center">
@@ -306,6 +359,8 @@
         const CAR_PHOTO_STORAGE_KEY = 'yono_chatbot_car_photos';
         const FALLBACK_CAR_IMAGE = '{{ asset("image/NoImage.png") }}';
         const DETAIL_MOBIL_BASE_URL = '{{ url("/web/detailMobil") }}';
+        const CHATBOT_WHATSAPP_URL = 'https://wa.me/62895388870708';
+        const CHATBOT_WHATSAPP_DISPLAY = '62 895-3888-70708';
 
         let history = parseStorage(STORAGE_KEY, []);
         let carPhotoMap = parseStorage(CAR_PHOTO_STORAGE_KEY, {});
@@ -388,6 +443,12 @@
                         &bull; "Rekomendasikan mobil keluarga"<br>
                         &bull; "Ada mobil transmisi otomatis?"
                     </span>
+                    <div class="mt-3 pt-2" style="border-top:1px solid rgba(39,84,138,0.12);">
+                        <span style="font-size:12px;"><i class="fa-brands fa-whatsapp" style="color:#25d366;" aria-hidden="true"></i> WhatsApp: <strong>${CHATBOT_WHATSAPP_DISPLAY}</strong></span><br>
+                        <a href="${CHATBOT_WHATSAPP_URL}" target="_blank" rel="noopener noreferrer" class="chatbot-wa-cta-btn mt-2" style="width:100%;">
+                            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i> Klik di sini
+                        </a>
+                    </div>
                 </div>
             `;
             el.messages.appendChild(container);
@@ -411,6 +472,10 @@
             });
         }
 
+        function buildWhatsappCtaButtonHtml() {
+            return `<a href="${CHATBOT_WHATSAPP_URL}" target="_blank" rel="noopener noreferrer" class="chatbot-wa-cta-btn"><i class="fa-brands fa-whatsapp" aria-hidden="true"></i>Klik di sini</a>`;
+        }
+
         function buildCarCard(carId, photoUrl) {
             return `<div class="chatbot-car-card"><div class="chatbot-car-thumb-wrap js-chatbot-thumb" data-image="${photoUrl}"><img src="${photoUrl}" alt="Mobil ${carId}" class="chatbot-car-thumb" loading="lazy" onerror="this.onerror=null;this.src='${FALLBACK_CAR_IMAGE}';"><span class="chatbot-car-thumb-zoom-hint"><i class="fa-solid fa-magnifying-glass-plus"></i> Perbesar</span></div><div class="chatbot-car-footer"><a href="${DETAIL_MOBIL_BASE_URL}/${carId}" class="chatbot-car-link"><i class="fa-solid fa-arrow-up-right-from-square"></i><span>Lihat Detail</span></a></div></div>`;
         }
@@ -421,8 +486,9 @@
                 saveCarPhotoMap();
             }
 
-            const escaped = linkifyPlainHttps(escapeHTML(content));
-            return escaped
+            let html = linkifyPlainHttps(escapeHTML(content));
+            html = html.replace(/\[WA_CTA\]/g, buildWhatsappCtaButtonHtml());
+            return html
                 .replace(/\n+\[CAR_ID:(\d+)\]/g, '\n[CAR_ID:$1]')
                 .replace(/\[CAR_ID:(\d+)\]/g, (match, carId) => {
                     const photoUrl = carPhotos[carId] || carPhotoMap[carId] || FALLBACK_CAR_IMAGE;

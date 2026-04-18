@@ -15,6 +15,14 @@ class ChatbotController extends Controller
 
     private const SHOWROOM_MAPS_URL = 'https://maps.app.goo.gl/DfuVx5fYPCajf7Rk8';
 
+    /** Tampilan manusia; link chat pakai wa.me dengan angka internasional. */
+    private const WHATSAPP_DISPLAY = '62 895-3888-70708';
+
+    private const WHATSAPP_WA_ME_URL = 'https://wa.me/62895388870708';
+
+    /** Placeholder diganti di frontend menjadi tombol "Klik di sini" menuju WhatsApp. */
+    private const WHATSAPP_CTA_PLACEHOLDER = '[WA_CTA]';
+
     public function chat(Request $request)
     {
         $request->validate(['message' => 'required|string']);
@@ -55,11 +63,21 @@ class ChatbotController extends Controller
 
         if ($this->userAsksShowroomLocation($userMessage)) {
             $reply = "Berikut alamat showroom YonoMobilindo:\n\n📍 " . self::SHOWROOM_ADDRESS
-                . "\n\n🗺️ Google Maps: " . self::SHOWROOM_MAPS_URL;
+                . "\n\n🗺️ Google Maps: " . self::SHOWROOM_MAPS_URL
+                . "\n\n📱 WhatsApp: " . self::WHATSAPP_DISPLAY . "\n" . self::WHATSAPP_CTA_PLACEHOLDER;
 
             return response()->json([
                 'reply'     => $reply,
-                'carPhotos' => $carPhotos,
+                // 'carPhotos' => $carPhotos,
+            ]);
+        }
+
+        if ($this->userAsksWhatsAppContact($userMessage)) {
+            $reply = '📱 WhatsApp YonoMobilindo: ' . self::WHATSAPP_DISPLAY . "\n\n" . self::WHATSAPP_CTA_PLACEHOLDER;
+
+            return response()->json([
+                'reply'     => $reply,
+                // 'carPhotos' => $carPhotos,
             ]);
         }
 
@@ -83,6 +101,7 @@ class ChatbotController extends Controller
               Alamat: " . self::SHOWROOM_ADDRESS . "
               Google Maps: " . self::SHOWROOM_MAPS_URL . "
             - Jangan menjawab pertanyaan di luar topik mobil dan layanan jual beli mobil YonoMobilindo (termasuk lokasi showroom)
+            - Jika user bertanya nomor WhatsApp, kontak, CS, atau ingin chat admin, sebut nomor persis: " . self::WHATSAPP_DISPLAY . " lalu baris berikutnya hanya placeholder persis berikut (tanpa URL wa.me di teks, biar jadi tombol di aplikasi): " . self::WHATSAPP_CTA_PLACEHOLDER . "
 
             PENTING - Jika user meminta daftar/rekomendasi/tampilkan mobil, format menampilkan mobil HARUS persis seperti ini (urutan tidak boleh diubah):
             🚗 [Brand] [Model] [Year]
@@ -135,8 +154,8 @@ class ChatbotController extends Controller
 
         return response()->json([
             'reply' => $reply,
-            'carPhotos' => $carPhotos,
-            ]);
+            // 'carPhotos' => $carPhotos,
+        ]);
     }
 
     /**
@@ -177,5 +196,36 @@ class ChatbotController extends Controller
             '/\b(showroom|dealer|kantor)\b.*\b(lokasi|alamat|dimana|maps?)\b|\b(lokasi|alamat|dimana|maps?)\b.*\b(showroom|dealer|kantor)\b/u',
             $m
         );
+    }
+
+    /**
+     * Deteksi pertanyaan kontak / WhatsApp / CS.
+     */
+    private function userAsksWhatsAppContact(string $message): bool
+    {
+        $m = mb_strtolower($message, 'UTF-8');
+
+        if (str_contains($m, 'whatsapp') || str_contains($m, 'whats app')) {
+            return true;
+        }
+
+        if (preg_match('/\bkontak\b/u', $m)) {
+            return true;
+        }
+
+        if (preg_match('/nomor\s*(hp|telepon|telpon|wa|whatsapp)\b/u', $m)) {
+            return true;
+        }
+
+        if (preg_match('/\b(hubungi|chat)\b.*\b(wa|whatsapp)\b|\b(wa|whatsapp)\b.*\b(hubungi|chat)\b/u', $m)) {
+            return true;
+        }
+
+        if (preg_match('/\b(cs|customer\s*service)\b/u', $m)) {
+            return true;
+        }
+
+        return (bool) preg_match('/\bwa\b/u', $m)
+            && (str_contains($m, 'nomor') || str_contains($m, 'admin') || str_contains($m, 'sales'));
     }
 }
