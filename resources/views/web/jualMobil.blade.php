@@ -110,7 +110,7 @@
     #testimonial {
         /* margin-top: 50px; */
         /* padding: 100px 0; */
-        background: linear-gradient(to bottom, var(--background), var(--yellow));
+        /* background: linear-gradient(to bottom, var(--background), var(--yellow)); */
     }
 
     #testimonial h5 {
