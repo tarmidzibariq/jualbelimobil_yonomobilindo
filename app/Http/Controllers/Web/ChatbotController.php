@@ -11,6 +11,10 @@ use Illuminate\Support\Facades\Storage;
 
 class ChatbotController extends Controller
 {
+    private const SHOWROOM_ADDRESS = 'Pekapuran Jl 1000 RT 06/05 NO 200 SUKAMAJU BARU TAPOS, DEPOK';
+
+    private const SHOWROOM_MAPS_URL = 'https://maps.app.goo.gl/DfuVx5fYPCajf7Rk8';
+
     public function chat(Request $request)
     {
         $request->validate(['message' => 'required|string']);
@@ -49,6 +53,16 @@ class ChatbotController extends Controller
             ]);
         $carPhotos = $cars->pluck('first_photo', 'id');
 
+        if ($this->userAsksShowroomLocation($userMessage)) {
+            $reply = "Berikut alamat showroom YonoMobilindo:\n\n📍 " . self::SHOWROOM_ADDRESS
+                . "\n\n🗺️ Google Maps: " . self::SHOWROOM_MAPS_URL;
+
+            return response()->json([
+                'reply'     => $reply,
+                'carPhotos' => $carPhotos,
+            ]);
+        }
+
         $systemPrompt = "
             Kamu adalah asisten virtual YonoMobilindo, platform jual beli mobil bekas terpercaya di Indonesia.
             Tugasmu adalah membantu customer untuk:
@@ -64,7 +78,11 @@ class ChatbotController extends Controller
             - Jawaban singkat, padat, dan informatif
             - Tampilkan harga dalam format Rupiah
             - Jika mobil tidak ditemukan sesuai kriteria, sarankan alternatif terdekat
-            - Jangan menjawab pertanyaan di luar topik mobil
+            - Pertanyaan tentang lokasi/alamat showroom, dealer, atau kantor YonoMobilindo termasuk topik yang diperbolehkan
+            - Jika user bertanya lokasi/alamat showroom, dealer, kantor, atau ingin datang ke tempat (maps, alamat lengkap), jawab dengan alamat dan tautan Google Maps persis berikut tanpa mengubah teks:
+              Alamat: " . self::SHOWROOM_ADDRESS . "
+              Google Maps: " . self::SHOWROOM_MAPS_URL . "
+            - Jangan menjawab pertanyaan di luar topik mobil dan layanan jual beli mobil YonoMobilindo (termasuk lokasi showroom)
 
             PENTING - Jika user meminta daftar/rekomendasi/tampilkan mobil, format menampilkan mobil HARUS persis seperti ini (urutan tidak boleh diubah):
             🚗 [Brand] [Model] [Year]
@@ -119,5 +137,45 @@ class ChatbotController extends Controller
             'reply' => $reply,
             'carPhotos' => $carPhotos,
             ]);
+    }
+
+    /**
+     * Deteksi permintaan lokasi/alamat showroom agar jawaban selalu konsisten.
+     */
+    private function userAsksShowroomLocation(string $message): bool
+    {
+        $m = mb_strtolower($message, 'UTF-8');
+
+        $locationHints = ['lokasi', 'alamat', 'dimana', 'di mana', 'maps', 'map ', 'petunjuk arah', 'google map'];
+        $placeHints    = ['showroom', 'dealer', 'kantor', 'toko', 'yonomobilindo', 'yono mobilindo', 'yono'];
+
+        $hasLocation = false;
+        foreach ($locationHints as $hint) {
+            if (str_contains($m, $hint)) {
+                $hasLocation = true;
+                break;
+            }
+        }
+
+        $hasPlace = false;
+        foreach ($placeHints as $hint) {
+            if (str_contains($m, $hint)) {
+                $hasPlace = true;
+                break;
+            }
+        }
+
+        if ($hasLocation && $hasPlace) {
+            return true;
+        }
+
+        if (str_contains($m, 'alamat kantor') || str_contains($m, 'lokasi kantor')) {
+            return true;
+        }
+
+        return (bool) preg_match(
+            '/\b(showroom|dealer|kantor)\b.*\b(lokasi|alamat|dimana|maps?)\b|\b(lokasi|alamat|dimana|maps?)\b.*\b(showroom|dealer|kantor)\b/u',
+            $m
+        );
     }
 }

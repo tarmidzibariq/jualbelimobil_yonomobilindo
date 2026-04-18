@@ -54,7 +54,15 @@
     }
 
     #chatbot-messages {
+        min-width: 0;
+        overflow-x: hidden;
         background: #f8f6ef;
+    }
+
+    /* Baris bubble: izinkan menyusut agar teks/URL panjang tidak meluber kartu (flex min-width: auto). */
+    #chatbot-messages > .d-flex {
+        min-width: 0;
+        max-width: 100%;
     }
 
     .chatbot-input-wrap {
@@ -76,6 +84,9 @@
 
     .chatbot-welcome-bubble {
         max-width: 90%;
+        min-width: 0;
+        overflow-wrap: anywhere;
+        word-break: break-word;
         border: 1px solid rgba(39, 84, 138, 0.15);
         border-radius: 16px 16px 16px 4px !important;
         font-size: 13px;
@@ -84,10 +95,26 @@
     }
 
     #chatbot-box .chatbot-bubble {
+        box-sizing: border-box;
         max-width: 82%;
+        min-width: 0;
         font-size: 13px;
         line-height: 1.4;
         white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    #chatbot-box .chatbot-external-link {
+        overflow-wrap: anywhere;
+        word-break: break-all;
+        color: #27548a;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+    }
+
+    #chatbot-box .chatbot-external-link:hover {
+        color: #1f436f;
     }
 
     #chatbot-box .chatbot-bubble-user {
@@ -106,6 +133,8 @@
     }
 
     #chatbot-box .chatbot-car-card {
+        box-sizing: border-box;
+        max-width: 100%;
         margin-top: 6px !important;
         overflow: hidden !important;
         border: 1px solid rgba(39, 84, 138, 0.16) !important;
@@ -371,6 +400,17 @@
                 .replace(/>/g, '&gt;');
         }
 
+        /**
+         * Ubah URL http(s) menjadi tautan agar bisa diputus baris (CSS) dan diklik.
+         * Hanya dipakai pada teks yang sudah di-escape; dijalankan sebelum substitusi [CAR_ID:…].
+         */
+        function linkifyPlainHttps(escaped) {
+            return escaped.replace(/https?:\/\/[^\s<]+/g, (url) => {
+                const hrefAttr = url.replace(/"/g, '&quot;');
+                return `<a href="${hrefAttr}" target="_blank" rel="noopener noreferrer" class="chatbot-external-link">${url}</a>`;
+            });
+        }
+
         function buildCarCard(carId, photoUrl) {
             return `<div class="chatbot-car-card"><div class="chatbot-car-thumb-wrap js-chatbot-thumb" data-image="${photoUrl}"><img src="${photoUrl}" alt="Mobil ${carId}" class="chatbot-car-thumb" loading="lazy" onerror="this.onerror=null;this.src='${FALLBACK_CAR_IMAGE}';"><span class="chatbot-car-thumb-zoom-hint"><i class="fa-solid fa-magnifying-glass-plus"></i> Perbesar</span></div><div class="chatbot-car-footer"><a href="${DETAIL_MOBIL_BASE_URL}/${carId}" class="chatbot-car-link"><i class="fa-solid fa-arrow-up-right-from-square"></i><span>Lihat Detail</span></a></div></div>`;
         }
@@ -381,7 +421,7 @@
                 saveCarPhotoMap();
             }
 
-            const escaped = escapeHTML(content);
+            const escaped = linkifyPlainHttps(escapeHTML(content));
             return escaped
                 .replace(/\n+\[CAR_ID:(\d+)\]/g, '\n[CAR_ID:$1]')
                 .replace(/\[CAR_ID:(\d+)\]/g, (match, carId) => {
