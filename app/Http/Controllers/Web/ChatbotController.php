@@ -23,6 +23,12 @@ class ChatbotController extends Controller
     /** Placeholder diganti di frontend menjadi tombol "Klik di sini" menuju WhatsApp. */
     private const WHATSAPP_CTA_PLACEHOLDER = '[WA_CTA]';
 
+    private const PURCHASE_STEPS_REPLY = "Berikut cara transaksi / proses pembelian mobil:\n"
+        . "1. Pilih Mobil\n"
+        . "2. Melakukan DownPayment\n"
+        . "3. Test Drive\n"
+        . "4. Selesaikan Pembayaran ditempat";
+
     public function chat(Request $request)
     {
         $request->validate(['message' => 'required|string']);
@@ -81,6 +87,12 @@ class ChatbotController extends Controller
             ]);
         }
 
+        if ($this->userAsksPurchaseProcess($userMessage)) {
+            return response()->json([
+                'reply' => self::PURCHASE_STEPS_REPLY,
+            ]);
+        }
+
         $systemPrompt = "
             Kamu adalah asisten virtual YonoMobilindo, platform jual beli mobil bekas terpercaya di Indonesia.
             Tugasmu adalah membantu customer untuk:
@@ -102,6 +114,11 @@ class ChatbotController extends Controller
               Google Maps: " . self::SHOWROOM_MAPS_URL . "
             - Jangan menjawab pertanyaan di luar topik mobil dan layanan jual beli mobil YonoMobilindo (termasuk lokasi showroom)
             - Jika user bertanya nomor WhatsApp, kontak, CS, atau ingin chat admin, sebut nomor persis: " . self::WHATSAPP_DISPLAY . " lalu baris berikutnya hanya placeholder persis berikut (tanpa URL wa.me di teks, biar jadi tombol di aplikasi): " . self::WHATSAPP_CTA_PLACEHOLDER . "
+            - Jika user bertanya cara transaksi atau proses pembelian mobil, jawab persis langkah berikut:
+              1. Pilih Mobil
+              2. Melakukan DownPayment
+              3. Test Drive
+              4. Selesaikan Pembayaran ditempat
 
             PENTING - Jika user meminta daftar/rekomendasi/tampilkan mobil, format menampilkan mobil HARUS persis seperti ini (urutan tidak boleh diubah):
             🚗 [Brand] [Model] [Year]
@@ -227,5 +244,32 @@ class ChatbotController extends Controller
 
         return (bool) preg_match('/\bwa\b/u', $m)
             && (str_contains($m, 'nomor') || str_contains($m, 'admin') || str_contains($m, 'sales'));
+    }
+
+    /**
+     * Deteksi pertanyaan alur transaksi / proses pembelian mobil.
+     */
+    private function userAsksPurchaseProcess(string $message): bool
+    {
+        $m = mb_strtolower($message, 'UTF-8');
+
+        $transactionHints = [
+            'cara transaksi',
+            'proses pembelian',
+            'cara pembelian',
+            'cara beli',
+            'alur pembelian',
+            'tahap pembelian',
+            'langkah pembelian',
+            'proses transaksi',
+        ];
+
+        foreach ($transactionHints as $hint) {
+            if (str_contains($m, $hint)) {
+                return true;
+            }
+        }
+
+        return (bool) preg_match('/\b(beli|pembelian|transaksi)\b.*\b(cara|proses|alur|tahap|langkah)\b|\b(cara|proses|alur|tahap|langkah)\b.*\b(beli|pembelian|transaksi)\b/u', $m);
     }
 }
