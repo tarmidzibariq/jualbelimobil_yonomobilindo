@@ -171,7 +171,7 @@ class ChatbotController extends Controller
 
         return response()->json([
             'reply' => $reply,
-            // 'carPhotos' => $carPhotos,
+            'carPhotos' => $carPhotos,
         ]);
     }
 
