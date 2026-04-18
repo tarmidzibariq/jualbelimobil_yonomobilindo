@@ -181,47 +181,7 @@
       background-color: #ffffff;
     } */
 
-    /* Chatbot car detail link - fix whitespace */
-    .car-detail-link {
-        display: inline-flex !important;
-        align-items: center !important;
-        gap: 0.125rem !important; /* 2px gap icon-text */
-        font-size: 11px !important;
-        font-weight: 700 !important;
-        line-height: 1.3 !important;
-        color: var(--primary) !important;
-        text-decoration: none !important;
-        padding: 0.125rem 0.25rem !important; /* minimal vertical padding */
-        border-bottom: 1px solid var(--primary) !important;
-        border-radius: 2px;
-        transition: all 0.2s ease !important;
-        white-space: nowrap !important;
-        margin: 0 !important;
-    }
-
-    .car-detail-link:hover {
-        color: #1f3f6b !important;
-        border-color: #1f3f6b !important;
-        background: rgba(39, 84, 138, 0.05) !important;
-    }
-
-    .car-detail-link i {
-        font-size: 9px !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-
-    /* Chatbot car thumbnail */
-    .car-thumb {
-        width: 48px !important;
-        height: 36px !important;
-        object-fit: cover !important;
-        border-radius: 6px !important;
-        border: 1px solid rgba(39,84,138,0.2) !important;
-        margin: 0.25rem 0 !important;
-        display: block !important;
-        vertical-align: middle;
-    }
+   
 
 
 

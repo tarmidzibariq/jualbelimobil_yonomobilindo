@@ -1,9 +1,9 @@
  <section id="navbar">
-     <nav class="navbar navbar-expand-lg bg-white shadow-sm py-3 ">
+     <nav class="navbar navbar-expand-lg bg-white shadow-sm py-2 ">
          <div class="container">
              <!-- Logo -->
              <a class="navbar-brand d-flex align-items-center" href="{{route('home')}}">
-                 <img src="{{asset('image/Logo-Mobilindo-2.svg')}}" alt="Logo" width="150" class="me-2" />
+                 <img src="{{asset('image/Logo-Mobilindo-2.svg')}}" alt="Logo" width="80" class="me-2" />
              </a>
 
              <!-- Custom toggle button -->
