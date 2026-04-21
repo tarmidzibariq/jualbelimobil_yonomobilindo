@@ -179,6 +179,26 @@
                             window.location = "{{ route('user.downPayment.index') }}"
                         }else if (data.status === 'confirmed' || data.status === 'cancelled') {
                             window.location.href = "{{ route('user.downPayment.changeStatus', $downPayments->id) }}";
+                        }else if (data.status === 'pending') {
+                            const token = data.snap_token || '{{ $snapToken }}';
+                            if (!token) {
+                                alert("Token pembayaran tidak ditemukan. Silakan refresh halaman.");
+                                return;
+                            }
+                            snap.pay(token, {
+                                onSuccess: function(result){
+                                    window.location.href = "{{ route('user.downPayment.changeStatus' , $downPayments->id) }}";
+                                },
+                                onPending: function(result){
+                                    window.location.href = "{{ route('user.downPayment.checkout' , $downPayments->id) }}";
+                                },
+                                onError: function(result){
+                                    window.location.href = "{{ route('user.downPayment.changeStatus' , $downPayments->id) }}";
+                                },
+                                onClose: function(){
+                                    alert("Kamu menutup popup tanpa menyelesaikan pembayaran.");
+                                },
+                            });
                         }else if (data.status == "error") {
                             snap.pay(data.snap_token, {
                                 onSuccess: function(result){

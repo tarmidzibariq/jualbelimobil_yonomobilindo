@@ -106,6 +106,27 @@ class PaymentController extends Controller
                         'snap_token' => null,
                     ]);
                 } elseif ($transaction === 'pending') {
+                    if (empty($downPayment->snap_token)) {
+                        $newOrderId = 'DP-' . $downPayment->id . '-' . time();
+                        $params = [
+                            'transaction_details' => [
+                                'order_id' => $newOrderId,
+                                'gross_amount' => (int) $downPayment->amount,
+                            ],
+                            'customer_details' => [
+                                'first_name' => $downPayment->user->name,
+                                'email' => $downPayment->user->email,
+                                'phone' => $downPayment->user->phone,
+                            ],
+                        ];
+
+                        $downPayment->update([
+                            'order_id' => $newOrderId,
+                            'snap_token' => Snap::getSnapToken($params),
+                        ]);
+                        $downPayment->refresh();
+                    }
+
                     // masih pending → pakai snap_token lama
                     return view('user.downPayment.checkout', [
                         'downPayments' => $downPayment,
@@ -296,7 +317,7 @@ class PaymentController extends Controller
 
     public function checkMidtransStatus($id)
     {
-        $downPayment = DownPayment::findOrFail($id);  
+        $downPayment = DownPayment::with('user')->findOrFail($id);  
         
         // dd($downPayment);
         $car = Car::findOrFail($downPayment->car_id);
@@ -317,52 +338,61 @@ class PaymentController extends Controller
 
             // dd($data);
 
-            // Convert status Midtrans ke sistem lokal (optional)
-            if ($data["status_code"] == 200) {
-                $status = match ($data['transaction_status']) {
-                    'settlement' => 'confirmed',
-                    'expire' => 'cancelled',
-                    'pending' => 'pending',
-                    default => 'unknown',
-                };
+            $transaction = $data['transaction_status'] ?? null;
+            $paymentMethod = $data['payment_type'] ?? null;
 
-                $transaction = $data['transaction_status'];
+            // Midtrans pending biasanya status_code 201.
+            $status = match ($transaction) {
+                'settlement' => 'confirmed',
+                'expire' => 'expired',
+                'cancel' => 'cancelled',
+                'pending' => 'pending',
+                default => 'unknown',
+            };
 
-                if ($transaction == 'settlement') {
-                    $status = 'confirmed';
-                    $paymentMethod = $data['payment_type'] ?? null; 
-                } elseif ($transaction == 'expire') {
-                    $status = 'expired';
-                }elseif ($transaction == 'cancel') {
-                    $status = 'cancelled';
-                } elseif ($transaction == 'pending') {
-                    $status = 'pending';
+            if ($status !== 'unknown') {
+                $updatePayload = [
+                    "payment_status" => $status,
+                    "payment_date" => $data['transaction_time'] ?? null,
+                    "payment_method" => $paymentMethod,
+                ];
+
+                // Simpan snap_token saat pending agar popup pembayaran bisa dibuka lagi.
+                if ($status !== 'pending') {
+                    $updatePayload["snap_token"] = null;
+                } elseif (empty($downPayment->snap_token)) {
+                    $newOrderId = 'DP-' . $downPayment->id . '-' . time();
+                    $params = [
+                        'transaction_details' => [
+                            'order_id' => $newOrderId,
+                            'gross_amount' => (int) $downPayment->amount,
+                        ],
+                        'customer_details' => [
+                            'first_name' => $downPayment->user->name ?? '-',
+                            'email' => $downPayment->user->email ?? '-',
+                            'phone' => $downPayment->user->phone ?? '-',
+                        ],
+                    ];
+                    $updatePayload["order_id"] = $newOrderId;
+                    $updatePayload["snap_token"] = Snap::getSnapToken($params);
                 }
-        
-                DownPayment::where("id", $id)
-                    ->update([
-                        "payment_status" => $status,
-                        "payment_date" => $data['transaction_time'] ?? null,
-                        "payment_method" => $paymentMethod,
-                        "snap_token" => null
-                    ]);
-    
-                return response()->json(['status' => $status]);
-            }else {
-                $id = DownPayment::where("id", $id)
-                ->update([
-                    'snap_token' => null
-                ]);
 
-            // dd($id);
+                DownPayment::where("id", $id)->update($updatePayload);
+                $downPayment->refresh();
+
+                return response()->json([
+                    'status' => $status,
+                    'snap_token' => $downPayment->snap_token
+                ]);
+            }
 
             return response()->json(
                 [
                     'status' => 'error',
                     'snap_token' => $downPayment->snap_token
-                ], 
-                $response->status());
-            }
+                ],
+                $response->status()
+            );
         }
 
         DownPayment::where("id", $id)
