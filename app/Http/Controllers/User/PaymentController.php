@@ -75,6 +75,16 @@ class PaymentController extends Controller
 
         MidtransHelper::init();
 
+        if (in_array($downPayment->car->status, ['under_review', 'sold', 'pending_check']) && $downPayment->payment_status === 'pending') {
+            $downPayment->update([
+                'payment_status' => 'cancelled',
+                'snap_token' => null,
+            ]);
+
+            return redirect()->route('user.downPayment.index')
+                ->with('error', 'Pembayaran dibatalkan karena mobil sudah dibayar pengguna lain.');
+        }
+
         // Cek status order lama dulu
         if ($downPayment->order_id) {
             try {
@@ -93,6 +103,7 @@ class PaymentController extends Controller
                     ]);
 
                     $downPayment->car->update(['status' => 'under_review']);
+                    $this->cancelOtherPendingDownPayments($downPayment);
 
                     if (!$wasConfirmed) {
                         $this->sendPaymentConfirmedWhatsApp($downPayment);
@@ -173,6 +184,16 @@ class PaymentController extends Controller
         
         MidtransHelper::init();
 
+        if (in_array($downPayment->car->status, ['under_review', 'sold', 'pending_check']) && $downPayment->payment_status === 'pending') {
+            $downPayment->update([
+                'payment_status' => 'cancelled',
+                'snap_token' => null,
+            ]);
+
+            return redirect()->route('user.downPayment.index')
+                ->with('error', 'Pembayaran dibatalkan karena mobil sudah dibayar pengguna lain.');
+        }
+
         $statusFromMidtrans = null;
 
         try {
@@ -242,6 +263,7 @@ class PaymentController extends Controller
 
             // Update status mobil menjadi sold
             $downPayment->car->update(['status' => 'under_review']);
+            $this->cancelOtherPendingDownPayments($downPayment);
 
             if (!$wasConfirmed) {
                 $this->sendPaymentConfirmedWhatsApp($downPayment);
@@ -303,6 +325,8 @@ class PaymentController extends Controller
             $payment->save();
 
             if ($status === 'confirmed' && !$wasConfirmed) {
+                $payment->car?->update(['status' => 'under_review']);
+                $this->cancelOtherPendingDownPayments($payment);
                 $this->sendPaymentConfirmedWhatsApp($payment->fresh(['user', 'car']));
             }
 
@@ -423,5 +447,17 @@ class PaymentController extends Controller
                 'user_id' => $downPayment->user_id,
             ]
         );
+    }
+
+    private function cancelOtherPendingDownPayments(DownPayment $confirmedDownPayment): void
+    {
+        DownPayment::where('car_id', $confirmedDownPayment->car_id)
+            ->where('id', '!=', $confirmedDownPayment->id)
+            ->where('payment_status', 'pending')
+            ->update([
+                'payment_status' => 'cancelled',
+                'snap_token' => null,
+                'payment_method' => null,
+            ]);
     }
 }

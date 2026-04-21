@@ -23,6 +23,7 @@ class DownPaymentController extends Controller
      */
     public function index()
     {
+        $this->syncUnavailableCarDownPayments(Auth::id());
 
         $downPayments = DownPayment::with('car')->where('user_id', Auth::id())->orderBy('id', 'desc')->paginate(10);
 
@@ -31,9 +32,24 @@ class DownPaymentController extends Controller
     
 
     public function checkout($id){
+        $this->syncUnavailableCarDownPayments(Auth::id());
         $snapToken = 'xxx';
         $downPayments = DownPayment::with('car')->where('user_id', Auth::id())->findOrFail($id);
         return view('user.downPayment.checkout', compact('downPayments', 'snapToken'));
+    }
+
+    private function syncUnavailableCarDownPayments(int $userId): void
+    {
+        DownPayment::where('user_id', $userId)
+            ->where('payment_status', 'pending')
+            ->whereHas('car', function ($query) {
+                $query->whereIn('status', ['under_review', 'sold', 'pending_check']);
+            })
+            ->update([
+                'payment_status' => 'cancelled',
+                'snap_token' => null,
+                'payment_method' => null,
+            ]);
     }
 
     // public function getSnapToken($id)
