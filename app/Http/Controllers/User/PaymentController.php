@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Helpers\MidtransHelper;
+use App\Helpers\WhatsAppHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Car;
 use Illuminate\Http\Request;
@@ -82,6 +83,8 @@ class PaymentController extends Controller
                 $transaction = $midtransStatus->transaction_status ?? null;
 
                 if ($transaction === 'settlement') {
+                    $wasConfirmed = $downPayment->payment_status === 'confirmed';
+
                     $downPayment->update([
                         'payment_status' => 'confirmed',
                         'payment_date' => $midtransStatus->transaction_time,
@@ -90,6 +93,10 @@ class PaymentController extends Controller
                     ]);
 
                     $downPayment->car->update(['status' => 'under_review']);
+
+                    if (!$wasConfirmed) {
+                        $this->sendPaymentConfirmedWhatsApp($downPayment);
+                    }
 
                     return redirect()->route('user.downPayment.show', $id)
                         ->with('success', 'Pembayaran berhasil!');
@@ -210,8 +217,14 @@ class PaymentController extends Controller
         }
         
         if ($status == 'confirmed') {
+            $wasConfirmed = $downPayment->payment_status === 'confirmed';
+
             // Update status mobil menjadi sold
             $downPayment->car->update(['status' => 'under_review']);
+
+            if (!$wasConfirmed) {
+                $this->sendPaymentConfirmedWhatsApp($downPayment);
+            }
         }
 
         $newDownPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
@@ -242,6 +255,8 @@ class PaymentController extends Controller
                 return response()->json(['message' => 'Not found'], 404);
             }
 
+            $wasConfirmed = $payment->payment_status === 'confirmed';
+
             // Proses status dari Midtrans
             $status = "pending";
             $paymentMethod = null;
@@ -265,6 +280,11 @@ class PaymentController extends Controller
                 ]);
 
             $payment->save();
+
+            if ($status === 'confirmed' && !$wasConfirmed) {
+                $this->sendPaymentConfirmedWhatsApp($payment->fresh(['user', 'car']));
+            }
+
             Log::info("✅ Status untuk ID {$id} diupdate menjadi {$payment->payment_status}");
 
             return response()->json(['message' => 'Success']);
@@ -351,5 +371,27 @@ class PaymentController extends Controller
         ]);
 
         return response()->json(['status' => 'error'], $response->status());
+    }
+
+    private function sendPaymentConfirmedWhatsApp(DownPayment $downPayment): void
+    {
+        $downPayment->loadMissing(['user', 'car']);
+
+        if (!$downPayment->user) {
+            return;
+        }
+
+        $carName = trim(($downPayment->car->brand ?? '') . ' ' . ($downPayment->car->model ?? ''));
+        $amount = number_format((float) $downPayment->amount, 0, ',', '.');
+
+        WhatsAppHelper::send(
+            $downPayment->user->phone ?? null,
+            "Halo {$downPayment->user->name}, pembayaran DP sebesar Rp {$amount} untuk mobil {$carName} sudah kami terima. Terima kasih.",
+            [
+                'event' => 'payment_confirmed',
+                'down_payment_id' => $downPayment->id,
+                'user_id' => $downPayment->user_id,
+            ]
+        );
     }
 }

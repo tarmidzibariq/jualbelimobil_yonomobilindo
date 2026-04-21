@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Helpers\MidtransHelper;
+use App\Helpers\WhatsAppHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Car;
 use App\Models\DownPayment;
@@ -49,6 +50,16 @@ class DownPaymentController extends Controller
         ]);
 
         $store->save();
+
+        WhatsAppHelper::send(
+            $user->phone ?? null,
+            "Halo {$user->name}, appointment test drive/DP kamu untuk mobil {$car->brand} {$car->model} sudah tercatat pada {$appointmentDateTime->format('d-m-Y H:i')}.",
+            [
+                'event' => 'appointment_created',
+                'user_id' => $user->id,
+                'down_payment_id' => $store->id,
+            ]
+        );
 
         // return redirect()->route('home-cms')->with('success', 'DP berhasil dikirim.');
         return redirect()->route('user.downPayment.checkout' , $store->id);

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\WhatsAppHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -64,7 +65,18 @@ class LoginController extends Controller
 
 
 
-    
+    protected function authenticated(Request $request, $user)
+    {
+        WhatsAppHelper::send(
+            $user->phone ?? null,
+            "Halo {$user->name}, login ke akun YonoMobilindo berhasil.",
+            [
+                'event' => 'user_login',
+                'user_id' => $user->id,
+            ]
+        );
+    }
+
 
     // protected function authenticated(Request $request, $user)
     // {

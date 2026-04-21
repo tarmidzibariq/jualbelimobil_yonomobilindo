@@ -40,4 +40,8 @@ return [
         'client_key' => env('MIDTRANS_CLIENT_KEY'),
         'is_production' => false, // Sandbox
     ],
+    'fonnte' => [
+        'token' => env('FONNTE_TOKEN'),
+        'url' => env('FONNTE_URL', 'https://api.fonnte.com/send'),
+    ],
 ];
