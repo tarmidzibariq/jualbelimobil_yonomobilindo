@@ -49,7 +49,7 @@
           <!--end::User Image-->
           <!--begin::Menu Footer-->
           <li class="user-footer">
-            {{-- <a href="#" class="btn btn-default btn-flat">Profile</a> --}}
+            <a href="{{ route('user.profile.index') }}" class="btn btn-default btn-flat">Profile</a>
             
             <a class="btn btn-default btn-flat float-end" href="{{ route('logout') }}"
                 onclick="event.preventDefault();

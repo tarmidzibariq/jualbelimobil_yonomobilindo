@@ -47,7 +47,7 @@ class TransactionSalesRecordController extends Controller
 
         $request->validate([
             'rating' => 'required|numeric|min:1|max:5',
-            'comment' => 'required|string|max:255',
+            'comment' => 'required|string|max:60',
             'photo_review' => 'required|image|mimes:jpeg,png,jpg|max:2048',
             // 'status' => 'required|in:pending,approved,rejected',
         ]);

@@ -109,6 +109,10 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
     // Offer Route
     Route::resource('offer', OfferController::class)->names('user.offer')->except(['edit', 'update', 'create', 'destroy']);
     
+    // Profile Route
+    Route::get('profile', [ProfileController::class, 'index'])->name('user.profile.index');
+    Route::put('profile', [ProfileController::class, 'update'])->name('user.profile.update');
+
     // updateAddress Route
     Route::post('updateUser/{id}', [ProfileController::class, 'updateAddress'])->name('user.updateAdress');
 
