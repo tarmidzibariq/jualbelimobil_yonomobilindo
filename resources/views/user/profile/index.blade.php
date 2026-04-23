@@ -67,6 +67,14 @@
                             @error('phone')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
+                            <small class="text-muted d-block mt-1">
+                                Status WhatsApp:
+                                @if($user->whatsapp_verified_at)
+                                    <span class="badge bg-success">Terverifikasi</span>
+                                @else
+                                    <span class="badge bg-warning text-dark">Belum Verifikasi</span>
+                                @endif
+                            </small>
                         </div>
 
                         <div class="col-md-6 mb-3">
@@ -116,6 +124,59 @@
                     </button>
                 </div>
             </form>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4 class="card-title mb-0">Verifikasi WhatsApp</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-muted mb-3">
+                    Verifikasi diperlukan sebelum melakukan transaksi. Kode OTP akan dikirim ke nomor WhatsApp Anda.
+                </p>
+
+                <form action="{{ route('user.profile.sendWhatsappOtp') }}" method="POST" class="mb-3 row g-2 align-items-end">
+                    @csrf
+                    <div class="col-md-4">
+                        <label for="phone_otp" class="form-label">Nomor WhatsApp</label>
+                        <input
+                            type="text"
+                            id="phone_otp"
+                            name="phone"
+                            class="form-control @error('phone') is-invalid @enderror"
+                            value="{{ old('phone', $user->phone) }}"
+                            required
+                        >
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-outline-primary w-100">
+                            Kirim Kode OTP
+                        </button>
+                    </div>
+                </form>
+
+                <form action="{{ route('user.profile.verifyWhatsappOtp') }}" method="POST" class="row g-2 align-items-end">
+                    @csrf
+                    <div class="col-md-4">
+                        <label for="otp_code" class="form-label">Masukkan Kode OTP</label>
+                        <input
+                            type="text"
+                            id="otp_code"
+                            name="otp_code"
+                            maxlength="4"
+                            class="form-control @error('otp_code') is-invalid @enderror"
+                            placeholder="Contoh: 1234"
+                            required
+                        >
+                        @error('otp_code')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-success w-100">Verifikasi OTP</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

@@ -24,6 +24,11 @@ class DownPaymentController extends Controller
         if (!$user || $user->role !== 'user') {
             return redirect()->back()->with('error', 'Admin tidak diperbolehkan melakukan pembayaran DP.');
         }
+
+        if (!$user->whatsapp_verified_at) {
+            return redirect()->route('user.profile.index')
+                ->with('error', 'Sebelum transaksi, verifikasi nomor WhatsApp Anda terlebih dahulu.');
+        }
         // Validasi input
         $request->validate([
             'appointment_date' => 'required|date',
@@ -41,12 +46,19 @@ class DownPaymentController extends Controller
         // Maka konversi ke format datetime valid (pakai Carbon)
         $appointmentDateTime = \Carbon\Carbon::createFromFormat('Y-m-d H:i', $appointmentDateTime);
 
+        // order_id wajib saat insert awal karena kolom DB tidak nullable.
+        // Nilai ini hanya placeholder dan akan diganti lagi saat proses checkout Midtrans.
+        do {
+            $temporaryOrderId = 'TMP' . time() . random_int(10, 99); // panjang 15 karakter
+        } while (DownPayment::where('order_id', $temporaryOrderId)->exists());
+
         // Simpan data ke tabel (misal DownPayment)
         $store = DownPayment::create([
             'car_id' => $car->id,
             'user_id' => Auth::guard('web')->id(),
             'appointment_date' => $appointmentDateTime,
             'amount' => $request->amount,
+            'order_id' => $temporaryOrderId,
         ]);
 
         $store->save();

@@ -112,6 +112,8 @@ Route::prefix('user')->middleware(['auth', 'checkrole:user'])->group(function ()
     // Profile Route
     Route::get('profile', [ProfileController::class, 'index'])->name('user.profile.index');
     Route::put('profile', [ProfileController::class, 'update'])->name('user.profile.update');
+    Route::post('profile/send-whatsapp-otp', [ProfileController::class, 'sendWhatsappOtp'])->name('user.profile.sendWhatsappOtp');
+    Route::post('profile/verify-whatsapp-otp', [ProfileController::class, 'verifyWhatsappOtp'])->name('user.profile.verifyWhatsappOtp');
 
     // updateAddress Route
     Route::post('updateUser/{id}', [ProfileController::class, 'updateAddress'])->name('user.updateAdress');

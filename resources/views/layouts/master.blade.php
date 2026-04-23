@@ -49,9 +49,7 @@
         <!--end::App Content Header-->
 
         <!--begin::App Content-->
-        <div class="container">
-          
-        </div>
+        @include('layouts.alert')
         @yield('content')
         <!--end::App Content-->
 

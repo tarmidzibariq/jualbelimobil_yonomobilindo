@@ -24,6 +24,7 @@ class User extends Authenticatable
         'phone',
         'address',
         'role',
+        'whatsapp_verified_at',
     ];
 
     /**
@@ -45,6 +46,7 @@ class User extends Authenticatable
     {
         return [
             'email_verified_at' => 'datetime',
+            'whatsapp_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
     }
@@ -103,5 +105,9 @@ class User extends Authenticatable
     public function carPhoto()
     {
         return $this->hasMany(CarPhoto::class);
+    }
+    public function otpKode()
+    {
+        return $this->hasMany(OtpKode::class);
     }
 }

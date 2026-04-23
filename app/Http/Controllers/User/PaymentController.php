@@ -71,6 +71,11 @@ class PaymentController extends Controller
     // }
     public function checkout($id)
     {
+        if (!Auth::user()?->whatsapp_verified_at) {
+            return redirect()->route('user.profile.index')
+                ->with('error', 'Sebelum transaksi, verifikasi nomor WhatsApp Anda terlebih dahulu.');
+        }
+
         $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
 
         MidtransHelper::init();
@@ -180,6 +185,11 @@ class PaymentController extends Controller
 
 
     public function changeStatus($id) {
+        if (!Auth::user()?->whatsapp_verified_at) {
+            return redirect()->route('user.profile.index')
+                ->with('error', 'Sebelum transaksi, verifikasi nomor WhatsApp Anda terlebih dahulu.');
+        }
+
         $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
         
         MidtransHelper::init();
