@@ -202,18 +202,12 @@
 
                 <!-- Tombol -->
                 <div class="d-flex align-items-center gap-3 mt-3">
-                    @auth
-                    <a href="{{ route('web.downPayment.show' ,$car->id) }}" class="btn btn-primary fw-semibold px-5 py-2"
+                    <a href="{{ auth()->check() ? route('web.downPayment.show', $car->id) : route('login', ['redirect' => request()->fullUrl()]) }}"
+                        class="btn btn-primary fw-semibold px-5 py-2"
                         style="background-color: var(--primary);">
                         <span style="color: var(--yellow);">Book Mobil</span><br>
-                        <small class="fw-normal text-white" style="font-size: 12px;">Min: Rp 500.000</small>
+                        <small class="fw-normal text-white" style="font-size: 12px;">Min: Rp 100.000</small>
                     </a>
-                    @else
-                    <a href="{{ route('login', ['redirect' => request()->fullUrl()]) }}" class="btn btn-primary fw-semibold px-5 py-2" style="background-color: var(--primary);">
-                        <span style="color: var(--yellow);">Book Mobil</span><br>
-                        <small class="fw-normal text-white" style="font-size: 12px;">Min: Rp 500.000</small>
-                    </a>
-                    @endauth
                     <button class="btn btn-outline-secondary rounded-circle" style="width: 45px; height: 45px;"
                         onclick="shareLink()" title="Bagikan">
                         <i class="fas fa-share-alt"></i>

@@ -20,6 +20,7 @@
             </div>
         @endif
 
+        
         <div class="card mb-4">
             <div class="card-header">
                 <h3 class="card-title mb-0">Profil Pengguna</h3>
@@ -126,7 +127,7 @@
             </form>
         </div>
 
-        <div class="card mb-4">
+        <div class="card mb-4" id="verifikasi">
             <div class="card-header">
                 <h4 class="card-title mb-0">Verifikasi WhatsApp</h4>
             </div>

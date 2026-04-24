@@ -33,7 +33,7 @@ class DownPaymentController extends Controller
         $request->validate([
             'appointment_date' => 'required|date',
             'appointment_time' => 'required',
-            'amount' => 'required|numeric|min:500000',
+            'amount' => 'required|numeric|min:100000',
             'car_id' => 'required|exists:cars,id',
         ]);
 
