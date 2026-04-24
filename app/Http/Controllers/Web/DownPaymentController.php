@@ -65,9 +65,11 @@ class DownPaymentController extends Controller
 
         WhatsAppHelper::send(
             $user->phone ?? null,
-            "Halo {$user->name}, appointment test drive/DP kamu untuk mobil {$car->brand} {$car->model} sudah tercatat pada {$appointmentDateTime->format('d-m-Y H:i')}.",
+            "Halo {$user->name}, janji test drive dan DP untuk {$car->brand} {$car->model} sudah kami catat pada {$appointmentDateTime->format('d-m-Y H:i')} WIB. Untuk melanjutkan pelunasan DP, silakan gunakan tautan pembayaran di bawah ini. Jika tautan tidak bisa dibuka atau ada kendala, hubungi kami di [081220745317]. Terima kasih.
+
+            Bayar DP Sekarang: " . route('user.downPayment.checkout', $store->id),
             [
-                'event' => 'appointment_created',
+                'event' => 'downPayment_created',
                 'user_id' => $user->id,
                 'down_payment_id' => $store->id,
             ]

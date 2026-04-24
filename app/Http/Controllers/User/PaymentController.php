@@ -18,57 +18,7 @@ use Midtrans\Transaction;
 
 class PaymentController extends Controller
 {
-        // Menampilkan halaman Snap pembayaran
-    // public function checkout($id)
-    // {
-    //     $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
-
-    //     // $car = Car::findOrFail($downPayment->car_id);
-    //     // // dd($car->status);
-
-    //     // // Cek apakah mobil sudah terjual
-    //     //  if ($car->status !== 'available') {
-    //     //     return redirect()->route('user.downPayment.index')->with('error', 'Mobil tidak tersedia untuk pembayaran.');
-    //     // }
-        
-    //     // Konfigurasi Midtrans
-    //     MidtransHelper::init();
-
-    //     $checkStatus = $this->checkMidtransStatus($id);
-    //     // dd($checkStatus);
-    //     if ($checkStatus->original['status'] != "error") {
-    //         $this->changeStatus($id);
-    //     }
-
-    //     $orderId = 'DP-' . $downPayment->id . '-' . time();
-
-    //     // Siapkan parameter transaksi
-    //     $params = [
-    //         'transaction_details' => [
-    //             'order_id' => $orderId,  
-    //             'gross_amount' => (int) $downPayment->amount,
-    //         ],
-    //         'customer_details' => [
-    //             'first_name' => $downPayment->user->name,
-    //             'email' => $downPayment->user->email,
-    //             'phone' => $downPayment->user->phone,
-    //         ],
-    //     ];
-
-    //     $snapToken = !empty($downPayment->snap_token) ? $snapToken = $downPayment->snap_token : $snapToken = Snap::getSnapToken($params);
-
-    //     DownPayment::where('id', $id)
-    //     ->where('payment_status', 'pending')
-    //     ->update([
-    //         'order_id' => $orderId,
-    //         'snap_token' => $snapToken
-    //     ]);
-
-    //     return view('user.downPayment.checkout', [
-    //         'downPayments' => $downPayment,
-    //         'snapToken' => $snapToken
-    //     ]);
-    // }
+    // Menampilkan halaman Checkout untuk pembayaran DP
     public function checkout($id)
     {
         if (!Auth::user()?->whatsapp_verified_at) {

@@ -51,40 +51,4 @@ class DownPaymentController extends Controller
                 'payment_method' => null,
             ]);
     }
-
-    // public function getSnapToken($id)
-    // {
-    //     $dp = DownPayment::findOrFail($id);
-
-    //     // Optional: pastikan hanya pemilik DP yang bisa generate token-nya
-    //     if ($dp->user_id !== auth()->id()) {
-    //         abort(403, 'Unauthorized');
-    //     }
-
-    //     // Set konfigurasi Midtrans (seharusnya sudah di AppServiceProvider)
-    //     Config::$serverKey = config('midtrans.server_key');
-    //     Config::$isProduction = false;
-    //     Config::$isSanitized = true;
-    //     Config::$is3ds = true;
-
-    //     $params = [
-    //         'transaction_details' => [
-    //             'order_id' => 'DP-' . $dp->id . '-' . uniqid(),
-    //             'gross_amount' => (int) $dp->amount,
-    //         ],
-    //         'customer_details' => [
-    //             'first_name' => auth()->user()->name,
-    //             'email' => auth()->user()->email,
-    //         ]
-    //     ];
-
-    //     try {
-    //         $snapToken = Snap::getSnapToken($params);
-    //         return response()->json(['snapToken' => $snapToken]);
-    //     } catch (\Exception $e) {
-    //         \Log::error('Midtrans Error: ' . $e->getMessage());
-    //         return response()->json(['error' => 'Gagal generate token'], 500);
-    //     }
-    // }
-
 }

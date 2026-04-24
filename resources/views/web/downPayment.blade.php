@@ -497,8 +497,8 @@
         }
 
         const dpAmount = parseInt(jumlahDP.replace(/[^\d]/g, ''));
-        if (dpAmount < 500000) {
-            alert('Minimal DP adalah Rp 500.000');
+        if (dpAmount < 100000) {
+            alert('Minimal DP adalah Rp 100.000');
             return;
         }
 
