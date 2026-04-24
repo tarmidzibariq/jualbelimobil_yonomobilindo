@@ -11,6 +11,58 @@
         font-size: 20px;
         color: #fcf259;
         background: #27548a;
+        transition: transform 0.15s ease, box-shadow 0.2s ease;
+        transform-origin: center;
+    }
+
+    #chatbot-toggle i {
+        transition: transform 0.25s ease;
+    }
+
+    #chatbot-toggle:hover {
+        box-shadow: 0 8px 18px rgba(39, 84, 138, 0.25);
+        background: #55769e;
+        transition: transform 0.25s;
+    }
+
+    #chatbot-toggle:active {
+        transform: scale(0.93);
+    }
+
+    #chatbot-toggle.is-clicked {
+        animation: chatbotTogglePress 0.26s ease;
+    }
+
+    #chatbot-toggle.is-open {
+        animation: chatbotOpenPulse 1.8s ease-in-out infinite;
+    }
+
+    #chatbot-toggle.is-open i {
+        transform: rotate(12deg);
+    }
+
+    @keyframes chatbotTogglePress {
+        0% {
+            transform: scale(1);
+        }
+        45% {
+            transform: scale(0.9);
+        }
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    @keyframes chatbotOpenPulse {
+        0% {
+            box-shadow: 0 0 0 0 rgba(39, 84, 138, 0.35);
+        }
+        70% {
+            box-shadow: 0 0 0 10px rgba(39, 84, 138, 0);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(39, 84, 138, 0);
+        }
     }
 
     #chatbot-box {
@@ -288,7 +340,7 @@
 
 <div id="chatbot-container" class="position-fixed bottom-0 end-0 p-3 me-3">
     <button id="chatbot-toggle" class="btn rounded-circle d-flex align-items-center justify-content-center shadow">
-        <i class="fa-solid fa-comment-dots"></i>
+        <i class="fa-solid fa-comment-dots text-white"></i>
     </button>
 
     <div id="chatbot-box" class="d-none flex-column position-absolute shadow rounded-4 overflow-hidden">
@@ -327,7 +379,7 @@
         <div class="chatbot-input-wrap d-flex gap-2 p-2 flex-shrink-0">
             <input id="chatbot-input" type="text" class="form-control rounded-pill" placeholder="Ketik pesan...">
             <button id="chatbot-send" class="btn rounded-pill px-3 d-flex align-items-center">
-                <i class="fa-solid fa-paper-plane" style="font-size:13px;"></i>
+                <i class="fa-solid fa-paper-plane text-white" style="font-size:13px;"></i>
             </button>
         </div>
     </div>
@@ -420,6 +472,7 @@
         function openChatbot() {
             el.box.classList.remove('d-none');
             el.box.classList.add('d-flex');
+            el.toggle.classList.add('is-open');
             applyResponsiveLayout();
             el.messages.scrollTop = el.messages.scrollHeight;
             el.input.focus();
@@ -428,6 +481,7 @@
         function closeChatbot() {
             el.box.classList.add('d-none');
             el.box.classList.remove('d-flex');
+            el.toggle.classList.remove('is-open');
         }
 
         function addWelcomeMessage() {
@@ -604,6 +658,9 @@
         }
 
         el.toggle.addEventListener('click', () => {
+            el.toggle.classList.remove('is-clicked');
+            void el.toggle.offsetWidth;
+            el.toggle.classList.add('is-clicked');
             const isOpen = !el.box.classList.contains('d-none');
             if (isOpen) {
                 closeChatbot();
