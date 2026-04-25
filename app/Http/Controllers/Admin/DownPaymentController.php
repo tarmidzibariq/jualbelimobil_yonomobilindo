@@ -18,6 +18,8 @@ class DownPaymentController extends Controller
 
     public function index(Request $request)
     {
+        // Pastikan semua DP pending yang sudah expired otomatis cancel
+        DownPayment::cancelExpiredPendingPayments();
         $query = DownPayment::query();
 
         
