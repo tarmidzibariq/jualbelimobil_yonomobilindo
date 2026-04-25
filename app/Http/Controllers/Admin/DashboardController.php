@@ -21,7 +21,9 @@ class DashboardController extends Controller
     }
     public function index()
     {
-    // < START FITUR STATISTIK>
+        // PASTIKAN SEMUA DP PENDING YANG EXPIRED OTOMATIS CANCEL
+        DownPayment::cancelExpiredPendingPayments();
+        
         // Menghitung jumlah down payment dengan status confirmed 
         $downPayment = DownPayment::where('payment_status', 'confirmed')
             // ->where('created_at', '>=', now()->subDays(30))
@@ -36,9 +38,7 @@ class DashboardController extends Controller
         // Menghitung jumlah mobil terjual
         $car = Car::where('status', 'sold')
             ->count();
-    // < END FITUR STATISTIK>
 
-    // <START FITUR GRAFIK>
         // Range: 7 bulan terakhir
         $startDate = Carbon::now()->subMonths(6)->startOfMonth();
         $endDate = Carbon::now()->endOfMonth();

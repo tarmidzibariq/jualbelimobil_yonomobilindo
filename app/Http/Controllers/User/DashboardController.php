@@ -17,6 +17,8 @@ class DashboardController extends Controller
         $this->middleware('auth');
     }
     public function index(){
+        DownPayment::cancelExpiredPendingPayments();
+
         $downPayment = DownPayment::with('car') // kalau relasi ke Car
             ->where('payment_status', 'pending')
             ->where('user_id', Auth::id())

@@ -5,7 +5,6 @@ namespace App\Http\Controllers\User;
 use App\Helpers\MidtransHelper;
 use App\Http\Controllers\Controller;
 use App\Models\DownPayment;
-use Illuminate\Database\Console\Migrations\StatusCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Midtrans\Snap;
@@ -23,6 +22,7 @@ class DownPaymentController extends Controller
      */
     public function index()
     {
+        DownPayment::cancelExpiredPendingPayments();
         $this->syncUnavailableCarDownPayments(Auth::id());
 
         $downPayments = DownPayment::with('car')->where('user_id', Auth::id())->orderBy('id', 'desc')->paginate(10);
@@ -32,6 +32,7 @@ class DownPaymentController extends Controller
     
 
     public function checkout($id){
+        DownPayment::cancelExpiredPendingPayments();
         $this->syncUnavailableCarDownPayments(Auth::id());
         $snapToken = 'xxx';
         $downPayments = DownPayment::with('car')->where('user_id', Auth::id())->findOrFail($id);
@@ -49,6 +50,7 @@ class DownPaymentController extends Controller
                 'payment_status' => 'cancelled',
                 'snap_token' => null,
                 'payment_method' => null,
+                'pending_payment_expires_at' => null,
             ]);
     }
 }

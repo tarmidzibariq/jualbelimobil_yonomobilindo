@@ -26,7 +26,14 @@ class PaymentController extends Controller
                 ->with('error', 'Sebelum transaksi, verifikasi nomor WhatsApp Anda terlebih dahulu.');
         }
 
+        DownPayment::cancelExpiredPendingPayments();
+
         $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
+
+        if ($downPayment->payment_status !== 'pending') {
+            return redirect()->route('user.downPayment.index')
+                ->with('error', 'Pembayaran ini sudah tidak aktif (dibatalkan, kedaluwarsa, atau sudah dibayar).');
+        }
 
         MidtransHelper::init();
 
@@ -34,6 +41,7 @@ class PaymentController extends Controller
             $downPayment->update([
                 'payment_status' => 'cancelled',
                 'snap_token' => null,
+                'pending_payment_expires_at' => null,
             ]);
 
             return redirect()->route('user.downPayment.index')
@@ -55,6 +63,7 @@ class PaymentController extends Controller
                         'payment_date' => $midtransStatus->transaction_time,
                         'payment_method' => $midtransStatus->payment_type,
                         'snap_token' => null,
+                        'pending_payment_expires_at' => null,
                     ]);
 
                     $downPayment->car->update(['status' => 'under_review']);
@@ -70,6 +79,7 @@ class PaymentController extends Controller
                     $downPayment->update([
                         'payment_status' => $transaction === 'expire' ? 'expired' : 'cancelled',
                         'snap_token' => null,
+                        'pending_payment_expires_at' => null,
                     ]);
                 } elseif ($transaction === 'pending') {
                     if (empty($downPayment->snap_token)) {
@@ -89,6 +99,7 @@ class PaymentController extends Controller
                         $downPayment->update([
                             'order_id' => $newOrderId,
                             'snap_token' => Snap::getSnapToken($params),
+                            'pending_payment_expires_at' => now()->addMinutes(10),
                         ]);
                         $downPayment->refresh();
                     }
@@ -125,6 +136,7 @@ class PaymentController extends Controller
             'order_id' => $orderId,
             'snap_token' => $snapToken,
             'payment_status' => 'pending',
+            'pending_payment_expires_at' => now()->addMinutes(10),
         ]);
 
         return view('user.downPayment.checkout', [
@@ -140,14 +152,22 @@ class PaymentController extends Controller
                 ->with('error', 'Sebelum transaksi, verifikasi nomor WhatsApp Anda terlebih dahulu.');
         }
 
+        DownPayment::cancelExpiredPendingPayments();
+
         $downPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
-        
+
+        if ($downPayment->payment_status !== 'pending') {
+            return redirect()->route('user.downPayment.index')
+                ->with('error', 'Pembayaran ini sudah tidak aktif (dibatalkan, kedaluwarsa, atau sudah dibayar).');
+        }
+
         MidtransHelper::init();
 
         if (in_array($downPayment->car->status, ['under_review', 'sold', 'pending_check']) && $downPayment->payment_status === 'pending') {
             $downPayment->update([
                 'payment_status' => 'cancelled',
                 'snap_token' => null,
+                'pending_payment_expires_at' => null,
             ]);
 
             return redirect()->route('user.downPayment.index')
@@ -183,7 +203,8 @@ class PaymentController extends Controller
                 "payment_status" => $status,
                 "payment_date" => $statusFromMidtrans->transaction_time ?? null,
                 "payment_method" => $paymentMethod,
-                'snap_token' => null
+                'snap_token' => null,
+                'pending_payment_expires_at' => null,
             ]);
         }else {
             $orderId = 'DP-' . $downPayment->id . '-' . time();
@@ -207,7 +228,8 @@ class PaymentController extends Controller
             ->where('payment_status', 'pending')
             ->update([
                 'order_id' => $orderId,
-                'snap_token' => $snapToken
+                'snap_token' => $snapToken,
+                'pending_payment_expires_at' => now()->addMinutes(10),
             ]);
 
             $newDownPayment = DownPayment::with(['user', 'car'])->where('user_id', Auth::id())->findOrFail($id);
@@ -275,12 +297,15 @@ class PaymentController extends Controller
                 $status = 'pending';
             }
     
-            DownPayment::where("id", $id)
-                ->update([
-                    "payment_status" => $status,
-                    "payment_date" => $notif->transaction_time ?? null,
-                    "payment_method" => $paymentMethod,
-                ]);
+            $updatePayload = [
+                "payment_status" => $status,
+                "payment_date" => $notif->transaction_time ?? null,
+                "payment_method" => $paymentMethod,
+            ];
+            if ($status !== 'pending') {
+                $updatePayload['pending_payment_expires_at'] = null;
+            }
+            DownPayment::where("id", $id)->update($updatePayload);
 
             $payment->save();
 
@@ -343,7 +368,8 @@ class PaymentController extends Controller
 
                 // Simpan snap_token saat pending agar popup pembayaran bisa dibuka lagi.
                 if ($status !== 'pending') {
-                    $updatePayload["snap_token"] = null;
+                    $updatePayload['pending_payment_expires_at'] = null;
+                    $updatePayload['snap_token'] = null;
                 } elseif (empty($downPayment->snap_token)) {
                     $newOrderId = 'DP-' . $downPayment->id . '-' . time();
                     $params = [
@@ -359,6 +385,7 @@ class PaymentController extends Controller
                     ];
                     $updatePayload["order_id"] = $newOrderId;
                     $updatePayload["snap_token"] = Snap::getSnapToken($params);
+                    $updatePayload['pending_payment_expires_at'] = now()->addMinutes(10);
                 }
 
                 DownPayment::where("id", $id)->update($updatePayload);
@@ -418,6 +445,7 @@ class PaymentController extends Controller
                 'payment_status' => 'cancelled',
                 'snap_token' => null,
                 'payment_method' => null,
+                'pending_payment_expires_at' => null,
             ]);
     }
 }

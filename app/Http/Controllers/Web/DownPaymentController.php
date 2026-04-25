@@ -38,6 +38,19 @@ class DownPaymentController extends Controller
         ]);
 
         $car = Car::findOrFail($request->car_id);
+
+        DownPayment::cancelExpiredPendingPayments();
+
+        $pendingCount = DownPayment::where('user_id', $user->id)
+            ->where('payment_status', 'pending')
+            ->count();
+
+        if ($pendingCount >= DownPayment::MAX_PENDING_PER_USER) {
+            return redirect()->back()->with(
+                'error',
+                'Anda hanya dapat memiliki maksimal '.DownPayment::MAX_PENDING_PER_USER.' DP yang menunggu pembayaran. Selesaikan pembayaran atau tunggu pembatalan otomatis (10 menit tanpa bayar).'
+            );
+        }
         
         // Gabungkan tanggal dan waktu
         $appointmentDateTime = $request->appointment_date . ' ' . $request->appointment_time;
@@ -59,6 +72,7 @@ class DownPaymentController extends Controller
             'appointment_date' => $appointmentDateTime,
             'amount' => $request->amount,
             'order_id' => $temporaryOrderId,
+            'pending_payment_expires_at' => now()->addMinutes(10),
         ]);
 
         $store->save();
